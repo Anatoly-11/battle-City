@@ -3,6 +3,10 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#define STB_IMAGE_IMPLEMENTATION
+#define STBI_ONLY_PNG
+#include "stb_image.h"
+#include "../Renderer/Texture2D.h"
 //-------------------------------------------------------------------------------------------------------------
 using namespace std;
 //-------------------------------------------------------------------------------------------------------------
@@ -22,7 +26,6 @@ string ResourceManager::getFileString(const string &relativeFilePath) const noex
   buf << f.rdbuf();
   return buf.str();
 }
-
 //-------------------------------------------------------------------------------------------------------------
 shared_ptr<Renderer::ShaderProgram> ResourceManager :: loadShaders(const string &shaderName,
   const string &vertexPath, const string &fragmentPath) noexcept {
@@ -52,6 +55,32 @@ shared_ptr<Renderer::ShaderProgram> ResourceManager::getShaderProgram(const stri
   auto it = m_shaderPrograms.find(shaderName);
   if(it == m_shaderPrograms.end()) {
     cerr << "Can't find the shader: " << shaderName << endl;
+    return nullptr;
+  }
+  return it->second;
+}
+//-------------------------------------------------------------------------------------------------------------
+shared_ptr<Renderer::Texture2D> ResourceManager::loadTexture(const string & textureName, const string & texturePath) noexcept {
+  int channels = 0;
+  int width = 0;
+  int height = 0;
+  stbi_set_flip_vertically_on_load(true);
+  if(unsigned char *pixels = stbi_load((m_path + '/' + texturePath).c_str(), &width, &height, &channels, 0);
+    pixels != nullptr) {
+    shared_ptr<Renderer::Texture2D> newTexture = m_textureMap.emplace(textureName, 
+      make_shared<Renderer::Texture2D>(width, height, pixels, channels, GL_NEAREST, GL_CLAMP_TO_EDGE)).first->second;
+    stbi_image_free(pixels);
+    return newTexture;
+  } else {
+    cerr << "Can't load image: " << texturePath << " ..." << endl;
+    return nullptr;
+  }
+}
+//-------------------------------------------------------------------------------------------------------------
+shared_ptr<Renderer::Texture2D> ResourceManager::getTexture(const string &textureName) noexcept{
+  auto it = m_textureMap.find(textureName);
+  if(it == m_textureMap.end()) {
+    cerr << "Can't find the texture: " << textureName << endl;
     return nullptr;
   }
   return it->second;

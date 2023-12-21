@@ -82,4 +82,8 @@ namespace Renderer {
     }
   }
   //-------------------------------------------------------------------------------------------------------------
+  void ShaderProgram :: setInt(const std::string &name, const GLint value) noexcept {
+    glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
+  }
+  //-------------------------------------------------------------------------------------------------------------
 }

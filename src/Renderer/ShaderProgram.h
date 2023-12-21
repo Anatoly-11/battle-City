@@ -22,6 +22,7 @@ namespace Renderer {
 		~ShaderProgram() noexcept;
 		bool isCompiled() const noexcept;
 		void use() const noexcept;
+		void setInt(const std::string &name, const GLint value) noexcept;
 	};
 }
 //-------------------------------------------------------------------------------------------------------------
