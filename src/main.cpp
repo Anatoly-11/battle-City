@@ -11,11 +11,11 @@ GLfloat point[]{
   -0.5f, -0.5f, 0.0f
 };
 //-------------------------------------------------------------------------------------------------------------
-GLfloat colors[]{
+/*GLfloat colors[]{
   1.0f, 0.0f, 0.0f,
   0.0f, 1.0f, 0.0f,
   0.0f, 0.0f, 1.0f
-};
+};*/
 //-------------------------------------------------------------------------------------------------------------
 GLfloat texCoord[]{
   0.5f, 1.5f,
@@ -83,16 +83,18 @@ int main(int argc, char *argv[]) {
       std::cerr << "Can't create shader program: " << shaderProgramName << std::endl;
       return -1;
     }
+
     auto tex = resourceManager.loadTexture("defaultTexture", "res/textures/map_16x16.png");
+
     GLuint points_vbo = 0;
     glGenBuffers(1, &points_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(point), point, GL_STATIC_DRAW);
 
-    GLuint colors_vbo = 0;
+    /*GLuint colors_vbo = 0;
     glGenBuffers(1, &colors_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);*/
 
     GLuint texCoord_vbo = 0;
     glGenBuffers(1, &texCoord_vbo);
@@ -107,13 +109,13 @@ int main(int argc, char *argv[]) {
     glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-    glEnableVertexAttribArray(1);
+    /*glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);*/
 
-    glEnableVertexAttribArray(2); //texCoord
+    glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, texCoord_vbo);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     pDefaultShaderProgram->use();
     pDefaultShaderProgram->setInt("tex", 0);
