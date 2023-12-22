@@ -401,7 +401,7 @@ namespace detail
 	template<typename genType>
 	GLM_FUNC_QUALIFIER genType mod(genType x, genType y)
 	{
-#		if (GLM_COMPILER & GLM_COMPILER_CUDA) || (GLM_COMPILER & GLM_COMPILER_HIP)
+#		if GLM_COMPILER & GLM_COMPILER_CUDA
 			// Another Cuda compiler bug https://github.com/g-truc/glm/issues/530
 			vec<1, genType, defaultp> Result(mod(vec<1, genType, defaultp>(x), y));
 			return Result.x;
@@ -601,7 +601,7 @@ namespace detail
 #				endif
 #			elif (GLM_COMPILER & (GLM_COMPILER_GCC | GLM_COMPILER_CLANG)) && (GLM_PLATFORM & GLM_PLATFORM_ANDROID) && __cplusplus < 201103L
 				return _isnan(x) != 0;
-#			elif (GLM_COMPILER & GLM_COMPILER_CUDA) || (GLM_COMPILER & GLM_COMPILER_HIP)
+#			elif GLM_COMPILER & GLM_COMPILER_CUDA
 				return ::isnan(x) != 0;
 #			else
 				return std::isnan(x);
@@ -642,7 +642,7 @@ namespace detail
 #				else
 					return std::isinf(x);
 #				endif
-#			elif (GLM_COMPILER & GLM_COMPILER_CUDA) || (GLM_COMPILER & GLM_COMPILER_HIP)
+#			elif GLM_COMPILER & GLM_COMPILER_CUDA
 				// http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/docs/online/group__CUDA__MATH__DOUBLE_g13431dd2b40b51f9139cbb7f50c18fab.html#g13431dd2b40b51f9139cbb7f50c18fab
 				return ::isinf(double(x)) != 0;
 #			else
@@ -662,7 +662,7 @@ namespace detail
 		return Result;
 	}
 
-	GLM_FUNC_QUALIFIER int floatBitsToInt(float v)
+	GLM_FUNC_QUALIFIER int floatBitsToInt(float const& v)
 	{
 		union
 		{
@@ -678,10 +678,10 @@ namespace detail
 	template<length_t L, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<L, int, Q> floatBitsToInt(vec<L, float, Q> const& v)
 	{
-		return detail::functor1<vec, L, int, float, Q>::call(floatBitsToInt, v);
+		return reinterpret_cast<vec<L, int, Q>&>(const_cast<vec<L, float, Q>&>(v));
 	}
 
-	GLM_FUNC_QUALIFIER uint floatBitsToUint(float v)
+	GLM_FUNC_QUALIFIER uint floatBitsToUint(float const& v)
 	{
 		union
 		{
@@ -697,10 +697,10 @@ namespace detail
 	template<length_t L, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<L, uint, Q> floatBitsToUint(vec<L, float, Q> const& v)
 	{
-		return detail::functor1<vec, L, uint, float, Q>::call(floatBitsToUint, v);
+		return reinterpret_cast<vec<L, uint, Q>&>(const_cast<vec<L, float, Q>&>(v));
 	}
 
-	GLM_FUNC_QUALIFIER float intBitsToFloat(int v)
+	GLM_FUNC_QUALIFIER float intBitsToFloat(int const& v)
 	{
 		union
 		{
@@ -716,10 +716,10 @@ namespace detail
 	template<length_t L, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<L, float, Q> intBitsToFloat(vec<L, int, Q> const& v)
 	{
-		return detail::functor1<vec, L, float, int, Q>::call(intBitsToFloat, v);
+		return reinterpret_cast<vec<L, float, Q>&>(const_cast<vec<L, int, Q>&>(v));
 	}
 
-	GLM_FUNC_QUALIFIER float uintBitsToFloat(uint v)
+	GLM_FUNC_QUALIFIER float uintBitsToFloat(uint const& v)
 	{
 		union
 		{

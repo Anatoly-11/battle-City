@@ -69,38 +69,6 @@ static int test_min()
 }
 
 template <typename vecType>
-static int test_max()
-{
-	typedef typename vecType::value_type T;
-
-	int Error = 0;
-
-	vecType const N(static_cast<T>(0));
-	vecType const B(static_cast<T>(1));
-	Error += glm::all(glm::equal(glm::max(N, B), B, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(B, N), B, glm::epsilon<T>())) ? 0 : 1;
-
-	vecType const C(static_cast<T>(2));
-	Error += glm::all(glm::equal(glm::max(N, B, C), C, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(B, N, C), C, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(C, N, B), C, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(C, B, N), C, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(B, C, N), C, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(N, C, B), C, glm::epsilon<T>())) ? 0 : 1;
-
-	vecType const D(static_cast<T>(3));
-	Error += glm::all(glm::equal(glm::max(D, N, B, C), D, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(B, D, N, C), D, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(C, N, D, B), D, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(C, B, D, N), D, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(B, C, N, D), D, glm::epsilon<T>())) ? 0 : 1;
-	Error += glm::all(glm::equal(glm::max(N, C, B, D), D, glm::epsilon<T>())) ? 0 : 1;
-
-	return Error;
-}
-
-#if ((GLM_LANG & GLM_LANG_CXX11_FLAG) || (GLM_COMPILER & GLM_COMPILER_VC))
-template <typename vecType>
 static int test_min_nan()
 {
 	typedef typename vecType::value_type T;
@@ -128,6 +96,37 @@ static int test_min_nan()
 	Error += !glm::all(glm::isnan(glm::min(C, B, D, N))) ? 0 : 1;
 	Error += !glm::all(glm::isnan(glm::min(B, C, N, D))) ? 0 : 1;
 	Error += glm::all(glm::isnan(glm::min(N, C, B, D))) ? 0 : 1;
+
+	return Error;
+}
+
+template <typename vecType>
+static int test_max()
+{
+	typedef typename vecType::value_type T;
+
+	int Error = 0;
+
+	vecType const N(static_cast<T>(0));
+	vecType const B(static_cast<T>(1));
+	Error += glm::all(glm::equal(glm::max(N, B), B, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(B, N), B, glm::epsilon<T>())) ? 0 : 1;
+
+	vecType const C(static_cast<T>(2));
+	Error += glm::all(glm::equal(glm::max(N, B, C), C, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(B, N, C), C, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(C, N, B), C, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(C, B, N), C, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(B, C, N), C, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(N, C, B), C, glm::epsilon<T>())) ? 0 : 1;
+
+	vecType const D(static_cast<T>(3));
+	Error += glm::all(glm::equal(glm::max(D, N, B, C), D, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(B, D, N, C), D, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(C, N, D, B), D, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(C, B, D, N), D, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(B, C, N, D), D, glm::epsilon<T>())) ? 0 : 1;
+	Error += glm::all(glm::equal(glm::max(N, C, B, D), D, glm::epsilon<T>())) ? 0 : 1;
 
 	return Error;
 }
@@ -227,7 +226,6 @@ static int test_fmax()
 
 	return Error;
 }
-#endif//
 
 static int test_clamp()
 {
@@ -305,64 +303,30 @@ static int test_mirrorRepeat()
 	return Error;
 }
 
-static int test_iround()
-{
-	int Error = 0;
-
-	for(float f = 0.0f; f < 3.1f; f += 0.05f)
-	{
-		int RoundFast = static_cast<int>(glm::iround(f));
-		int RoundSTD = static_cast<int>(glm::round(f));
-		Error += RoundFast == RoundSTD ? 0 : 1;
-		assert(!Error);
-	}
-
-	return Error;
-}
-
-static int test_uround()
-{
-	int Error = 0;
-
-	for(float f = 0.0f; f < 3.1f; f += 0.05f)
-	{
-		int RoundFast = static_cast<int>(glm::uround(f));
-		int RoundSTD = static_cast<int>(glm::round(f));
-		Error += RoundFast == RoundSTD ? 0 : 1;
-		assert(!Error);
-	}
-
-	return Error;
-}
-
 int main()
 {
 	int Error = 0;
 
 	Error += test_min<glm::vec3>();
 	Error += test_min<glm::vec2>();
-	Error += test_max<glm::vec3>();
-	Error += test_max<glm::vec2>();
-
-#if ((GLM_LANG & GLM_LANG_CXX11_FLAG) || (GLM_COMPILER & GLM_COMPILER_VC))
 	Error += test_min_nan<glm::vec3>();
 	Error += test_min_nan<glm::vec2>();
+
+	Error += test_max<glm::vec3>();
+	Error += test_max<glm::vec2>();
 	Error += test_max_nan<glm::vec3>();
 	Error += test_max_nan<glm::vec2>();
 
 	Error += test_fmin<glm::vec3>();
 	Error += test_fmin<glm::vec2>();
+
 	Error += test_fmax<glm::vec3>();
 	Error += test_fmax<glm::vec2>();
-#endif//
 
 	Error += test_clamp();
 	Error += test_repeat();
 	Error += test_mirrorClamp();
 	Error += test_mirrorRepeat();
-
-	Error += test_iround();
-	Error += test_uround();
 
 	return Error;
 }

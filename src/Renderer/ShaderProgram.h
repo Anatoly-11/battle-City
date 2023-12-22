@@ -3,6 +3,7 @@
 #define _SHADERPROGRAM_H_ 1.0
 //-------------------------------------------------------------------------------------------------------------
 #include <glad/glad.h>
+#include <glm/mat4x4.hpp>
 #include <string>
 //-------------------------------------------------------------------------------------------------------------
 namespace Renderer {
@@ -23,6 +24,7 @@ namespace Renderer {
 		bool isCompiled() const noexcept;
 		void use() const noexcept;
 		void setInt(const std::string &name, const GLint value) noexcept;
+		void setMatrix4(const std::string &name, const glm::mat4 &matr) noexcept;
 	};
 }
 //-------------------------------------------------------------------------------------------------------------

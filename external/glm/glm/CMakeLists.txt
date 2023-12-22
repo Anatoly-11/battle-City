@@ -1,6 +1,3 @@
-option(BUILD_SHARED_LIBS "Build shared library" ON)
-option(BUILD_STATIC_LIBS "Build static library" ON)
-
 file(GLOB ROOT_SOURCE *.cpp)
 file(GLOB ROOT_INLINE *.inl)
 file(GLOB ROOT_HEADER *.hpp)
@@ -46,15 +43,7 @@ source_group("SIMD Files" FILES ${SIMD_INLINE})
 source_group("SIMD Files" FILES ${SIMD_HEADER})
 
 add_library(glm INTERFACE)
-
-include(GNUInstallDirs)
-
-target_include_directories(glm INTERFACE
-	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
-
-install(TARGETS glm EXPORT glm)
+target_include_directories(glm INTERFACE ../)
 
 if(BUILD_STATIC_LIBS)
 add_library(glm_static STATIC ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
