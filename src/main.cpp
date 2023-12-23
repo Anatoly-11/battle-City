@@ -99,8 +99,8 @@ int main(int argc, char *argv[]) {
     auto tex = resourceManager.loadTexture("DefaultTexture", "res/textures/map_16x16.png");
     auto spriteTex = resourceManager.loadTexture("DefaultTexture", "res/textures/map_16x16.png");
 
-    auto pSprite = resourceManager.loadSprite("NewSprite", "DefaultTexture", spriteShaderProgramName, 50, 100);
-    pSprite->setPosition(glm::vec2(50, 150));
+    auto pSprite = resourceManager.loadSprite("NewSprite", "DefaultTexture", spriteShaderProgramName, 100, 100);
+    pSprite->setPosition(glm::vec2(120, 250));
 
     GLuint points_vbo = 0;
     glGenBuffers(1, &points_vbo);
