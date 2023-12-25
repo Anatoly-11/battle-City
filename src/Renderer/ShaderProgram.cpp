@@ -1,7 +1,7 @@
 #include "ShaderProgram.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
-//-------------------------------------------------------------------------------------------------------------
+
 namespace Renderer {
   ShaderProgram::ShaderProgram(const std::string &vertexShader, const std::string &fragmentShader) noexcept
     : m_isCompiled(false), m_ID(0) {
@@ -31,13 +31,13 @@ namespace Renderer {
     glDeleteShader(vertexShaderID);
     glDeleteShader(fragmentShaderID);
   }
-  //-------------------------------------------------------------------------------------------------------------
+
   ShaderProgram :: ~ShaderProgram() noexcept {
     if(m_isCompiled) {
       glDeleteProgram(m_ID);
     }
   }
-  //-------------------------------------------------------------------------------------------------------------
+
   bool ShaderProgram :: createShader(const std::string &shader, const GLenum shaderType, GLuint &shaderID) noexcept {
     shaderID = glCreateShader(shaderType);
     const char *code = shader.data();
@@ -53,14 +53,14 @@ namespace Renderer {
     }
     return true;
   }
-  //-------------------------------------------------------------------------------------------------------------
+
   ShaderProgram :: ShaderProgram(ShaderProgram &&shaderProgram) noexcept
     : m_ID(shaderProgram.m_ID), m_isCompiled(shaderProgram.m_isCompiled) {
 
     shaderProgram.m_ID = 0;
     shaderProgram.m_isCompiled = false;
   }
-  //-------------------------------------------------------------------------------------------------------------
+
   ShaderProgram &ShaderProgram ::operator=(ShaderProgram &&shaderProgram) noexcept {
     if(m_isCompiled) {
       glDeleteProgram(m_ID);
@@ -72,23 +72,22 @@ namespace Renderer {
     shaderProgram.m_isCompiled = false;
     return *this;
   }
-  //-------------------------------------------------------------------------------------------------------------
+
   bool ShaderProgram :: isCompiled() const noexcept {
     return m_isCompiled;
   }
-  //-------------------------------------------------------------------------------------------------------------
+
   void ShaderProgram :: use() const noexcept {
     if(m_isCompiled) {
       glUseProgram(m_ID);
     }
   }
-  //-------------------------------------------------------------------------------------------------------------
+
   void ShaderProgram :: setInt(const std::string &name, const GLint value) noexcept {
     glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
   }
-  //-------------------------------------------------------------------------------------------------------------
+
   void ShaderProgram :: setMatrix4(const std::string &name, const glm::mat4 &matr) noexcept {
     glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matr));
   }
-//-------------------------------------------------------------------------------------------------------------
 }

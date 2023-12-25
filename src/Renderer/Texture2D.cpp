@@ -1,7 +1,7 @@
 #include "Texture2D.h"
-//-------------------------------------------------------------------------------------------------------------
+
 namespace Renderer {
-  Texture2D :: Texture2D(const GLuint width, const GLuint height, const unsigned char *data, 
+  Texture2D :: Texture2D(const GLuint width, const GLuint height, const unsigned char *data,
     const unsigned int channels, const GLenum filter, const GLenum wrapMode) noexcept : m_width(width),
     m_height(height) {
     switch(channels) {
@@ -28,18 +28,18 @@ namespace Renderer {
 
     glBindTexture(GL_TEXTURE_2D, 0);
   }
-  //-----------------------------------------------------------------------------------------------------------
+
   Texture2D :: ~Texture2D() noexcept {
     glDeleteTextures(1, &m_ID);
   }
-  //-----------------------------------------------------------------------------------------------------------
+
   Texture2D :: Texture2D(Texture2D &&texture) noexcept {
     m_ID = texture.m_ID; texture.m_ID = 0;
     m_mode = texture.m_mode;
     m_width = texture.m_width;
     m_height = texture.m_height;
   }
-  //-----------------------------------------------------------------------------------------------------------
+
   Texture2D &Texture2D :: operator=(Texture2D &&texture) noexcept {
     glDeleteTextures(1, &m_ID);
     m_ID = texture.m_ID; texture.m_ID = 0;
@@ -48,10 +48,37 @@ namespace Renderer {
     m_height = texture.m_height;
     return *this;
   }
-  //-----------------------------------------------------------------------------------------------------------
-  void Texture2D :: bind() const noexcept { 
+
+  void Texture2D :: bind() const noexcept {
     glBindTexture(GL_TEXTURE_2D, m_ID);
   }
-  //-----------------------------------------------------------------------------------------------------------
+
+  unsigned int Texture2D::width() const noexcept {
+    return m_width;
+  }
+
+  unsigned int Texture2D::height() const noexcept {
+    return m_height;
+  }
+
+  Texture2D :: SubTexture2D :: SubTexture2D(const glm::vec2 &_leftBottomUV, const glm::vec2 &_rightTopUV) noexcept
+    : leftBottomUV(_leftBottomUV), rightTopUV(_rightTopUV) {
+  }
+  
+  Texture2D :: SubTexture2D :: SubTexture2D() noexcept : leftBottomUV(0.f), rightTopUV(1.f) {
+  }
+  
+  void Texture2D::addSubTexture(const std::string &name, const glm::vec2 &_leftBottomUV,
+    const glm::vec2 &_rightTopUV) noexcept {
+    m_subTextures.emplace(name, Texture2D::SubTexture2D(_leftBottomUV, _rightTopUV));
+  }
+  
+  const Texture2D::SubTexture2D &Texture2D::getSubTexture(const std::string &name) const noexcept {
+    auto it = m_subTextures.find(name);
+    if(it != m_subTextures.end()) {
+      return it->second;
+    }
+    static const Texture2D::SubTexture2D defSubTexture2D;
+    return defSubTexture2D;
+  }
 }
-//-------------------------------------------------------------------------------------------------------------
