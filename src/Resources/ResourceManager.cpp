@@ -17,6 +17,9 @@ ResourceManager :: ResourceManager(const std::string &executablePath) noexcept {
   m_path = executablePath.substr(0, found);
 }
 
+ResourceManager :: ~ResourceManager() noexcept {
+}
+
 string ResourceManager::getFileString(const string &relativeFilePath) const noexcept {
   ifstream f;
   f.open(m_path + '/' + relativeFilePath.c_str(), ios::in | ios::binary);
@@ -50,10 +53,9 @@ shared_ptr<Renderer::ShaderProgram> ResourceManager :: loadShader(const string &
     return nullptr;
   }
   return newShader;
-
 }
 
-shared_ptr<Renderer::ShaderProgram> ResourceManager::getShaderProgram(const string &shaderName) noexcept {
+shared_ptr<Renderer::ShaderProgram> ResourceManager::getShaderProgram(const string &shaderName) const noexcept {
   auto it = m_shaderPrograms.find(shaderName);
   if(it == m_shaderPrograms.end()) {
     cerr << "Can't find the shader: " << shaderName << endl;
@@ -90,14 +92,9 @@ shared_ptr<Renderer::Texture2D> ResourceManager::getTexture(const string &textur
   return it->second;
 }
 
-shared_ptr<Renderer::Sprite> ResourceManager::loadSprite(
-  const std::string &spriteName,
-  const std::string &textureName,
-  const std::string &shaderName,
-  const unsigned int spriteWidth,
-  const unsigned int spriteHeight,
-  const std::string &subTextureName
-) noexcept {
+shared_ptr<Renderer::Sprite> ResourceManager::loadSprite(const std::string &spriteName,
+  const std::string &textureName, const std::string &shaderName, const unsigned int spriteWidth,
+  const unsigned int spriteHeight, const std::string &subTextureName) noexcept {
   auto pTexture = getTexture(textureName);
   if(pTexture == nullptr) {
     cerr << "Can't find the texture: " << textureName << " for the sprite: " << spriteName << endl;
@@ -126,14 +123,9 @@ shared_ptr<Renderer::Sprite> ResourceManager::getSprite(const string &spriteName
   return it->second;
 }
 
-shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(
-  const std::string &animatedSpriteName,
-  const std::string &textureName,
-  const std::string &shaderName,
-  const unsigned int spriteWidth,
-  const unsigned int spriteHeight,
-  const std::string &subTextureName
-) noexcept {
+shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(const std::string &animatedSpriteName,
+  const std::string &textureName, const std::string &shaderName, const unsigned int spriteWidth,
+  const unsigned int spriteHeight, const std::string &subTextureName) noexcept {
   auto pTexture = getTexture(textureName);
   if(pTexture == nullptr) {
     cerr << "Can't find the texture: " << textureName << " for the animated sprite: " << animatedSpriteName << endl;
@@ -153,7 +145,8 @@ shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(
   return nullptr;
 }
 
-shared_ptr<Renderer::AnimatedSprite> ResourceManager::getAnimatedSprite(const string &animatedSpriteName) const noexcept{
+shared_ptr<Renderer::AnimatedSprite> ResourceManager::getAnimatedSprite(
+  const string &animatedSpriteName) const noexcept{
   auto it = m_animatedSprites.find(animatedSpriteName);
   if(it == m_animatedSprites.end()) {
     cerr << "Can't find the animated sprite: " << animatedSpriteName << endl;

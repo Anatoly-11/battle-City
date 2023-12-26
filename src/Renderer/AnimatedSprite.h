@@ -24,7 +24,7 @@ namespace Renderer {
 
     void setState(const std::string &newState) noexcept;
 
-    const std::string &getState() const noexcept;
+    //const std::string &getState() const noexcept;
 
   private:
     std::map<std::string, std::vector<std::pair<std::string, uint64_t>>> m_statesMap;
@@ -32,7 +32,7 @@ namespace Renderer {
     uint64_t m_currentAnimationTime;
     std::map<std::string, std::vector<std::pair<std::string,
       uint64_t>>>::const_iterator m_pCurrentAnimationDurations;
-    std::string m_currentStateName;
+    //std::string m_currentStateName;
     mutable bool m_dirty;
   };
 }

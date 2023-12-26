@@ -10,7 +10,7 @@ namespace Renderer {
     const glm::vec2 &size, 
     const float rotation) noexcept : Sprite(pTexture, initialSubTexture,
       pShaderProgram, position, size, rotation), m_currentFrame(0), m_currentAnimationTime(0),
-    m_dirty(false), m_currentStateName("") {
+    m_dirty(false)/*, m_currentStateName("")*/ {
     m_pCurrentAnimationDurations = m_statesMap.end();
   }
 
@@ -20,7 +20,7 @@ namespace Renderer {
       std::cerr << "Can't find animation state: " << newState << std::endl;
       return;
     }
-    m_currentStateName = newState;
+    //m_currentStateName = newState;
     if(it != m_pCurrentAnimationDurations) {
       m_currentFrame = 0;
       m_currentAnimationTime = 0;
@@ -29,9 +29,9 @@ namespace Renderer {
     }
   }
 
-  const std::string& AnimatedSprite::getState() const noexcept {
+  /*const std::string& AnimatedSprite::getState() const noexcept {
     return m_currentStateName;
-  }
+  }*/
 
   void AnimatedSprite::insertState(const std::string &state, const std::vector<std::pair<std::string, 
     uint64_t>> &subTextureDuration) noexcept {

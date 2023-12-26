@@ -14,15 +14,8 @@ namespace Renderer {
   class AnimatedSprite;
 }
 
+
 class ResourceManager {
-#pragma region Invisible
-public:
-  ~ResourceManager() noexcept = default;
-  ResourceManager(const ResourceManager&) = delete;
-  ResourceManager &operator=(const ResourceManager&) = delete;
-  ResourceManager(ResourceManager&&) = delete;
-  ResourceManager &operator=(ResourceManager&&) = delete;
-#pragma endregion
 private:
   std::string getFileString(const std::string &relativeFilePath) const noexcept;
 
@@ -41,8 +34,14 @@ private:
   std::string m_path;
 public:
   ResourceManager(const std::string &executablePath) noexcept;
-  std::shared_ptr<Renderer::ShaderProgram> getShaderProgram(const std::string &shaderName) noexcept;
-    std::shared_ptr<Renderer::ShaderProgram> loadShader(const std::string &shaderName,
+
+  ResourceManager() = delete;
+
+  ~ResourceManager() noexcept;
+  
+  std::shared_ptr<Renderer::ShaderProgram> getShaderProgram(const std::string &shaderName) const noexcept;
+ 
+  std::shared_ptr<Renderer::ShaderProgram> loadShader(const std::string &shaderName,
     const std::string &vertexPath,const std::string &fragmentPath) noexcept;
 
   std::shared_ptr<Renderer::Texture2D> loadTexture(const std::string &textureName,
