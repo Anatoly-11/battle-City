@@ -20,11 +20,11 @@ namespace Renderer {
 
     void update(const uint64_t delta) noexcept;
     
-    void insertState(const std::string &state, const std::vector<std::pair<std::string, uint64_t>> &subTextureDuration) noexcept;
+    void insertState(const std::string &state, const std::vector<std::pair<std::string,
+      uint64_t>> &subTextureDuration) noexcept;
 
     void setState(const std::string &newState) noexcept;
 
-    //const std::string &getState() const noexcept;
 
   private:
     std::map<std::string, std::vector<std::pair<std::string, uint64_t>>> m_statesMap;
@@ -32,7 +32,6 @@ namespace Renderer {
     uint64_t m_currentAnimationTime;
     std::map<std::string, std::vector<std::pair<std::string,
       uint64_t>>>::const_iterator m_pCurrentAnimationDurations;
-    //std::string m_currentStateName;
     mutable bool m_dirty;
   };
 }

@@ -5,6 +5,7 @@
 #include <array>
 #include <glm/vec2.hpp>
 
+class Tank;
 
 class Game {
 public:
@@ -25,5 +26,7 @@ private:
   EGameState m_eCurrentGameState;
 
   glm::ivec2 m_windowSize;
+
+  Tank *m_pTank;
 };
 #endif // !_GAME_H
