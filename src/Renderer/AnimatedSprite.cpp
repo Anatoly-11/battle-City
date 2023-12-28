@@ -54,8 +54,8 @@ namespace Renderer {
         // U  V
         subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
         subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
-        subTexture.rightTopUV.x, subTexture.rightTopUV.y,
-        subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
+        subTexture.rightTopUV.x,   subTexture.rightTopUV.y,
+        subTexture.rightTopUV.x,   subTexture.leftBottomUV.y,
       };
       const_cast<VertexBuffer*>(&m_textureCoordsBuffer)->update(textureCoords, 2 * 4 * sizeof(GLfloat));
       m_dirty = false;

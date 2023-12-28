@@ -4,10 +4,13 @@
 
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
+
 #include <string>
 #include <memory>
+
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
 
 namespace Renderer {
   class Texture2D;
@@ -21,7 +24,8 @@ namespace Renderer {
     glm::vec2 m_position;
     glm::vec2 m_size;
     float m_rotation;
-    GLuint m_VAO;
+
+    VertexArray m_vertexArray;
     VertexBuffer m_vertexCoordsBuffer;
     VertexBuffer m_textureCoordsBuffer;
     IndexBuffer m_idexBuffer;

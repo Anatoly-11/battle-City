@@ -1,6 +1,8 @@
 #include "Sprite.h"
 #include "ShaderProgram.h"
 #include "Texture2D.h"
+#include "VertexBufferLayout.h"
+
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -42,26 +44,24 @@ namespace Renderer {
       2, 3, 0
     };
 
-    glGenVertexArrays(1, &m_VAO);
-    glBindVertexArray(m_VAO);
-
     m_vertexCoordsBuffer.init(vertexCoords, 2 * 4 * sizeof(GLfloat));
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+        VertexBufferLayout vertexCoordsLayout;
+    vertexCoordsLayout.adLayoutEletmtntsFloat(2, false);
+    m_vertexArray.addBuffer(m_vertexCoordsBuffer, vertexCoordsLayout);
 
     m_textureCoordsBuffer.init(textureCoords, 2 * 4 * sizeof(GLfloat));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    VertexBufferLayout textureCoordsLayout;
+    textureCoordsLayout.adLayoutEletmtntsFloat(2, false);
+    m_vertexArray.addBuffer(m_textureCoordsBuffer, textureCoordsLayout);
 
     m_idexBuffer.init(indeces, 6 * sizeof(GLuint));
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    m_vertexArray.unbind();
+    m_idexBuffer.unbind();
   }
 
   Sprite::~Sprite() noexcept {
-    glDeleteVertexArrays(1, &m_VAO);
+    //glDeleteVertexArrays(1, &m_VAO);
   }
 
   void Sprite::render() const noexcept {
@@ -74,7 +74,7 @@ namespace Renderer {
     model = glm::translate(model, glm::vec3(-0.5f*m_size, 0.f));
     model = glm::scale(model, glm::vec3(m_size, 1.f));
     
-    glBindVertexArray(m_VAO);
+    m_vertexArray.bind();
 
     m_pShaderProgram->setMatrix4("modelMat", model);
 
@@ -83,7 +83,7 @@ namespace Renderer {
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     
-    glBindVertexArray(0);
+    m_vertexArray.unbind();
   }
 
   void Sprite::setPosition(const glm::vec2 &position) noexcept {
