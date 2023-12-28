@@ -47,7 +47,7 @@ namespace Renderer {
     }
   }
 
-  void AnimatedSprite::render() const noexcept{
+  void AnimatedSprite::render() const noexcept {
     if(m_dirty) {
       auto subTexture = m_pTexture->getSubTexture(m_pCurrentAnimationDurations->second[m_currentFrame].first);
       const GLfloat textureCoords[]{
@@ -57,9 +57,7 @@ namespace Renderer {
         subTexture.rightTopUV.x, subTexture.rightTopUV.y,
         subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
       };
-      glBindBuffer(GL_ARRAY_BUFFER, m_textureCoordsVBO);
-      glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(textureCoords), textureCoords);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      const_cast<VertexBuffer*>(&m_textureCoordsBuffer)->update(textureCoords, 2 * 4 * sizeof(GLfloat));
       m_dirty = false;
     }
     Sprite::render();
