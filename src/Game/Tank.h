@@ -23,6 +23,8 @@ public:
 
   void move(const bool move) noexcept;
 
+  bool getmove() const noexcept;
+
   void update(const uint64_t delta) noexcept;
 private:
   EOrientation m_eOrientation;

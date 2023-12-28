@@ -45,6 +45,10 @@ void Tank::move(const bool move) noexcept {
   m_move = move;
 }
 
+bool Tank::getmove() const noexcept {
+  return m_move;
+}
+
 void Tank::update(const uint64_t delta) noexcept {
   if(m_move) {
     m_position += delta * m_velocity * m_moveOffset;

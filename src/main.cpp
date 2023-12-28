@@ -33,7 +33,6 @@ void glfwKeyCallback(GLFWwindow *win, int key, int scan, int act, int mode) {
     glfwSetWindowShouldClose(win, GL_TRUE);
   }
   g_game.setKey(key, act);
-
 }
 
 int main(int argc, char *argv[]) {
