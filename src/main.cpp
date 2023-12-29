@@ -77,6 +77,8 @@ int main(int argc, char *argv[]) {
 
   // Loop until the user closes the window
   while(!glfwWindowShouldClose(win)) {
+    // Poll for and process events
+    glfwPollEvents();
 
     auto currentTime = chrono::high_resolution_clock::now();
     uint64_t duration = chrono::duration_cast<chrono::nanoseconds>(currentTime - lastTime).count();
@@ -85,14 +87,10 @@ int main(int argc, char *argv[]) {
 
     // Render here
     RendererEngine::Renderer::clear();
-
     g_game.render();
 
     // Swap front and back buffers
     glfwSwapBuffers(win);
-
-    // Poll for and process events
-    glfwPollEvents();
   }
 
   ResourceManager::unloadAllResources();

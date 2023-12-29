@@ -4,6 +4,7 @@
 #include <array>
 #include <vector>
 #include <glm/vec2.hpp>
+#include <memory>
 
 class Tank;
 
@@ -32,6 +33,6 @@ private:
 
   glm::ivec2 m_windowSize;
 
-  Tank *m_pTank;
+  std::unique_ptr<Tank> m_pTank;
 };
 #endif // !_GAME_H

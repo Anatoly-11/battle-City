@@ -22,7 +22,7 @@ Game::Game(const glm::ivec2 &_windowSize) noexcept : m_eCurrentGameState(EGameSt
 }
 
 Game::~Game() noexcept {
-  delete m_pTank;
+  //delete m_pTank;
   //log_f.close();
   //std::cerr.rdbuf(cerrbuf);
 }
@@ -155,7 +155,7 @@ bool Game::init() noexcept {
   pTankAnimatedSprite->setState("tankTopState");
   //pTankAnimatedSprite->setPosition(glm::vec2(100.f, 200.f));
 
-  m_pTank = new Tank(pTankAnimatedSprite, 0.0000001f, glm::vec2(100.f, 100.f));
+  m_pTank = make_unique<Tank>(pTankAnimatedSprite, 0.0000001f, glm::vec2(100.f, 100.f));
 
   return true;
 }
