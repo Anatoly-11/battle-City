@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _SHADERPROGRAM_H_
 #define _SHADERPROGRAM_H_ 1.0
 
@@ -6,7 +5,7 @@
 #include <glm/mat4x4.hpp>
 #include <string>
 
-namespace Renderer {
+namespace RendererEngine {
 	class ShaderProgram {
 	private:
 		bool m_isCompiled;

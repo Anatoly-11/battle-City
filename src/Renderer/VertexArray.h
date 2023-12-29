@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 //#include "VertexBuffer.h"
 
-namespace Renderer {
+namespace RendererEngine {
 
   class VertexBuffer;
   class VertexBufferLayout;

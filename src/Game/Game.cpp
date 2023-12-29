@@ -11,8 +11,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-extern ResourceManager *resourceManager;
-
 //std::ofstream log_f;
 //std::streambuf *cerrbuf = std::cerr.rdbuf(); //запомним старый буфер
 
@@ -31,14 +29,14 @@ Game::~Game() noexcept {
 
 void Game::render() noexcept {
   //resourceManager->getSprite("NewSprite")->render();
-  resourceManager->getAnimatedSprite("newAnimetedSprite")->render();
+  ResourceManager::getAnimatedSprite("newAnimetedSprite")->render();
   if(m_pTank != nullptr) {
     m_pTank->render();
   }
 }
 
 void Game::update(const uint64_t delta) noexcept {
-  resourceManager->getAnimatedSprite("newAnimetedSprite")->update(delta);
+  ResourceManager::getAnimatedSprite("newAnimetedSprite")->update(delta);
   if(m_pTank != nullptr) {
     if(m_keys[GLFW_KEY_W] || m_keys[GLFW_KEY_UP]) {
       m_pTank->setOrientation(Tank::EOrientation::Top);
@@ -66,20 +64,20 @@ void Game::setKey(const int key, const int action) noexcept {
 }
 
 bool Game::init() noexcept {
-  auto pDefaultShaderProgram = resourceManager->loadShader("DefaultShader", "res/shaders/vertex.glsl",
+  auto pDefaultShaderProgram = ResourceManager::loadShader("DefaultShader", "res/shaders/vertex.glsl",
     "res/shaders/fragment.glsl");
   if(!pDefaultShaderProgram) {
     std::cerr << "Can't create the default shader program: " << "DefaultShader" << std::endl;
     return false;
   }
-  auto pSpriteShaderProgram = resourceManager->loadShader("SpriteShader", "res/shaders/vSprite.glsl",
+  auto pSpriteShaderProgram = ResourceManager::loadShader("SpriteShader", "res/shaders/vSprite.glsl",
     "res/shaders/fSprite.glsl");
   if(!pSpriteShaderProgram) {
     std::cerr << "Can't create the sprite shader program: " << "SpriteShader" << std::endl;
     return false;
   }
 
-  auto tex = resourceManager->loadTexture("DefaultTexture", "res/textures/map_16x16.png");
+  auto tex = ResourceManager::loadTexture("DefaultTexture", "res/textures/map_16x16.png");
 
   std::vector<std::string> subTextureNames{"block", "topBlock", "bottomBlock", "leftBlock", "rightBlock", "topLeftBlock",
     "bottomLeftBlock", "topRightBlock", "bottomRightBlock", "concrete", "topConcrete", "bottomConcrete",
@@ -87,14 +85,14 @@ bool Game::init() noexcept {
     "bottomRightConcrete", "water1", "water2", "water3", "trees", "ice", "wall", "eagle", "deadEagle",
     "nothing", "respawn1", "respawn2", "respawn3", "respawn4" };
 
-  auto pTextureAtlas = resourceManager->loadTextureAtlas("DefaultTextureAtlas", "res/textures/map_16x16.png",
+  auto pTextureAtlas = ResourceManager::loadTextureAtlas("DefaultTextureAtlas", "res/textures/map_16x16.png",
     subTextureNames, 16, 16);
 
-  auto pSprite = resourceManager->loadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader",
+  auto pSprite = ResourceManager::loadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader",
     100, 100, "concrete");
   pSprite->setPosition(glm::vec2(120, 250));
 
-  auto pAnimatedSprite = resourceManager->loadAnimatedSprite("newAnimetedSprite", "DefaultTextureAtlas", 
+  auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("newAnimetedSprite", "DefaultTextureAtlas", 
     "SpriteShader", 100, 100, "concrete");
   pAnimatedSprite->setPosition(glm::vec2(300, 300));
 
@@ -142,11 +140,11 @@ bool Game::init() noexcept {
     "tankRight1",
     "tankRight2",
   };
-  auto pTankTextureAtlas = resourceManager->loadTextureAtlas("TanksTextureAtlas", "res/textures/tanks.png",
+  auto pTankTextureAtlas = ResourceManager::loadTextureAtlas("TanksTextureAtlas", "res/textures/tanks.png",
     TanksSubTextureNames, 16, 16);
   if(!pTankTextureAtlas)
     return false;
-  auto pTankAnimatedSprite = resourceManager->loadAnimatedSprite("TanksAnimetedSprite", "TanksTextureAtlas", 
+  auto pTankAnimatedSprite = ResourceManager::loadAnimatedSprite("TanksAnimetedSprite", "TanksTextureAtlas", 
     "SpriteShader", 100, 100, "tankTop1");
   
   pTankAnimatedSprite->insertState("tankTopState", {{"tankTop1", 500000000}, {"tankTop2", 500000000}});

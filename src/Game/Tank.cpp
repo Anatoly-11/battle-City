@@ -1,7 +1,7 @@
 #include "Tank.h"
 #include "../Renderer/AnimatedSprite.h"
 
-Tank::Tank(const std::shared_ptr<Renderer::AnimatedSprite> pSprite, const float velocity,
+Tank::Tank(const std::shared_ptr<RendererEngine::AnimatedSprite> pSprite, const float velocity,
   const glm::vec2 &position) noexcept : m_eOrientation(EOrientation::Top), m_pSprite(pSprite), m_move(false),
   m_velocity(velocity), m_position(position), m_moveOffset({0.f, 1.f}) {
   m_pSprite->setPosition(m_position);

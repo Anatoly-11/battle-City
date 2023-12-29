@@ -1,11 +1,10 @@
-#pragma once
 #ifndef _TANK_H
 #define _TANK_H 1.0
 
 #include <memory>
 #include <glm/vec2.hpp>
 
-namespace Renderer{
+namespace RendererEngine{
   class AnimatedSprite;
 }
 
@@ -15,7 +14,7 @@ public:
     Top, Bottom,  Left, Right
   };
 
-  Tank(const std::shared_ptr<Renderer::AnimatedSprite> pSprite, const float velocity, const glm::vec2 &position) noexcept;
+  Tank(const std::shared_ptr<RendererEngine::AnimatedSprite> pSprite, const float velocity, const glm::vec2 &position) noexcept;
 
   void render() const noexcept;
 
@@ -28,7 +27,7 @@ public:
   void update(const uint64_t delta) noexcept;
 private:
   EOrientation m_eOrientation;
-  const std::shared_ptr<Renderer::AnimatedSprite> m_pSprite;
+  const std::shared_ptr<RendererEngine::AnimatedSprite> m_pSprite;
   bool m_move;
   float m_velocity;
   glm::vec2 m_position;

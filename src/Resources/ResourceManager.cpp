@@ -12,15 +12,30 @@
 
 using namespace std;
 
-ResourceManager :: ResourceManager(const std::string &executablePath) noexcept {
+ResourceManager::ShaderProgramsMap ResourceManager::m_shaderPrograms;
+
+ResourceManager::TextureMap ResourceManager::m_textures;
+
+ResourceManager::SpritesMap ResourceManager::m_sprites;
+
+ResourceManager::AnimatedSpritesMap ResourceManager::m_animatedSprites;
+
+std::string ResourceManager::m_path;
+
+void ResourceManager :: setExecutablePath(const std::string &executablePath) noexcept {
   size_t found = executablePath.find_last_of("/\\");
   m_path = executablePath.substr(0, found);
 }
 
-ResourceManager :: ~ResourceManager() noexcept {
+void ResourceManager :: unloadAllResources() noexcept {
+  m_shaderPrograms.clear();
+  m_textures.clear();
+  m_sprites.clear();
+  m_animatedSprites.clear();
+  m_path.clear();
 }
 
-string ResourceManager::getFileString(const string &relativeFilePath) const noexcept {
+string ResourceManager::getFileString(const string &relativeFilePath) noexcept {
   ifstream f;
   f.open(m_path + '/' + relativeFilePath.c_str(), ios::in | ios::binary);
   if(!f.is_open()) {
@@ -32,7 +47,7 @@ string ResourceManager::getFileString(const string &relativeFilePath) const noex
   return buf.str();
 }
 
-shared_ptr<Renderer::ShaderProgram> ResourceManager :: loadShader(const string &shaderName,
+shared_ptr<RendererEngine::ShaderProgram> ResourceManager :: loadShader(const string &shaderName,
   const string &vertexPath, const string &fragmentPath) noexcept {
   string vertexStr = getFileString(vertexPath);
   if(vertexStr == "") {
@@ -44,8 +59,8 @@ shared_ptr<Renderer::ShaderProgram> ResourceManager :: loadShader(const string &
     cerr << "No fragment shader..." << endl;
     return nullptr;
   }
-  shared_ptr<Renderer::ShaderProgram> &newShader =  m_shaderPrograms.emplace(shaderName,
-    make_shared<Renderer::ShaderProgram>(vertexStr, fragmentStr)).first->second;
+  shared_ptr<RendererEngine::ShaderProgram> &newShader =  m_shaderPrograms.emplace(shaderName,
+    make_shared<RendererEngine::ShaderProgram>(vertexStr, fragmentStr)).first->second;
   if(!newShader->isCompiled()) {
     cerr << "Can't load shader program:\n"
       << "Vertex: " << vertexPath << '\n'
@@ -55,7 +70,7 @@ shared_ptr<Renderer::ShaderProgram> ResourceManager :: loadShader(const string &
   return newShader;
 }
 
-shared_ptr<Renderer::ShaderProgram> ResourceManager::getShaderProgram(const string &shaderName) const noexcept {
+shared_ptr<RendererEngine::ShaderProgram> ResourceManager::getShaderProgram(const string &shaderName) noexcept {
   auto it = m_shaderPrograms.find(shaderName);
   if(it == m_shaderPrograms.end()) {
     cerr << "Can't find the shader: " << shaderName << endl;
@@ -64,7 +79,7 @@ shared_ptr<Renderer::ShaderProgram> ResourceManager::getShaderProgram(const stri
   return it->second;
 }
 
-shared_ptr<Renderer::Texture2D> ResourceManager::loadTexture(const string &textureName,
+shared_ptr<RendererEngine::Texture2D> ResourceManager::loadTexture(const string &textureName,
   const string &texturePath) noexcept {
   int channels = 0;
   int width = 0;
@@ -72,8 +87,8 @@ shared_ptr<Renderer::Texture2D> ResourceManager::loadTexture(const string &textu
   stbi_set_flip_vertically_on_load(true);
   if(unsigned char *pixels = stbi_load((m_path + '/' + texturePath).c_str(), &width, &height, &channels, 0);
     pixels != nullptr) {
-    shared_ptr<Renderer::Texture2D> newTexture = m_textures.emplace(textureName, 
-      make_shared<Renderer::Texture2D>(width, height, pixels, channels, GL_NEAREST,
+    shared_ptr<RendererEngine::Texture2D> newTexture = m_textures.emplace(textureName, 
+      make_shared<RendererEngine::Texture2D>(width, height, pixels, channels, GL_NEAREST,
         GL_CLAMP_TO_EDGE)).first->second;
     stbi_image_free(pixels);
     return newTexture;
@@ -83,7 +98,7 @@ shared_ptr<Renderer::Texture2D> ResourceManager::loadTexture(const string &textu
   }
 }
 
-shared_ptr<Renderer::Texture2D> ResourceManager::getTexture(const string &textureName) const noexcept {
+shared_ptr<RendererEngine::Texture2D> ResourceManager::getTexture(const string &textureName) noexcept {
   auto it = m_textures.find(textureName);
   if(it == m_textures.end()) {
     cerr << "Can't find the texture: " << textureName << endl;
@@ -92,7 +107,7 @@ shared_ptr<Renderer::Texture2D> ResourceManager::getTexture(const string &textur
   return it->second;
 }
 
-shared_ptr<Renderer::Sprite> ResourceManager::loadSprite(const std::string &spriteName,
+shared_ptr<RendererEngine::Sprite> ResourceManager::loadSprite(const std::string &spriteName,
   const std::string &textureName, const std::string &shaderName, const unsigned int spriteWidth,
   const unsigned int spriteHeight, const std::string &subTextureName) noexcept {
   auto pTexture = getTexture(textureName);
@@ -105,8 +120,8 @@ shared_ptr<Renderer::Sprite> ResourceManager::loadSprite(const std::string &spri
     cerr << "Can't find the shader: " << shaderName << " for the sprite: " << spriteName << endl;
     return nullptr;
   }
-  if(shared_ptr<Renderer::Sprite> newSprite = m_sprites.emplace(spriteName,
-    make_shared<Renderer::Sprite>(pTexture, subTextureName, pShader, glm::vec2(0.f, 0.f),
+  if(shared_ptr<RendererEngine::Sprite> newSprite = m_sprites.emplace(spriteName,
+    make_shared<RendererEngine::Sprite>(pTexture, subTextureName, pShader, glm::vec2(0.f, 0.f),
       glm::vec2(spriteWidth, spriteHeight))).first->second; newSprite != nullptr){
     return newSprite;
   }
@@ -114,7 +129,7 @@ shared_ptr<Renderer::Sprite> ResourceManager::loadSprite(const std::string &spri
   return nullptr;
 }
 
-shared_ptr<Renderer::Sprite> ResourceManager::getSprite(const string &spriteName) const noexcept{
+shared_ptr<RendererEngine::Sprite> ResourceManager::getSprite(const string &spriteName) noexcept{
   auto it = m_sprites.find(spriteName);
   if(it == m_sprites.end()) {
     cerr << "Can't find the sprite: " << spriteName << endl;
@@ -123,7 +138,7 @@ shared_ptr<Renderer::Sprite> ResourceManager::getSprite(const string &spriteName
   return it->second;
 }
 
-shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(const std::string &animatedSpriteName,
+shared_ptr<RendererEngine::AnimatedSprite> ResourceManager::loadAnimatedSprite(const std::string &animatedSpriteName,
   const std::string &textureName, const std::string &shaderName, const unsigned int spriteWidth,
   const unsigned int spriteHeight, const std::string &subTextureName) noexcept {
   auto pTexture = getTexture(textureName);
@@ -136,8 +151,8 @@ shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(const s
     cerr << "Can't find the shader: " << shaderName << " for the sprite: " << animatedSpriteName << endl;
     return nullptr;
   }
-  if(shared_ptr<Renderer::AnimatedSprite> newSprite = m_animatedSprites.emplace(animatedSpriteName,
-    make_shared<Renderer::AnimatedSprite>(pTexture, subTextureName, pShader, glm::vec2(0.f, 0.f),
+  if(shared_ptr<RendererEngine::AnimatedSprite> newSprite = m_animatedSprites.emplace(animatedSpriteName,
+    make_shared<RendererEngine::AnimatedSprite>(pTexture, subTextureName, pShader, glm::vec2(0.f, 0.f),
       glm::vec2(spriteWidth, spriteHeight))).first->second; newSprite != nullptr){
     return newSprite;
   }
@@ -145,8 +160,8 @@ shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(const s
   return nullptr;
 }
 
-shared_ptr<Renderer::AnimatedSprite> ResourceManager::getAnimatedSprite(
-  const string &animatedSpriteName) const noexcept{
+shared_ptr<RendererEngine::AnimatedSprite> ResourceManager::getAnimatedSprite(
+  const string &animatedSpriteName) noexcept{
   auto it = m_animatedSprites.find(animatedSpriteName);
   if(it == m_animatedSprites.end()) {
     cerr << "Can't find the animated sprite: " << animatedSpriteName << endl;
@@ -155,7 +170,7 @@ shared_ptr<Renderer::AnimatedSprite> ResourceManager::getAnimatedSprite(
   return it->second;
 }
 
-std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(const std::string &textureName,
+std::shared_ptr<RendererEngine::Texture2D> ResourceManager::loadTextureAtlas(const std::string &textureName,
   const std::string texturePath, std::vector<std::string> &subTextures, const unsigned subTextureWidth,
   const unsigned subTextureHeight) noexcept {
   auto pTexture = loadTexture(textureName, texturePath);

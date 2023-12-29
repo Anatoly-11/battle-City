@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-namespace Renderer {
+namespace RendererEngine {
   class VertexBuffer {
     VertexBuffer(const VertexBuffer&) = delete;
     VertexBuffer &operator=(const VertexBuffer&) = delete;

@@ -5,7 +5,7 @@
 using namespace std;
 using namespace glm;
 
-namespace Renderer {
+namespace RendererEngine {
   AnimatedSprite::AnimatedSprite(const shared_ptr<Texture2D> &pTexture,
     const string &initialSubTexture, const shared_ptr<ShaderProgram> &pShaderProgram,
     const vec2 &position, const vec2 &size, const float rotation) noexcept : Sprite(pTexture, initialSubTexture,

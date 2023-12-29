@@ -13,19 +13,18 @@
 #include "Renderer/Sprite.h"
 #include "Renderer/AnimatedSprite.h"
 #include "Game/Game.h"
+#include "Renderer/Renderer.h"
 
 using namespace std;
 
 glm::ivec2 g_windowSize(640, 480);
-
-extern ResourceManager *resourceManager = nullptr;
 
 Game g_game(g_windowSize);
 
 void glfwWindowSizeCallback(GLFWwindow *win, int width, int height) {
   g_windowSize.x = width;
   g_windowSize.y = height;
-  glViewport(0, 0, width, height);
+  RendererEngine::Renderer::setViewport(width, height);
 }
 
 void glfwKeyCallback(GLFWwindow *win, int key, int scan, int act, int mode) {
@@ -65,17 +64,16 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  cout << "Render: " << glGetString(GL_RENDERER) << endl;
-  cout << "OpenGL version: " << glGetString(GL_VERSION) << endl;
-  resourceManager = new ResourceManager(argv[0]);
+  cout << RendererEngine::Renderer::getInfo() << endl;
+
+  ResourceManager::setExecutablePath(argv[0]);
   if(!g_game.init()) {
-    delete resourceManager;
     return -1;
   }
 
   auto lastTime = chrono::high_resolution_clock::now();
 
-  glClearColor(0, 0, 0, 1);
+  RendererEngine::Renderer::setClearColor(0.f, 0.f, 0.f, 1.f);
 
   // Loop until the user closes the window
   while(!glfwWindowShouldClose(win)) {
@@ -86,7 +84,7 @@ int main(int argc, char *argv[]) {
     g_game.update(duration);
 
     // Render here
-    glClear(GL_COLOR_BUFFER_BIT);
+    RendererEngine::Renderer::clear();
 
     g_game.render();
 
@@ -97,7 +95,7 @@ int main(int argc, char *argv[]) {
     glfwPollEvents();
   }
 
-  delete resourceManager;
+  ResourceManager::unloadAllResources();
 
   glfwTerminate();
 

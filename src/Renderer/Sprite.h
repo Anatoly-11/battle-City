@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _SPRITE_H
 #define _SPRITE_H 1.0
 
@@ -12,7 +11,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 
-namespace Renderer {
+namespace RendererEngine {
   class Texture2D;
   class ShaderProgram;
   class Sprite {

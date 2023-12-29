@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _ANIMATEDSPRITE_H
 #define _ANIMATEDSPRITE_H 1.0
 
@@ -6,7 +5,7 @@
 #include <map>
 #include <vector>
 
-namespace Renderer {
+namespace RendererEngine {
   class AnimatedSprite : public Sprite {
   public:
     AnimatedSprite(const std::shared_ptr<Texture2D> &pTexture,

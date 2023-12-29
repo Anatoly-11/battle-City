@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _TEXTURE2D_H
 #define _TEXTURE2D_H 1.0
 
@@ -7,7 +6,7 @@
 #include <string>
 #include <map>
 
-namespace Renderer {
+namespace RendererEngine {
   class Texture2D {
   public:
 

@@ -4,7 +4,7 @@
 #include <vector>
 #include <glad/glad.h>
 
-namespace Renderer {
+namespace RendererEngine {
   struct VertexBufferLayoutElement {
     GLint count;
     GLenum type;

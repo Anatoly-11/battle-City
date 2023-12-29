@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _GAME_H
 #define _GAME_H 1.0
 
