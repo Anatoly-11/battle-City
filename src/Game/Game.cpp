@@ -70,10 +70,10 @@ bool Game::init() noexcept {
     std::cerr << "Can't create the default shader program: " << "DefaultShader" << std::endl;
     return false;
   }
-  auto pSpriteShaderProgram = ResourceManager::loadShader("SpriteShader", "res/shaders/vSprite.glsl",
+  auto pSpriteShaderProgram = ResourceManager::loadShader("spriteShader", "res/shaders/vSprite.glsl",
     "res/shaders/fSprite.glsl");
   if(!pSpriteShaderProgram) {
-    std::cerr << "Can't create the sprite shader program: " << "SpriteShader" << std::endl;
+    std::cerr << "Can't create the sprite shader program: " << "spriteShader" << std::endl;
     return false;
   }
 
@@ -88,12 +88,12 @@ bool Game::init() noexcept {
   auto pTextureAtlas = ResourceManager::loadTextureAtlas("DefaultTextureAtlas", "res/textures/map_16x16.png",
     subTextureNames, 16, 16);
 
-  auto pSprite = ResourceManager::loadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader",
+  auto pSprite = ResourceManager::loadSprite("NewSprite", "DefaultTextureAtlas", "spriteShader",
     100, 100, "concrete");
   pSprite->setPosition(glm::vec2(120, 250));
 
   auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("newAnimetedSprite", "DefaultTextureAtlas", 
-    "SpriteShader", 100, 100, "concrete");
+    "spriteShader", 100, 100, "concrete");
   pAnimatedSprite->setPosition(glm::vec2(300, 300));
 
   pDefaultShaderProgram->use();
@@ -145,7 +145,7 @@ bool Game::init() noexcept {
   if(!pTankTextureAtlas)
     return false;
   auto pTankAnimatedSprite = ResourceManager::loadAnimatedSprite("TanksAnimetedSprite", "TanksTextureAtlas", 
-    "SpriteShader", 100, 100, "tankTop1");
+    "spriteShader", 100, 100, "tankTop1");
   
   pTankAnimatedSprite->insertState("tankTopState", {{"tankTop1", 500000000}, {"tankTop2", 500000000}});
   pTankAnimatedSprite->insertState("tankLeftState", {{"tankLeft1", 500000000}, {"tankLeft2", 500000000}});
