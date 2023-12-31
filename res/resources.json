@@ -6,16 +6,14 @@
 			"filePath_f" : "res/shaders/fSprite.glsl"
 		}
 	],
-	
-	"textureAtlases" : [
+
+	"textureAtlases": [
 		{
-			"name" : "mapTextureAtlas",
-			"filePath" : "res/textures/map_16x16.png",
-			"width" : 128,
-			"height" : 128,
-			"subTextureWidth" : 16,
-			"subTextureHeight" : 16,
-			"subTexture" : [
+			"name": "mapTextureAtlas",
+			"filePath": "res/textures/map_16x16.png",
+			"subTextureWidth": 16,
+			"subTextureHeight": 16,
+			"subTextures": [
 				"block",
 				"topBlock",
 				"bottomBlock",
@@ -49,14 +47,13 @@
 				"respawn4"
 			]
 		},
+
 		{
-			"name" : "tanksTextureAtlas",
-			"filePath" : "res/textures/tanks.png",
-			"width" : 256,
-			"height" : 256,
-			"subTextureWidth" : 16,
-			"subTextureHeight" : 16,
-			"subTexture" : [
+			"name": "tanksTextureAtlas",
+			"filePath": "res/textures/tanks.png",
+			"subTextureWidth": 16,
+			"subTextureHeight": 16,
+			"subTextures": [
 				"yellowType1_Top1",
 				"yellowType1_Top2",
 				"yellowType1_Left1",
@@ -68,73 +65,76 @@
 			]
 		}
 	],
-	"AnimatedSprites" : [
-		"name" : "tankAnimatedSprite",
-		"textureAtlase" : "tanksTextureAtlas",
-		"shader"        : "spriteShader",
-		"initialWidth"  : 100,
-		"initialHeight" : 100,
-		"initialSubTexture" : "yellowType1_Top1",
-		"states": [
-			{
-				"stateName" : "tankTopState",
-				"frames" : [
-					{
-						"subTesture" : "yellowType1_Top1",
-						"duration"   : 500000000,
-					},
+
+	"animatedSprites" : [
+		{   
+			"name" : "tankAnimatedSprite",
+			"textureAtlas" : "tanksTextureAtlas",
+			"shader"        : "spriteShader",
+			"initialWidth"  : 100,
+			"initialHeight" : 100,
+			"initialSubTexture" : "yellowType1_Top1",
+			"states": [
+				{
+					"stateName" : "tankTopState",
+					"frames" : [
+						{
+							"subTesture" : "yellowType1_Top1",
+							"duration"   : 500000000
+						},
 					
-					{
-						"subTesture" : "yellowType1_Top2",
-						"duration"   : 500000000,
-					}
-				]
-			},
+						{
+							"subTesture" : "yellowType1_Top2",
+							"duration"   : 500000000
+						}
+					]
+				},
+
+				{
+			 		"stateName" : "tankLeftState",
+					"frames" :  [
+						{
+							"subTesture" : "yellowType1_Left1",
+							"duration"   : 500000000
+						},
+					
+						{
+							"subTesture" : "yellowType1_Left2",
+							"duration"   : 500000000
+						}
+					]
+				},
+
+				{
+			 		"stateName" : "tankBottomState",
+					"frames" :  [
+						{
+							"subTesture" : "yellowType1_Bottom1",
+							"duration"   : 500000000
+						},
+					
+						{
+							"subTesture" : "yellowType1_Bottom2",
+							"duration"   : 500000000
+						}
+					]
+				},
 			
-			{
-			 	"stateName" : "tankLeftState",
-				"frames" :  [
-					{
-						"subTesture" : "yellowType1_Left1",
-						"duration"   : 500000000,
-					},
+				{
+			 		"stateName" : "tankRightState",
+					"frames" :  [
+						{
+							"subTesture" : "yellowType1_Right1",
+							"duration"   : 500000000
+						},
 					
-					{
-						"subTesture" : "yellowType1_Left2",
-						"duration"   : 500000000,
-					}
-				]
-			},
-			
-			{
-			 	"stateName" : "tankBottomState",
-				"frames" :  [
-					{
-						"subTesture" : "yellowType1_Bottom1",
-						"duration"   : 500000000,
-					},
-					
-					{
-						"subTesture" : "yellowType1_Bottom2",
-						"duration"   : 500000000,
-					}
-				]
-			},
-			
-			{
-			 	"stateName" : "tankRightState",
-				"frames" :  [
-					{
-						"subTesture" : "yellowType1_Right1",
-						"duration"   : 500000000,
-					},
-					
-					{
-						"subTesture" : "yellowType1_Right2",
-						"duration"   : 500000000,
-					}
-				]
-			}
-		]
+						{
+							"subTesture" : "yellowType1_Right2",
+							"duration"   : 500000000
+						}
+					]
+				}
+			]
+		}
 	]
 }

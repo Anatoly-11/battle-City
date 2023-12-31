@@ -38,6 +38,7 @@ private:
   static std::string m_path;
 public:
   static void setExecutablePath(const std::string &executablePath) noexcept;
+
   static void unloadAllResources() noexcept;
 
   static std::shared_ptr<RendererEngine::ShaderProgram> getShaderProgram(const std::string &shaderName) noexcept;
@@ -63,7 +64,9 @@ public:
   static std::shared_ptr<RendererEngine::AnimatedSprite> getAnimatedSprite(const std::string &animatedSpriteName) noexcept;
 
   static std::shared_ptr<RendererEngine::Texture2D> loadTextureAtlas(const std::string &textureName,
-    const std::string texturePath, std::vector<std::string> &subTextures, const unsigned subTextureWidth,
-    const unsigned subTextureHeight) noexcept;
+    const std::string texturePath, std::vector<std::string> &subTextures, const unsigned int subTextureWidth,
+    const unsigned int subTextureHeight) noexcept;
+
+  static bool loadJSONResources(const std::string &JSONPath) noexcept;
 };
 #endif // !_RESOURCEMANAGER_H
