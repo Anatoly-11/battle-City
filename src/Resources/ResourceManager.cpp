@@ -270,5 +270,17 @@ bool ResourceManager::loadJSONResources(const string &JSONPath) noexcept {
       }
     }
   }
+
+  if(auto levelsIt = document.FindMember("levels"); levelsIt != document.MemberEnd()) {
+    for(const auto& currentLevel : levelsIt->value.GetArray()) {
+      const auto description = currentLevel["description"].GetArray();
+      vector<string> levelRows;
+      levelRows.reserve(description.Size());
+      for(const auto& currentRoow : description) {
+        levelRows.emplace_back(currentRoow.GetString());
+      }
+      //TODO...
+    }
+  }
   return true;
 }
