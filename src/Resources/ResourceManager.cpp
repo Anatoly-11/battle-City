@@ -11,6 +11,7 @@
 #include "../Renderer/AnimatedSprite.h"
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
+#include <filesystem>
 
 
 using namespace std;
@@ -28,8 +29,7 @@ vector <vector<string>> ResourceManager::m_levels;
 std::string ResourceManager::m_path;
 
 void ResourceManager::setExecutablePath(const std::string &executablePath) noexcept {
-  size_t found = executablePath.find_last_of("/\\");
-  m_path = executablePath.substr(0, found);
+  m_path = filesystem::path{ executablePath }.parent_path().string();
 }
 
 void ResourceManager::unloadAllResources() noexcept {
@@ -181,11 +181,11 @@ std::shared_ptr<RendererEngine::Texture2D> ResourceManager::loadTextureAtlas(con
     unsigned int currentTextureOffsetX = 0;
     unsigned int currentTextureOffsetY = textureHeight;
     for(const auto &subTextureName : subTextures) {
-      glm::vec2 leftBottom(static_cast<float>(currentTextureOffsetX) / textureWidth, 
-        static_cast<float>(currentTextureOffsetY - subTextureHeight) / textureHeight);
-
-      glm::vec2 rightTop(static_cast<float>(currentTextureOffsetX + subTextureWidth) / textureWidth,
-        static_cast<float>(currentTextureOffsetY) / textureHeight);
+      glm::vec2 leftBottom(static_cast<float>(currentTextureOffsetX + 0.01f) / textureWidth, 
+        static_cast<float>(currentTextureOffsetY - subTextureHeight + 0.01f) / textureHeight);
+      //0.01f correction!!!
+      glm::vec2 rightTop(static_cast<float>(currentTextureOffsetX + subTextureWidth - 0.01f) / textureWidth,
+        static_cast<float>(currentTextureOffsetY - 0.01f) / textureHeight);
       pTexture->addSubTexture(subTextureName, leftBottom, rightTop);
       currentTextureOffsetX += subTextureWidth;
       if(currentTextureOffsetX >= textureWidth) {

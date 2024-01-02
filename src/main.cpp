@@ -21,10 +21,23 @@ glm::ivec2 g_windowSize(13 * 16, 14 * 16);
 
 unique_ptr<Game> g_game = make_unique<Game>(g_windowSize);
 
+constexpr float map_aspect_ratio = 13.f / 14.f;
+
 void glfwWindowSizeCallback(GLFWwindow *win, int width, int height) {
   g_windowSize.x = width;
   g_windowSize.y = height;
-  RendererEngine::Renderer::setViewport(width, height);
+  unsigned int viewPortWidth = g_windowSize.x;
+  unsigned int viewPortHeight = g_windowSize.y;
+  unsigned int viewPortLeftOffset = 0;
+  unsigned int viewPortBottomOffset = 0;
+  if((float)g_windowSize.x / g_windowSize.y > map_aspect_ratio) {
+    viewPortWidth = static_cast<unsigned int>((float)g_windowSize.y * map_aspect_ratio);
+    viewPortLeftOffset = static_cast<unsigned int>(((float)g_windowSize.x - viewPortWidth) / 2.f);
+  } else if((float)g_windowSize.x / g_windowSize.y < map_aspect_ratio) {
+    viewPortHeight = static_cast<unsigned int>(((float)g_windowSize.x / map_aspect_ratio));
+    viewPortBottomOffset = static_cast<unsigned int>(((float)g_windowSize.y - viewPortHeight) / 2.f);
+  }
+  RendererEngine::Renderer::setViewport(viewPortWidth, viewPortHeight, viewPortLeftOffset, viewPortBottomOffset);
 }
 
 void glfwKeyCallback(GLFWwindow *win, int key, int scan, int act, int mode) {
