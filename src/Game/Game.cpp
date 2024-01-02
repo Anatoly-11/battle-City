@@ -22,12 +22,12 @@ Game::~Game() noexcept {
 }
 
 void Game::render() noexcept {
-  if(m_pLevel) {
-    m_pLevel->render();;
-  }
-
   if(m_pTank != nullptr) {
     m_pTank->render();
+  }
+
+  if(m_pLevel) {
+    m_pLevel->render();;
   }
 }
 
