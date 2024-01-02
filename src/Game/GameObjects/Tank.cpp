@@ -1,14 +1,14 @@
 #include "Tank.h"
-#include "../Renderer/AnimatedSprite.h"
+#include "../../Renderer/AnimatedSprite.h"
 
 Tank::Tank(const std::shared_ptr<RendererEngine::AnimatedSprite> pSprite, const float velocity,
-  const glm::vec2 &position) noexcept : m_eOrientation(EOrientation::Top), m_pSprite(pSprite), m_move(false),
-  m_velocity(velocity), m_position(position), m_moveOffset({0.f, 1.f}) {
-  m_pSprite->setPosition(m_position);
+  const glm::vec2 &position, const glm::vec2 &size) noexcept : IGameObject(position, size, 0.f),
+  m_eOrientation(EOrientation::Top), m_pSprite(pSprite), m_move(false), m_velocity(velocity),
+  m_position(position), m_moveOffset({0.f, 1.f}) {
 }
 
 void Tank::render() const noexcept {
-  m_pSprite->render();
+  m_pSprite->render(m_position, m_size, m_rotation);
 }
 
 void Tank::setOrientation(const EOrientation eOrientation) noexcept {
@@ -52,7 +52,6 @@ bool Tank::getmove() const noexcept {
 void Tank::update(const uint64_t delta) noexcept {
   if(m_move) {
     m_position += delta * m_velocity * m_moveOffset;
-    m_pSprite->setPosition(m_position);
     m_pSprite->update(delta);
   }
 }

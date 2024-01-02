@@ -11,11 +11,8 @@ namespace RendererEngine {
 
   Sprite::Sprite(const std::shared_ptr<Texture2D> &pTexture, 
     const std::string &initialSubTexture,
-    const std::shared_ptr<ShaderProgram> &pShaderProgram,
-    const glm::vec2 &position, 
-    const glm::vec2 &size, 
-    const float rotation) noexcept : m_pTexture(pTexture),
-    m_pShaderProgram(pShaderProgram), m_position(position), m_size(size), m_rotation(rotation) {
+    const std::shared_ptr<ShaderProgram> &pShaderProgram) noexcept : m_pTexture(pTexture),
+    m_pShaderProgram(pShaderProgram) {
     const GLfloat vertexCoords[]{
       // 1--2
       // |  |
@@ -65,15 +62,15 @@ namespace RendererEngine {
     //glDeleteVertexArrays(1, &m_VAO);
   }
 
-  void Sprite::render() const noexcept {
+  void Sprite::render(const glm::vec2 &position, const glm::vec2 &size, const float rotation) const noexcept {
     m_pShaderProgram->use();
 
     glm::mat4 model(1.f);
 
-    model = glm::translate(model, glm::vec3(0.5f*m_size + m_position, 0.f));
-    model = glm::rotate(model, glm::radians(m_rotation), glm::vec3(0.f, 0.f, 1.f));
-    model = glm::translate(model, glm::vec3(-0.5f*m_size, 0.f));
-    model = glm::scale(model, glm::vec3(m_size, 1.f));
+    model = glm::translate(model, glm::vec3(0.5f*size + position, 0.f));
+    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.f, 0.f, 1.f));
+    model = glm::translate(model, glm::vec3(-0.5f*size, 0.f));
+    model = glm::scale(model, glm::vec3(size, 1.f));
     
     m_pShaderProgram->setMatrix4("modelMat", model);
 
@@ -81,17 +78,5 @@ namespace RendererEngine {
     m_pTexture->bind();
 
     Renderer::draw(m_vertexArray, m_idexBuffer, *m_pShaderProgram);
-  }
-
-  void Sprite::setPosition(const glm::vec2 &position) noexcept {
-    m_position = position;
-  }
-
-  void Sprite::setSize(const glm::vec2 &size) noexcept {
-    m_size = size;
-  }
-
-  void Sprite::setRotation(const float rotation) noexcept {
-    m_rotation = rotation;
   }
 }

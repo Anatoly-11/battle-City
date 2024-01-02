@@ -23,6 +23,8 @@ ResourceManager::SpritesMap ResourceManager::m_sprites;
 
 ResourceManager::AnimatedSpritesMap ResourceManager::m_animatedSprites;
 
+vector <vector<string>> ResourceManager::m_levels;
+
 std::string ResourceManager::m_path;
 
 void ResourceManager::setExecutablePath(const std::string &executablePath) noexcept {
@@ -111,8 +113,7 @@ shared_ptr<RendererEngine::Texture2D> ResourceManager::getTexture(const string &
 }
 
 shared_ptr<RendererEngine::Sprite> ResourceManager::loadSprite(const std::string &spriteName,
-  const std::string &textureName, const std::string &shaderName, const unsigned int spriteWidth,
-  const unsigned int spriteHeight, const std::string &subTextureName) noexcept {
+  const std::string &textureName, const std::string &shaderName,  const std::string &subTextureName) noexcept {
   auto pTexture = getTexture(textureName);
   if(pTexture == nullptr) {
     cerr << "Can't find the texture: " << textureName << " for the sprite: " << spriteName << endl;
@@ -124,8 +125,7 @@ shared_ptr<RendererEngine::Sprite> ResourceManager::loadSprite(const std::string
     return nullptr;
   }
   if(shared_ptr<RendererEngine::Sprite> newSprite = m_sprites.emplace(spriteName,
-    make_shared<RendererEngine::Sprite>(pTexture, subTextureName, pShader, glm::vec2(0.f, 0.f),
-      glm::vec2(spriteWidth, spriteHeight))).first->second; newSprite != nullptr){
+    make_shared<RendererEngine::Sprite>(pTexture, subTextureName, pShader)).first->second; newSprite != nullptr){
     return newSprite;
   }
   cerr << "Can't load the sprite: " << spriteName << " ..." << endl;
@@ -142,8 +142,7 @@ shared_ptr<RendererEngine::Sprite> ResourceManager::getSprite(const string &spri
 }
 
 shared_ptr<RendererEngine::AnimatedSprite> ResourceManager::loadAnimatedSprite(const std::string &animatedSpriteName,
-  const std::string &textureName, const std::string &shaderName, const unsigned int spriteWidth,
-  const unsigned int spriteHeight, const std::string &subTextureName) noexcept {
+  const std::string &textureName, const std::string &shaderName, const std::string &subTextureName) noexcept {
   auto pTexture = getTexture(textureName);
   if(pTexture == nullptr) {
     cerr << "Can't find the texture: " << textureName << " for the animated sprite: " << animatedSpriteName << endl;
@@ -155,8 +154,7 @@ shared_ptr<RendererEngine::AnimatedSprite> ResourceManager::loadAnimatedSprite(c
     return nullptr;
   }
   if(shared_ptr<RendererEngine::AnimatedSprite> newSprite = m_animatedSprites.emplace(animatedSpriteName,
-    make_shared<RendererEngine::AnimatedSprite>(pTexture, subTextureName, pShader, glm::vec2(0.f, 0.f),
-      glm::vec2(spriteWidth, spriteHeight))).first->second; newSprite != nullptr){
+    make_shared<RendererEngine::AnimatedSprite>(pTexture, subTextureName, pShader)).first->second; newSprite != nullptr){
     return newSprite;
   }
   cerr << "Can't load the sprite: " << animatedSpriteName << " ..." << endl;
@@ -241,17 +239,27 @@ bool ResourceManager::loadJSONResources(const string &JSONPath) noexcept {
     }
   }
 
+  if(auto spritesIt = document.FindMember("sprites"); spritesIt != document.MemberEnd()) {
+    for(const auto& currentSprite : spritesIt->value.GetArray()) {
+      const string name = currentSprite["name"].GetString();
+      const string textureAtlas = currentSprite["textureAtlas"].GetString();
+      const string shader = currentSprite["shader"].GetString();
+      const string subTextureName = currentSprite["subTextureName"].GetString();
+      auto pSprite = loadSprite(name, textureAtlas, shader, subTextureName);
+      if(!pSprite) {
+        continue;
+      }
+    }
+  }
+
   if(auto animatedSpritesIt = document.FindMember("animatedSprites"); animatedSpritesIt
     != document.MemberEnd()) {
     for(const auto& currentAnimatedSprite : animatedSpritesIt->value.GetArray()) {
       const string name = currentAnimatedSprite["name"].GetString();
       const string textureAtlas = currentAnimatedSprite["textureAtlas"].GetString();
       const string shader = currentAnimatedSprite["shader"].GetString();
-      const unsigned int initialWidth = currentAnimatedSprite["initialWidth"].GetUint();
-      const unsigned int initialHeight = currentAnimatedSprite["initialHeight"].GetUint();
       const string initialSubTexture = currentAnimatedSprite["initialSubTexture"].GetString();
-      auto pAnimatedSprite = loadAnimatedSprite(name, textureAtlas, shader, initialWidth, initialHeight,
-        initialSubTexture);
+      auto pAnimatedSprite = loadAnimatedSprite(name, textureAtlas, shader, initialSubTexture);
       if(!pAnimatedSprite) {
         continue;
       }
@@ -262,7 +270,7 @@ bool ResourceManager::loadJSONResources(const string &JSONPath) noexcept {
         const auto framesArray = currentState["frames"].GetArray();
         frames.reserve(framesArray.Size());
         for(const auto& currentFrame : framesArray) {
-          const string subTesture = currentFrame["subTesture"].GetString();
+          const string subTesture = currentFrame["subTexture"].GetString();
           const uint64_t duration = currentFrame["duration"].GetUint64();
           frames.emplace_back(pair<string, uint64_t>(subTesture, duration));
         }
@@ -276,11 +284,24 @@ bool ResourceManager::loadJSONResources(const string &JSONPath) noexcept {
       const auto description = currentLevel["description"].GetArray();
       vector<string> levelRows;
       levelRows.reserve(description.Size());
-      for(const auto& currentRoow : description) {
-        levelRows.emplace_back(currentRoow.GetString());
+      size_t maxLength = 0;
+      for(const auto &currentRow : description) {
+        size_t curLen = levelRows.emplace_back(currentRow.GetString()).length();
+        if(curLen > maxLength) {
+          maxLength = curLen;
+        }
       }
-      //TODO...
+      for(auto &currentRow : levelRows) {
+        if(currentRow.length() < maxLength) {
+          currentRow += string(maxLength - currentRow.length(), 'D');
+        }
+      }
+      m_levels.emplace_back(move(levelRows));
     }
   }
   return true;
+}
+
+const vector<vector<string>> &ResourceManager::getLevels() noexcept {
+  return m_levels;
 }

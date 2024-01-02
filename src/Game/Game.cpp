@@ -7,36 +7,35 @@
 #include <iostream>
 #include <fstream>
 
-#include "Tank.h"
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-//std::ofstream log_f;
-//std::streambuf *cerrbuf = std::cerr.rdbuf(); //запомним старый буфер
+#include "Level.h"
+#include "GameObjects/Tank.h"
 
 Game::Game(const glm::ivec2 &_windowSize) noexcept : m_eCurrentGameState(EGameState::Active),
   m_windowSize(_windowSize) {
   m_keys.fill(false);
-  //log_f.open("LOG<LG", std::ios_base::ate);
-  //std::cerr.set_rdbuf(log_f.rdbuf());
 }
 
 Game::~Game() noexcept {
-  //delete m_pTank;
-  //log_f.close();
-  //std::cerr.rdbuf(cerrbuf);
 }
 
 void Game::render() noexcept {
-  //resourceManager->getSprite("NewSprite")->render();
-  ResourceManager::getAnimatedSprite("newAnimetedSprite")->render();
+  if(m_pLevel) {
+    m_pLevel->render();;
+  }
+
   if(m_pTank != nullptr) {
     m_pTank->render();
   }
 }
 
+
 void Game::update(const uint64_t delta) noexcept {
-  ResourceManager::getAnimatedSprite("newAnimetedSprite")->update(delta);
+  if(m_pLevel) {
+    m_pLevel->update(delta);
+  }
   if(m_pTank != nullptr) {
     if(m_keys[GLFW_KEY_W] || m_keys[GLFW_KEY_UP]) {
       m_pTank->setOrientation(Tank::EOrientation::Top);
@@ -64,6 +63,7 @@ void Game::setKey(const int key, const int action) noexcept {
 }
 
 bool Game::init() noexcept {
+
   ResourceManager::loadJSONResources("res/resources.json");
 
   auto pSpriteShaderProgram = ResourceManager::getShaderProgram("spriteShader");
@@ -83,24 +83,7 @@ bool Game::init() noexcept {
     std::cerr << "Can't find texture atlas: pTankTextureAtlas..." << std::endl;
     return false;
   }
-
-  auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("newAnimetedSprite", "mapTextureAtlas", 
-    "spriteShader", 100, 100, "concrete");
-  pAnimatedSprite->setPosition(glm::vec2(300, 300));
-
-  std::vector<std::pair<std::string, uint64_t>> waterState{{"water1", 1000000000}, {"water2", 1000000000},
-    {"water3", 1000000000}};
-
-  pAnimatedSprite->insertState("waterState", waterState);
-
-  pAnimatedSprite->setState("waterState");
-
-  /*glm::mat4 modelMatrix_1(1.f);
-  modelMatrix_1 = glm::translate(modelMatrix_1, glm::vec3(100.f, 51.f, 0.f));
-
-  glm::mat4 modelMatrix_2(1.f);
-  modelMatrix_2 = glm::translate(modelMatrix_2, glm::vec3(589.f, 51.f, 0.f));*/
-
+   
   glm::mat4 projectMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f,
     static_cast<float>(m_windowSize.y), -100.0f, 100.0f);
 
@@ -114,7 +97,9 @@ bool Game::init() noexcept {
     return false;
   }
 
-  m_pTank = make_unique<Tank>(pTankAnimatedSprite, 0.0000001f, glm::vec2(100.f, 100.f));
+  m_pTank = make_unique<Tank>(pTankAnimatedSprite, 5.e-8f, glm::vec2(0.f, 0.f), glm::vec2(16.f, 16.f));
+
+  m_pLevel = make_unique<Level>(ResourceManager::getLevels()[0]);
 
   return true;
 }

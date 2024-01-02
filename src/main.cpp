@@ -17,9 +17,9 @@
 
 using namespace std;
 
-glm::ivec2 g_windowSize(640, 480);
+glm::ivec2 g_windowSize(13 * 16, 14 * 16);
 
-Game g_game(g_windowSize);
+unique_ptr<Game> g_game = make_unique<Game>(g_windowSize);
 
 void glfwWindowSizeCallback(GLFWwindow *win, int width, int height) {
   g_windowSize.x = width;
@@ -31,7 +31,7 @@ void glfwKeyCallback(GLFWwindow *win, int key, int scan, int act, int mode) {
   if(key == GLFW_KEY_ESCAPE && act == GLFW_PRESS) {
     glfwSetWindowShouldClose(win, GL_TRUE);
   }
-  g_game.setKey(key, act);
+  g_game->setKey(key, act);
 }
 
 int main(int argc, char *argv[]) {
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
   cout << RendererEngine::Renderer::getInfo() << endl;
 
   ResourceManager::setExecutablePath(argv[0]);
-  if(!g_game.init()) {
+  if(!g_game->init()) {
     return -1;
   }
 
@@ -83,16 +83,16 @@ int main(int argc, char *argv[]) {
     auto currentTime = chrono::high_resolution_clock::now();
     uint64_t duration = chrono::duration_cast<chrono::nanoseconds>(currentTime - lastTime).count();
     lastTime = currentTime;
-    g_game.update(duration);
+    g_game->update(duration);
 
     // Render here
     RendererEngine::Renderer::clear();
-    g_game.render();
+    g_game->render();
 
     // Swap front and back buffers
     glfwSwapBuffers(win);
   }
-
+  g_game = nullptr;
   ResourceManager::unloadAllResources();
 
   glfwTerminate();

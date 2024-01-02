@@ -8,14 +8,10 @@
 namespace RendererEngine {
   class AnimatedSprite : public Sprite {
   public:
-    AnimatedSprite(const std::shared_ptr<Texture2D> &pTexture,
-      const std::string &initialSubTexture,
-      const std::shared_ptr<ShaderProgram> &pShaderProgram,
-      const glm::vec2 &position = glm::vec2(0.f),
-      const glm::vec2 &size = glm::vec2(1.f),
-      const float rotation = 0.f) noexcept;
-
-    virtual void render() const noexcept override;
+    AnimatedSprite(const std::shared_ptr<Texture2D> &pTexture, const std::string &initialSubTexture,
+      const std::shared_ptr<ShaderProgram> &pShaderProgram) noexcept;
+     
+    virtual void render(const glm::vec2 &position, const glm::vec2 &size, const float rotation) const noexcept override;
 
     void update(const uint64_t delta) noexcept;
     

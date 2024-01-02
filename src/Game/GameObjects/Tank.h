@@ -3,20 +3,22 @@
 
 #include <memory>
 #include <glm/vec2.hpp>
+#include "IGameObject.h"
 
 namespace RendererEngine{
   class AnimatedSprite;
 }
 
-class Tank {
+class Tank : public IGameObject {
 public:
   enum class EOrientation{
     Top, Bottom,  Left, Right
   };
 
-  Tank(const std::shared_ptr<RendererEngine::AnimatedSprite> pSprite, const float velocity, const glm::vec2 &position) noexcept;
+  Tank(const std::shared_ptr<RendererEngine::AnimatedSprite> pSprite, const float velocity,
+    const glm::vec2 &position, const glm::vec2 &size) noexcept;
 
-  void render() const noexcept;
+  virtual void render() const noexcept override;
 
   void setOrientation(const EOrientation eOrientation) noexcept;
 
@@ -24,7 +26,7 @@ public:
 
   bool getmove() const noexcept;
 
-  void update(const uint64_t delta) noexcept;
+  virtual void update(const uint64_t delta) noexcept override;
 private:
   EOrientation m_eOrientation;
   const std::shared_ptr<RendererEngine::AnimatedSprite> m_pSprite;

@@ -7,9 +7,8 @@ using namespace glm;
 
 namespace RendererEngine {
   AnimatedSprite::AnimatedSprite(const shared_ptr<Texture2D> &pTexture,
-    const string &initialSubTexture, const shared_ptr<ShaderProgram> &pShaderProgram,
-    const vec2 &position, const vec2 &size, const float rotation) noexcept : Sprite(pTexture, initialSubTexture,
-      pShaderProgram, position, size, rotation), m_currentFrame(0), m_currentAnimationTime(0),
+    const string &initialSubTexture, const shared_ptr<ShaderProgram> &pShaderProgram) noexcept
+    : Sprite(pTexture, initialSubTexture, pShaderProgram), m_currentFrame(0), m_currentAnimationTime(0),
     m_dirty(false) {
     m_pCurrentAnimationDurations = m_statesMap.end();
   }
@@ -47,7 +46,7 @@ namespace RendererEngine {
     }
   }
 
-  void AnimatedSprite::render() const noexcept {
+  void AnimatedSprite::render(const glm::vec2 &position, const glm::vec2 &size, const float rotation) const noexcept {
     if(m_dirty) {
       auto subTexture = m_pTexture->getSubTexture(m_pCurrentAnimationDurations->second[m_currentFrame].first);
       const GLfloat textureCoords[]{
@@ -60,6 +59,6 @@ namespace RendererEngine {
       const_cast<VertexBuffer*>(&m_textureCoordsBuffer)->update(textureCoords, 2 * 4 * sizeof(GLfloat));
       m_dirty = false;
     }
-    Sprite::render();
+    Sprite::render(position, size, rotation);
   }
 }

@@ -15,33 +15,40 @@ set(CMAKE_C_STANDARD 17)
 add_executable(${PROJECT_NAME}
 	src/main.cpp
 
-	src/Renderer/ShaderProgram.h
 	src/Renderer/ShaderProgram.cpp
-	src/Renderer/Texture2D.h
+	src/Renderer/ShaderProgram.h
 	src/Renderer/Texture2D.cpp
-	src/Renderer/Sprite.h
+	src/Renderer/Texture2D.h
 	src/Renderer/Sprite.cpp
-	src/Renderer/AnimatedSprite.h
+	src/Renderer/Sprite.h
 	src/Renderer/AnimatedSprite.cpp
-	src/Renderer/VertexBuffer.h
+	src/Renderer/AnimatedSprite.h
 	src/Renderer/VertexBuffer.cpp
-	src/Renderer/IndexBuffer.h
+	src/Renderer/VertexBuffer.h
 	src/Renderer/IndexBuffer.cpp
-	src/Renderer/VertexArray.h
+	src/Renderer/IndexBuffer.h
 	src/Renderer/VertexArray.cpp
-	src/Renderer/VertexBufferLayout.h
+	src/Renderer/VertexArray.h
 	src/Renderer/VertexBufferLayout.cpp
+	src/Renderer/VertexBufferLayout.h
 	src/Renderer/Renderer.cpp
 	src/Renderer/Renderer.h
 
-	src/Resources/ResourceManager.h
 	src/Resources/ResourceManager.cpp
+	src/Resources/ResourceManager.h
 	src/Resources/stb_image.h
 
-	src/Game/Game.h
 	src/Game/Game.cpp
-	src/Game/Tank.h
-	src/Game/Tank.cpp
+	src/Game/Game.h
+	src/Game/Level.cpp
+	src/Game/Level.h
+
+	src/Game/GameObjects/IGameObject.cpp
+	src/Game/GameObjects/IGameObject.h
+	src/Game/GameObjects/BrickWall.cpp
+	src/Game/GameObjects/BrickWall.h
+	src/Game/GameObjects/Tank.cpp
+	src/Game/GameObjects/Tank.h
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
