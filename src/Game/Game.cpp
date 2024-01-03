@@ -3,7 +3,6 @@
 #include "../Resources/ResourceManager.h"
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Sprite.h"
-#include "../Renderer/AnimatedSprite.h"
 #include <iostream>
 #include <fstream>
 
@@ -27,7 +26,7 @@ void Game::render() noexcept {
   }
 
   if(m_pLevel) {
-    m_pLevel->render();;
+    m_pLevel->render();
   }
 }
 
@@ -91,13 +90,9 @@ bool Game::init() noexcept {
   pSpriteShaderProgram->setInt("tex", 0);
   pSpriteShaderProgram->setMatrix4("projectionMat", projectMatrix);
 
-  auto pTankAnimatedSprite = ResourceManager::getAnimatedSprite("tankAnimatedSprite");
-  if(!pTankAnimatedSprite) {
-    std::cerr << "Can't find animated sprite: tankAnimatedSprite..." << std::endl;
-    return false;
-  }
-
-  m_pTank = make_unique<Tank>(pTankAnimatedSprite, 5.e-8f, glm::vec2(0.f, 0.f), glm::vec2(16.f, 16.f));
+    m_pTank = make_unique<Tank>(ResourceManager::getSprite("tankSprite_top"), ResourceManager::getSprite("tankSprite_bottom"), 
+    ResourceManager::getSprite("tankSprite_left"), ResourceManager::getSprite("tankSprite_right"), 5.e-8f, glm::vec2(0.f, 0.f), 
+    glm::vec2(16.f, 16.f));
 
   m_pLevel = make_unique<Level>(ResourceManager::getLevels()[0]);
 

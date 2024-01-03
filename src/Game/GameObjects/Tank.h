@@ -4,9 +4,10 @@
 #include <memory>
 #include <glm/vec2.hpp>
 #include "IGameObject.h"
+#include "../../Renderer/SpriteAnimator.h"
 
 namespace RendererEngine{
-  class AnimatedSprite;
+  class Sprite;
 }
 
 class Tank : public IGameObject {
@@ -15,7 +16,8 @@ public:
     Top, Bottom,  Left, Right
   };
 
-  Tank(const std::shared_ptr<RendererEngine::AnimatedSprite> pSprite, const float velocity,
+  Tank(std::shared_ptr<RendererEngine::Sprite> pSprite_top, std::shared_ptr<RendererEngine::Sprite> pSprite_bottom,
+    std::shared_ptr<RendererEngine::Sprite> pSprite_left, std::shared_ptr<RendererEngine::Sprite> pSprite_right, const float velocity,
     const glm::vec2 &position, const glm::vec2 &size) noexcept;
 
   virtual void render() const noexcept override;
@@ -29,7 +31,16 @@ public:
   virtual void update(const uint64_t delta) noexcept override;
 private:
   EOrientation m_eOrientation;
-  const std::shared_ptr<RendererEngine::AnimatedSprite> m_pSprite;
+  std::shared_ptr<RendererEngine::Sprite> m_pSprite_top;
+  std::shared_ptr<RendererEngine::Sprite> m_pSprite_bottom;
+  std::shared_ptr<RendererEngine::Sprite> m_pSprite_left;
+  std::shared_ptr<RendererEngine::Sprite> m_pSprite_right;
+
+  RendererEngine::SpriteAnimator m_spriteAnimator_top;
+  RendererEngine::SpriteAnimator m_spriteAnimator_bottom;
+  RendererEngine::SpriteAnimator m_spriteAnimator_left;
+  RendererEngine::SpriteAnimator m_spriteAnimator_right;
+
   bool m_move;
   float m_velocity;
   glm::vec2 m_position;

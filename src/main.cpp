@@ -7,11 +7,7 @@
 #include <iostream>
 #include <chrono>
 
-#include "Renderer/ShaderProgram.h"
 #include "Resources/ResourceManager.h"
-#include "Renderer/Texture2D.h"
-#include "Renderer/Sprite.h"
-#include "Renderer/AnimatedSprite.h"
 #include "Game/Game.h"
 #include "Renderer/Renderer.h"
 

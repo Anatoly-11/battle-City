@@ -8,7 +8,6 @@
 #include "stb_image.h"
 #include "../Renderer/Texture2D.h"
 #include "../Renderer/Sprite.h"
-#include "../Renderer/AnimatedSprite.h"
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
 #include <filesystem>
@@ -22,8 +21,6 @@ ResourceManager::TextureMap ResourceManager::m_textures;
 
 ResourceManager::SpritesMap ResourceManager::m_sprites;
 
-ResourceManager::AnimatedSpritesMap ResourceManager::m_animatedSprites;
-
 vector <vector<string>> ResourceManager::m_levels;
 
 std::string ResourceManager::m_path;
@@ -36,7 +33,6 @@ void ResourceManager::unloadAllResources() noexcept {
   m_shaderPrograms.clear();
   m_textures.clear();
   m_sprites.clear();
-  m_animatedSprites.clear();
   m_path.clear();
 }
 
@@ -141,36 +137,6 @@ shared_ptr<RendererEngine::Sprite> ResourceManager::getSprite(const string &spri
   return it->second;
 }
 
-shared_ptr<RendererEngine::AnimatedSprite> ResourceManager::loadAnimatedSprite(const std::string &animatedSpriteName,
-  const std::string &textureName, const std::string &shaderName, const std::string &subTextureName) noexcept {
-  auto pTexture = getTexture(textureName);
-  if(pTexture == nullptr) {
-    cerr << "Can't find the texture: " << textureName << " for the animated sprite: " << animatedSpriteName << endl;
-    return nullptr;
-  }
-  auto pShader = getShaderProgram(shaderName);
-  if(pShader == nullptr) {
-    cerr << "Can't find the shader: " << shaderName << " for the sprite: " << animatedSpriteName << endl;
-    return nullptr;
-  }
-  if(shared_ptr<RendererEngine::AnimatedSprite> newSprite = m_animatedSprites.emplace(animatedSpriteName,
-    make_shared<RendererEngine::AnimatedSprite>(pTexture, subTextureName, pShader)).first->second; newSprite != nullptr){
-    return newSprite;
-  }
-  cerr << "Can't load the sprite: " << animatedSpriteName << " ..." << endl;
-  return nullptr;
-}
-
-shared_ptr<RendererEngine::AnimatedSprite> ResourceManager::getAnimatedSprite(
-  const string &animatedSpriteName) noexcept{
-  auto it = m_animatedSprites.find(animatedSpriteName);
-  if(it == m_animatedSprites.end()) {
-    cerr << "Can't find the animated sprite: " << animatedSpriteName << endl;
-    return nullptr;
-  }
-  return it->second;
-}
-
 std::shared_ptr<RendererEngine::Texture2D> ResourceManager::loadTextureAtlas(const std::string &textureName,
   const std::string texturePath, std::vector<std::string> &subTextures, const unsigned int subTextureWidth,
   const unsigned int subTextureHeight) noexcept {
@@ -244,37 +210,24 @@ bool ResourceManager::loadJSONResources(const string &JSONPath) noexcept {
       const string name = currentSprite["name"].GetString();
       const string textureAtlas = currentSprite["textureAtlas"].GetString();
       const string shader = currentSprite["shader"].GetString();
-      const string subTextureName = currentSprite["subTextureName"].GetString();
-      auto pSprite = loadSprite(name, textureAtlas, shader, subTextureName);
+      const string initialSubTexture = currentSprite["initialSubTexture"].GetString();
+      auto pSprite = loadSprite(name, textureAtlas, shader, initialSubTexture);
       if(!pSprite) {
         continue;
       }
-    }
-  }
-
-  if(auto animatedSpritesIt = document.FindMember("animatedSprites"); animatedSpritesIt
-    != document.MemberEnd()) {
-    for(const auto& currentAnimatedSprite : animatedSpritesIt->value.GetArray()) {
-      const string name = currentAnimatedSprite["name"].GetString();
-      const string textureAtlas = currentAnimatedSprite["textureAtlas"].GetString();
-      const string shader = currentAnimatedSprite["shader"].GetString();
-      const string initialSubTexture = currentAnimatedSprite["initialSubTexture"].GetString();
-      auto pAnimatedSprite = loadAnimatedSprite(name, textureAtlas, shader, initialSubTexture);
-      if(!pAnimatedSprite) {
-        continue;
-      }
-      const auto statesArray = currentAnimatedSprite["states"].GetArray();
-      for(const auto& currentState : statesArray) {
-        const string stateName = currentState["stateName"].GetString();
-        vector<pair<string, uint64_t>> frames;
-        const auto framesArray = currentState["frames"].GetArray();
-        frames.reserve(framesArray.Size());
+      if(auto framesIt = currentSprite.FindMember("frames"); framesIt != currentSprite.MemberEnd())
+      {
+        const auto framesArray = framesIt->value.GetArray();
+        vector<RendererEngine::Sprite::FrameDescription> framesDescriptions;
+        framesDescriptions.reserve(framesArray.Size());
         for(const auto& currentFrame : framesArray) {
-          const string subTesture = currentFrame["subTexture"].GetString();
+          const string subTextureStr = currentFrame["subTexture"].GetString();
           const uint64_t duration = currentFrame["duration"].GetUint64();
-          frames.emplace_back(pair<string, uint64_t>(subTesture, duration));
+          const auto pTextureAtlas = getTexture(textureAtlas);
+          const auto pSubTexture = pTextureAtlas->getSubTexture(subTextureStr);
+          framesDescriptions.emplace_back(pSubTexture.leftBottomUV, pSubTexture.rightTopUV, duration);
         }
-        pAnimatedSprite->insertState(stateName, frames);
+        pSprite->insertFrames(move(framesDescriptions));
       }
     }
   }

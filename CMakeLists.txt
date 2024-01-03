@@ -3,14 +3,12 @@ cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 
 SET(PROJECT_NAME BattleCity)
 
-project(${PROJECT_NAME} VERSION 1.0.0)
-#target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20) 
-#target_compile_features(${PROJECT_NAME} PUBLIC c17) 
 
-#set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+project(${PROJECT_NAME} VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(${PROJECT_NAME}
 	src/main.cpp
@@ -21,8 +19,6 @@ add_executable(${PROJECT_NAME}
 	src/Renderer/Texture2D.h
 	src/Renderer/Sprite.cpp
 	src/Renderer/Sprite.h
-	src/Renderer/AnimatedSprite.cpp
-	src/Renderer/AnimatedSprite.h
 	src/Renderer/VertexBuffer.cpp
 	src/Renderer/VertexBuffer.h
 	src/Renderer/IndexBuffer.cpp
@@ -33,6 +29,8 @@ add_executable(${PROJECT_NAME}
 	src/Renderer/VertexBufferLayout.h
 	src/Renderer/Renderer.cpp
 	src/Renderer/Renderer.h
+	src/Renderer/SpriteAnimator.cpp
+	src/Renderer/SpriteAnimator.h
 
 	src/Resources/ResourceManager.cpp
 	src/Resources/ResourceManager.h
