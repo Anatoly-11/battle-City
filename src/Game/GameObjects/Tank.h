@@ -16,9 +16,7 @@ public:
     Top, Bottom,  Left, Right
   };
 
-  Tank(std::shared_ptr<RendererEngine::Sprite> pSprite_top, std::shared_ptr<RendererEngine::Sprite> pSprite_bottom,
-    std::shared_ptr<RendererEngine::Sprite> pSprite_left, std::shared_ptr<RendererEngine::Sprite> pSprite_right, const float velocity,
-    const glm::vec2 &position, const glm::vec2 &size) noexcept;
+  Tank(const float velocity, const glm::vec2 &position, const glm::vec2 &size) noexcept;
 
   virtual void render() const noexcept override;
 
