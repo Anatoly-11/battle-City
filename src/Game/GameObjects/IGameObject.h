@@ -7,7 +7,7 @@ class IGameObject {
 public:
   IGameObject(const glm::vec2 &position, const glm::vec2 &size, const float rotation) noexcept;
   virtual void render() const noexcept = 0;
-  virtual void update(const uint64_t delta) noexcept = 0;
+  virtual void update(const uint64_t delta) noexcept {};
   virtual ~IGameObject() noexcept;
 protected:
   glm::vec2 m_position;

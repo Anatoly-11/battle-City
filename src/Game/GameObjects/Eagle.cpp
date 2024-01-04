@@ -1,0 +1,17 @@
+#include "Eagle.h"
+#include "../../Renderer/Sprite.h"
+#include "../../Resources/ResourceManager.h"
+
+Eagle::Eagle(const glm::vec2 &position,
+  const glm::vec2 &size, const float rotation) noexcept : IGameObject(position, size, rotation),
+  m_sprites{ResourceManager::getSprite("eagle"), ResourceManager::getSprite("eagle_dead")},
+  m_eCurrentEagleState(EEagleState::Alive) {
+}
+
+void Eagle::render() const noexcept {
+  m_sprites[static_cast<size_t>(m_eCurrentEagleState)]->render(m_position, m_size, m_rotation);
+}
+
+void Eagle::update(const uint64_t delta) noexcept {
+
+}

@@ -2,8 +2,10 @@
 #include "Sprite.h"
 
 namespace RendererEngine {
-  SpriteAnimator::SpriteAnimator(const std::shared_ptr<Sprite> pSprite) noexcept
-    : m_pSprite(pSprite), m_currentFrame(0), m_currentFrameDuration(pSprite->getFrameDuration(0)),
+  SpriteAnimator::SpriteAnimator(std::shared_ptr<Sprite> pSprite) noexcept : 
+    m_pSprite(std::move(pSprite)),
+    m_currentFrame(0),
+    m_currentFrameDuration(m_pSprite->getFrameDuration(0)),
     m_currentAnimationTime(0) {
   }
 
@@ -12,7 +14,7 @@ namespace RendererEngine {
   }
 
   void SpriteAnimator::update(const uint64_t delta) noexcept {
-
+    m_currentAnimationTime += delta;
     while(m_currentAnimationTime >= m_currentFrameDuration) {
       m_currentAnimationTime -= m_currentFrameDuration;
       ++m_currentFrame;
