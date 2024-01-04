@@ -17,11 +17,12 @@ glm::ivec2 g_windowSize(13 * 16, 14 * 16);
 
 unique_ptr<Game> g_game = make_unique<Game>(g_windowSize);
 
-constexpr float map_aspect_ratio = 13.f / 14.f;
 
 void glfwWindowSizeCallback(GLFWwindow *win, int width, int height) {
   g_windowSize.x = width;
   g_windowSize.y = height;
+
+  const float map_aspect_ratio = static_cast<float>(g_game->getCurrentLevelWidth()) / g_game->getCurrentLevelHeight();
   unsigned int viewPortWidth = g_windowSize.x;
   unsigned int viewPortHeight = g_windowSize.y;
   unsigned int viewPortLeftOffset = 0;
@@ -76,9 +77,8 @@ int main(int argc, char *argv[]) {
   cout << RendererEngine::Renderer::getInfo() << endl;
 
   ResourceManager::setExecutablePath(argv[0]);
-  if(!g_game->init()) {
-    return -1;
-  }
+  g_game->init();
+  glfwSetWindowSize(win, static_cast<int>(g_game->getCurrentLevelWidth()), static_cast<int>(g_game->getCurrentLevelHeight()));
 
   auto lastTime = chrono::high_resolution_clock::now();
 

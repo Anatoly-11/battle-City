@@ -57,6 +57,8 @@ add_executable(${PROJECT_NAME}
 	src/Game/GameObjects/Water.h
 	src/Game/GameObjects/Eagle.cpp
 	src/Game/GameObjects/Eagle.h
+	src/Game/GameObjects/Border.cpp
+	src/Game/GameObjects/Border.h
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

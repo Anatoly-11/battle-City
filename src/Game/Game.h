@@ -22,6 +22,10 @@ public:
 
   bool init() noexcept;
 
+  size_t getCurrentLevelWidth() const noexcept;
+
+  size_t getCurrentLevelHeight() const noexcept;
+
 private:
   std::array<bool, 349> m_keys;
 

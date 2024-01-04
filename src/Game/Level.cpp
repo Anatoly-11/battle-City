@@ -6,6 +6,7 @@
 #include "GameObjects/Ice.h"
 #include "GameObjects/Water.h"
 #include "GameObjects/Eagle.h"
+#include "GameObjects/Border.h"
 
 #include <iostream>
 constexpr unsigned int BLOCK_SIZE = 16;
@@ -65,22 +66,42 @@ Level::Level(const std::vector<std::string> &levelDescription) noexcept {
   }
   m_width = levelDescription[0].length();
   m_height = levelDescription.size();
-  m_mapObjects.reserve(m_width * m_height);
-  unsigned int currentBottonOffset = BLOCK_SIZE * (m_height - 1);
+  m_levelObjects.reserve(m_width * m_height + 4);
+  unsigned int currentBottonOffset = BLOCK_SIZE * (m_height - 0.5f);
   for(const std::string &currentRow : levelDescription) {
-    unsigned int currentLeftOffset = 0;
+    unsigned int currentLeftOffset = BLOCK_SIZE;
     for(const char currentElement : currentRow) {
-      m_mapObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottonOffset),
+      m_levelObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottonOffset),
         glm::vec2(BLOCK_SIZE, BLOCK_SIZE), 0.f));
 
       currentLeftOffset += BLOCK_SIZE;
     }
     currentBottonOffset -= BLOCK_SIZE;
   }
+  // bottom border
+  m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((float)BLOCK_SIZE, 0.f),
+    glm::vec2(m_width * BLOCK_SIZE, BLOCK_SIZE >> 1), 0.f, 0.f));
+  // top border
+  m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((float)BLOCK_SIZE, (m_height + 0.5f) * BLOCK_SIZE),
+    glm::vec2(m_width * BLOCK_SIZE, BLOCK_SIZE >> 1), 0.f, 0.f));
+  // left border
+  m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(0.f),
+    glm::vec2(BLOCK_SIZE, (m_height + 1.f) * BLOCK_SIZE), 0.f, 0.f));
+  // right border
+  m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((m_width + 1) * BLOCK_SIZE, 0.f),
+    glm::vec2(BLOCK_SIZE << 1, (m_height + 1.f) * BLOCK_SIZE), 0.f, 0.f));
+}
+
+size_t Level::getLevelWidth() const noexcept {
+  return (m_width + 3) * BLOCK_SIZE;
+}
+
+size_t Level::getLevelHeight() const noexcept {
+  return (m_height + 1) * BLOCK_SIZE;
 }
 
 void Level::render() const noexcept {
-  for(const auto &currentMapObject : m_mapObjects) {
+  for(const auto &currentMapObject : m_levelObjects) {
     if(currentMapObject) {
       currentMapObject->render();
     }
@@ -88,7 +109,7 @@ void Level::render() const noexcept {
 }
 
 void Level::update(const uint64_t delta) noexcept {
-  for(const auto &currentMapObject : m_mapObjects) {
+  for(const auto &currentMapObject : m_levelObjects) {
     if(currentMapObject) {
       currentMapObject->update(delta);
     }

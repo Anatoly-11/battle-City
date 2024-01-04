@@ -68,6 +68,11 @@ bool Game::init() noexcept {
     return false;
   }
 
+  m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[1]);
+  m_windowSize.x = static_cast<int>(m_pLevel->getLevelWidth());
+  m_windowSize.y = static_cast<int>(m_pLevel->getLevelHeight());
+
+
   glm::mat4 projectMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f,
     static_cast<float>(m_windowSize.y), -100.0f, 100.0f);
 
@@ -76,8 +81,13 @@ bool Game::init() noexcept {
   pSpriteShaderProgram->setMatrix4("projectionMat", projectMatrix);
 
   m_pTank = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f), 0.f);
-
-  m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[1]);
-
   return true;
+}
+
+size_t Game::getCurrentLevelWidth() const noexcept {
+  return m_pLevel->getLevelWidth();
+}
+
+size_t Game::getCurrentLevelHeight() const noexcept {
+  return m_pLevel->getLevelHeight();
 }
