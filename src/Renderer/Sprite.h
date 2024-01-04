@@ -36,7 +36,8 @@ namespace RendererEngine
 
     ~Sprite() noexcept;
 
-    void render(const glm::vec2 &position, const glm::vec2 &size, const float rotation, const size_t frameId = 0) const noexcept;
+    void render(const glm::vec2 &position, const glm::vec2 &size, const float rotation, const float layer = 0.f,
+      const size_t frameId = 0) const noexcept;
 
     uint64_t getFrameDuration(const size_t frameId) const noexcept;
 
@@ -49,7 +50,7 @@ namespace RendererEngine
 
     VertexArray m_vertexArray;
     VertexBuffer m_vertexCoordsBuffer;
-    VertexBuffer m_textureCoordsBuffer;
+    mutable VertexBuffer m_textureCoordsBuffer;
     IndexBuffer m_idexBuffer;
     std::vector<FrameDescription> m_framesDescriptions;
     mutable size_t lastFrameId;

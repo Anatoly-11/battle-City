@@ -3,7 +3,7 @@
 #include "../../Resources/ResourceManager.h"
 
 BetonWall::BetonWall(const EBetonWallType eBetonWallType, const glm::vec2 &position,
-  const glm::vec2 &size, const float rotation) noexcept : IGameObject(position, size, rotation),
+  const glm::vec2 &size, const float rotation, const float layer) noexcept : IGameObject(position, size, rotation, layer),
   m_eCurrentBlockState{ EBlockState::Destroyed,
                         EBlockState::Destroyed,
                         EBlockState::Destroyed,
@@ -53,7 +53,7 @@ BetonWall::BetonWall(const EBetonWallType eBetonWallType, const glm::vec2 &posit
 void BetonWall::renderBlock(const EBlockLocation eBlockLocation) const noexcept {
   const EBlockState state = m_eCurrentBlockState[(size_t)eBlockLocation];
   if(state != EBlockState::Destroyed) {
-    m_sprite->render(m_position + m_blockOffsets[(size_t)eBlockLocation], m_size /2.f, m_rotation);
+    m_sprite->render(m_position + m_blockOffsets[(size_t)eBlockLocation], m_size /2.f, m_rotation, m_layer);
   }
 }
 

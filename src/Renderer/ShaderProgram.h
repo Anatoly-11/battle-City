@@ -23,6 +23,7 @@ namespace RendererEngine {
 		bool isCompiled() const noexcept;
 		void use() const noexcept;
 		void setInt(const std::string &name, const GLint value) noexcept;
+		void setFloat(const std::string &name, const GLfloat value) noexcept;
 		void setMatrix4(const std::string &name, const glm::mat4 &matr) noexcept;
 	};
 }

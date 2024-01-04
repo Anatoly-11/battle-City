@@ -17,7 +17,7 @@ public:
     Alive = 0,
     Dead
   };
-  Eagle(const glm::vec2 &position, const glm::vec2 &size, const float rotation) noexcept;
+  Eagle(const glm::vec2 &position, const glm::vec2 &size, const float rotation, const float layer) noexcept;
   virtual void render() const noexcept override;
   virtual void update(const uint64_t delta) noexcept override;
 private:

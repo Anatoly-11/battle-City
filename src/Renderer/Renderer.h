@@ -12,6 +12,8 @@ namespace RendererEngine {
     static void draw(const VertexArray &vertexArray, const IndexBuffer &indexBuffer,
       const ShaderProgram &shader) noexcept;
     static void setClearColor(const float r, const float g, const float b, const float a) noexcept;
+    static void setDepthTest(const bool enable) noexcept;
+
     static void clear() noexcept;
     static void setViewport(const unsigned int width, const unsigned int height,
       const unsigned int leftOffset = 0, const unsigned int bottomOffset = 0) noexcept;

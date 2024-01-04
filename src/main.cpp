@@ -84,6 +84,8 @@ int main(int argc, char *argv[]) {
 
   RendererEngine::Renderer::setClearColor(0.f, 0.f, 0.f, 1.f);
 
+  RendererEngine::Renderer::setDepthTest(true);
+
   // Loop until the user closes the window
   while(!glfwWindowShouldClose(win)) {
     // Poll for and process events

@@ -16,7 +16,7 @@ public:
     Top, Bottom,  Left, Right
   };
 
-  Tank(const float velocity, const glm::vec2 &position, const glm::vec2 &size) noexcept;
+  Tank(const float velocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept;
 
   virtual void render() const noexcept override;
 

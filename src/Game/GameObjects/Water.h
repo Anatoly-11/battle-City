@@ -24,7 +24,7 @@ public:
     BottomRight
   };
 
-  Water(const glm::vec2 &position, const glm::vec2 &size, const float rotation) noexcept;
+  Water(const glm::vec2 &position, const glm::vec2 &size, const float rotation, const float layer) noexcept;
   void render() const noexcept override;
   void update(const uint64_t delta) noexcept override;
 

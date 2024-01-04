@@ -7,8 +7,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace RendererEngine
-{
+namespace RendererEngine {
 
   Sprite::Sprite(const std::shared_ptr<Texture2D> &pTexture,
     const std::string &initialSubTexture,
@@ -65,8 +64,8 @@ namespace RendererEngine
     //glDeleteVertexArrays(1, &m_VAO);
   }
 
-  void Sprite::render(const glm::vec2 &position, const glm::vec2 &size, const float rotation, const size_t frameId) const noexcept
-  { 
+  void Sprite::render(const glm::vec2 &position, const glm::vec2 &size, const float rotation, const float layer,
+    const size_t frameId) const noexcept { 
     if(lastFrameId != frameId)
     {
       lastFrameId = frameId;
@@ -78,7 +77,7 @@ namespace RendererEngine
         currentFrameDescription.rightTopUV.x, currentFrameDescription.rightTopUV.y,
         currentFrameDescription.rightTopUV.x, currentFrameDescription.leftBottomUV.y,
       };
-      const_cast<VertexBuffer*>(&m_textureCoordsBuffer)->update(textureCoords, 2 * 4 * sizeof(GLfloat));
+      m_textureCoordsBuffer.update(textureCoords, 2 * 4 * sizeof(GLfloat));
     }
 
     m_pShaderProgram->use();
@@ -90,6 +89,8 @@ namespace RendererEngine
     model = glm::scale(model, glm::vec3(size, 1.f));
 
     m_pShaderProgram->setMatrix4("modelMat", model);
+
+    m_pShaderProgram->setFloat("layer", layer);
 
     glActiveTexture(GL_TEXTURE0);
 

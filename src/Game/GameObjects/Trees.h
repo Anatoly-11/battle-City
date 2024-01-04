@@ -20,7 +20,7 @@ public:
     BottomRight
   };
 
-  Trees(const glm::vec2 &position, const glm::vec2 &size, const float rotation) noexcept;
+  Trees(const glm::vec2 &position, const glm::vec2 &size, const float rotation, const float layer) noexcept;
   virtual void render() const noexcept override;
 private:
   void renderBlock(const EBlockLocation eBlockLocation) const noexcept;
