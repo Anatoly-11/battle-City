@@ -10,8 +10,6 @@
 
 #include <iostream>
 
-extern const unsigned int BLOCK_SIZE = 16;
-
 std::shared_ptr<IGameObject> createGameObjectFromDescription(const char description,
   const glm::vec2 &position, const glm::vec2 &size, const float rotation) {
   switch(description)
@@ -68,14 +66,39 @@ Level::Level(const std::vector<std::string> &levelDescription) noexcept {
   }
   m_width = levelDescription[0].length();
   m_height = levelDescription.size();
+
+  m_playerRespawn_1 = {BLOCK_SIZE * ((m_width >> 1) - 1), BLOCK_SIZE >> 1};
+  m_playerRespawn_2 = {BLOCK_SIZE * ((m_width >> 1) + 3), BLOCK_SIZE >> 1};
+  m_enemyRespawn_1  = {BLOCK_SIZE,                        BLOCK_SIZE * (m_height - 0.5f)};
+  m_enemyRespawn_2  = {BLOCK_SIZE * ((m_width >> 1) + 1), BLOCK_SIZE * (m_height - 0.5f)};
+  m_enemyRespawn_3  = {BLOCK_SIZE * m_width,              BLOCK_SIZE * (m_height - 0.5f)};
+  
   m_levelObjects.reserve(m_width * m_height + 4);
-  unsigned int currentBottonOffset = BLOCK_SIZE * (m_height - 0.5f);
+    unsigned int currentBottonOffset = BLOCK_SIZE * (m_height - 0.5f);
   for(const std::string &currentRow : levelDescription) {
     unsigned int currentLeftOffset = BLOCK_SIZE;
     for(const char currentElement : currentRow) {
-      m_levelObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottonOffset),
-        glm::vec2(BLOCK_SIZE, BLOCK_SIZE), 0.f));
-
+      switch(currentElement) {
+      case 'K':
+        m_playerRespawn_1 = {currentLeftOffset, currentBottonOffset};
+        break;
+      case 'L':
+        m_playerRespawn_2 = {currentLeftOffset, currentBottonOffset};
+        break;
+      case 'M':
+        m_enemyRespawn_1 = {currentLeftOffset, currentBottonOffset};
+        break;
+      case 'N':
+        m_enemyRespawn_2 = {currentLeftOffset, currentBottonOffset};
+        break;
+      case 'O':
+        m_enemyRespawn_3 = {currentLeftOffset, currentBottonOffset};
+        break;
+      default:
+        m_levelObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset,
+          currentBottonOffset), glm::vec2(BLOCK_SIZE, BLOCK_SIZE), 0.f));
+        break;
+      }
       currentLeftOffset += BLOCK_SIZE;
     }
     currentBottonOffset -= BLOCK_SIZE;
@@ -116,4 +139,24 @@ void Level::update(const uint64_t delta) noexcept {
       currentMapObject->update(delta);
     }
   }
+}
+
+const glm::ivec2 &Level::getPlayerRespawn_1() const noexcept {
+  return m_playerRespawn_1;
+}
+
+const glm::ivec2 &Level::getPlayerRespawn_2() const noexcept {
+  return m_playerRespawn_2;
+}
+
+const glm::ivec2 &Level::getEnemyRespawn_1() const noexcept {
+  return m_enemyRespawn_1;
+}
+
+const glm::ivec2 &Level::getEnemyRespawn_2() const noexcept {
+  return m_enemyRespawn_2;
+}
+
+const glm::ivec2 &Level::getEnemyRespawn_3() const noexcept {
+  return m_enemyRespawn_3;
 }
