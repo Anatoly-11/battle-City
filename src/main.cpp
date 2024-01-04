@@ -77,8 +77,10 @@ int main(int argc, char *argv[]) {
   cout << RendererEngine::Renderer::getInfo() << endl;
 
   ResourceManager::setExecutablePath(argv[0]);
+  
   g_game->init();
-  glfwSetWindowSize(win, static_cast<int>(g_game->getCurrentLevelWidth()), static_cast<int>(g_game->getCurrentLevelHeight()));
+  glfwSetWindowSize(win, static_cast<int>(g_game->getCurrentLevelWidth()),
+    static_cast<int>(g_game->getCurrentLevelHeight()));
 
   auto lastTime = chrono::high_resolution_clock::now();
 

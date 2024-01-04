@@ -9,7 +9,9 @@
 #include "GameObjects/Border.h"
 
 #include <iostream>
-constexpr unsigned int BLOCK_SIZE = 16;
+
+extern const unsigned int BLOCK_SIZE = 16;
+
 std::shared_ptr<IGameObject> createGameObjectFromDescription(const char description,
   const glm::vec2 &position, const glm::vec2 &size, const float rotation) {
   switch(description)

@@ -11,6 +11,8 @@
 #include "Level.h"
 #include "GameObjects/Tank.h"
 
+extern const unsigned int BLOCK_SIZE;
+
 Game::Game(const glm::ivec2 &_windowSize) noexcept : m_eCurrentGameState(EGameState::Active),
   m_windowSize(_windowSize) {
   m_keys.fill(false);
@@ -80,7 +82,7 @@ bool Game::init() noexcept {
   pSpriteShaderProgram->setInt("tex", 0);
   pSpriteShaderProgram->setMatrix4("projectionMat", projectMatrix);
 
-  m_pTank = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f), 0.f);
+  m_pTank = std::make_unique<Tank>(0.0000001f, glm::vec2(BLOCK_SIZE, BLOCK_SIZE>>1), glm::vec2(16.f, 16.f), 0.f);
   return true;
 }
 
