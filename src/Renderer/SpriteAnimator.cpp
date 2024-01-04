@@ -13,7 +13,7 @@ namespace RendererEngine {
     return m_currentFrame;
   }
 
-  void SpriteAnimator::update(const uint64_t delta) noexcept {
+  void SpriteAnimator::update(const double delta) noexcept {
     m_currentAnimationTime += delta;
     while(m_currentAnimationTime >= m_currentFrameDuration) {
       m_currentAnimationTime -= m_currentFrameDuration;

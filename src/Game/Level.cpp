@@ -133,7 +133,7 @@ void Level::render() const noexcept {
   }
 }
 
-void Level::update(const uint64_t delta) noexcept {
+void Level::update(const double delta) noexcept {
   for(const auto &currentMapObject : m_levelObjects) {
     if(currentMapObject) {
       currentMapObject->update(delta);

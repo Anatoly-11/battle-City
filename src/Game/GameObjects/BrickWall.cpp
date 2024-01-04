@@ -78,5 +78,5 @@ void BrickWall::render() const noexcept {
   renderBrick(EBrickLocation::TopLeft);
 }
 
-void BrickWall::update(const uint64_t delta) noexcept {
+void BrickWall::update(const double delta) noexcept {
 }

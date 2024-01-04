@@ -15,7 +15,7 @@ public:
 
 	Level(const std::vector<std::string> &levelDescription) noexcept;
 	void render() const noexcept;
-	void update(const uint64_t delta) noexcept;
+	void update(const double delta) noexcept;
 	size_t getLevelWidth() const noexcept;
 	size_t getLevelHeight() const noexcept;
 

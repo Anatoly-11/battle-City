@@ -12,6 +12,6 @@ void Eagle::render() const noexcept {
   m_sprites[static_cast<size_t>(m_eCurrentEagleState)]->render(m_position, m_size, m_rotation, m_layer);
 }
 
-void Eagle::update(const uint64_t delta) noexcept {
+void Eagle::update(const double delta) noexcept {
 
 }

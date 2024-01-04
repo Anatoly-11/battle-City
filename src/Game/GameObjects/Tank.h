@@ -5,6 +5,7 @@
 #include <glm/vec2.hpp>
 #include "IGameObject.h"
 #include "../../Renderer/SpriteAnimator.h"
+#include "../../System/Timer.h"
 
 namespace RendererEngine{
   class Sprite;
@@ -16,7 +17,7 @@ public:
     Top, Bottom,  Left, Right
   };
 
-  Tank(const float velocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept;
+  Tank(const double velocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept;
 
   virtual void render() const noexcept override;
 
@@ -26,23 +27,32 @@ public:
 
   bool getmove() const noexcept;
 
-  virtual void update(const uint64_t delta) noexcept override;
+  virtual void update(const double delta) noexcept override;
 private:
   EOrientation m_eOrientation;
   std::shared_ptr<RendererEngine::Sprite> m_pSprite_top;
   std::shared_ptr<RendererEngine::Sprite> m_pSprite_bottom;
   std::shared_ptr<RendererEngine::Sprite> m_pSprite_left;
   std::shared_ptr<RendererEngine::Sprite> m_pSprite_right;
+  std::shared_ptr<RendererEngine::Sprite> m_pSprite_respawn;
+  std::shared_ptr<RendererEngine::Sprite> m_pSprite_shield;
 
   RendererEngine::SpriteAnimator m_spriteAnimator_top;
   RendererEngine::SpriteAnimator m_spriteAnimator_bottom;
   RendererEngine::SpriteAnimator m_spriteAnimator_left;
   RendererEngine::SpriteAnimator m_spriteAnimator_right;
+  RendererEngine::SpriteAnimator m_spriteAnimator_respawn;
+  RendererEngine::SpriteAnimator m_spriteAnimator_shield;
+  
+  Timer m_respawnTimer;
+  Timer m_shieldTimer;
 
   bool m_move;
-  float m_velocity;
-  glm::vec2 m_position;
+  double m_velocity;
   glm::vec2 m_moveOffset;
+  bool m_isRespawning;
+  bool m_hasShield;
+
 };
 
 #endif //  _TANK_H

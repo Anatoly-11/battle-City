@@ -41,6 +41,9 @@ add_executable(${PROJECT_NAME}
 	src/Game/Level.cpp
 	src/Game/Level.h
 
+	src/System/Timer.cpp
+	src/System/Timer.h
+
 	src/Game/GameObjects/IGameObject.cpp
 	src/Game/GameObjects/IGameObject.h
 	src/Game/GameObjects/Tank.cpp

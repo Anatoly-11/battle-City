@@ -23,6 +23,6 @@ void Water::render() const noexcept {
   renderBlock(EBlockLocation::TopLeft);
 }
 
-void Water::update(const uint64_t delta) noexcept {
+void Water::update(const double delta) noexcept {
   m_spriteAnimator.update(delta);
 }

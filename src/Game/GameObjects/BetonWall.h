@@ -40,7 +40,7 @@ public:
   BetonWall(const EBetonWallType eBetonWallType, const glm::vec2 &position, const glm::vec2 &size, const float rotation,
     const float layer) noexcept;
   virtual void render() const noexcept override;
-  virtual void update(const uint64_t delta) noexcept override;
+  virtual void update(const double delta) noexcept override;
 private:
   void renderBlock(const EBlockLocation eBlockLocation) const noexcept;
   std::array<EBlockState, 4> m_eCurrentBlockState;

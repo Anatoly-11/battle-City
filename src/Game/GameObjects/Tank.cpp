@@ -2,33 +2,59 @@
 #include "../../Renderer/Sprite.h"
 #include "../../Resources/ResourceManager.h"
 
-Tank::Tank(const float velocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept
+Tank::Tank(const double velocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept
   : IGameObject(position, size, 0.f, layer), m_eOrientation(EOrientation::Top),
   m_pSprite_top(ResourceManager::getSprite("tankSprite_top")),
   m_pSprite_bottom(ResourceManager::getSprite("tankSprite_bottom")),
   m_pSprite_left(ResourceManager::getSprite("tankSprite_left")),
   m_pSprite_right(ResourceManager::getSprite("tankSprite_right")),
+  m_pSprite_respawn(ResourceManager::getSprite("respawn")),
+  m_pSprite_shield(ResourceManager::getSprite("shield")),
   m_spriteAnimator_top(m_pSprite_top),
   m_spriteAnimator_bottom(m_pSprite_bottom),
   m_spriteAnimator_left(m_pSprite_left),
-  m_spriteAnimator_right(m_pSprite_right), m_move(false), m_velocity(velocity), m_position(position), m_moveOffset({0.f, 1.f}) {
+  m_spriteAnimator_right(m_pSprite_right),
+  m_spriteAnimator_respawn(m_pSprite_respawn),
+  m_spriteAnimator_shield(m_pSprite_shield),
+  m_move(false),
+  m_velocity(velocity),
+  m_moveOffset({0.f, 1.f}),
+  m_isRespawning(true),
+  m_hasShield(false)
+{
+  m_respawnTimer.setCallback([&]() {
+    m_isRespawning = false;
+    m_hasShield = true;
+    m_shieldTimer.start(2000);
+  });
+  m_respawnTimer.start(1500);
+  m_shieldTimer.setCallback([&]() {
+    m_hasShield = false;
+  });
 }
 
 void Tank::render() const noexcept {
-  switch(m_eOrientation)
-  {
-  case Tank::EOrientation::Top:
-    m_pSprite_top->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_top.getCurrentFrame());
-    break;
-  case Tank::EOrientation::Bottom:
-    m_pSprite_bottom->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_bottom.getCurrentFrame());
-    break;
-  case Tank::EOrientation::Left:
-    m_pSprite_left->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_left.getCurrentFrame());
-    break;
-  case Tank::EOrientation::Right:
-    m_pSprite_right->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_right.getCurrentFrame());
-    break;
+
+  if(!m_isRespawning) {
+    switch(m_eOrientation) {
+    case Tank::EOrientation::Top:
+      m_pSprite_top->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_top.getCurrentFrame());
+      break;
+    case Tank::EOrientation::Bottom:
+      m_pSprite_bottom->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_bottom.getCurrentFrame());
+      break;
+    case Tank::EOrientation::Left:
+      m_pSprite_left->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_left.getCurrentFrame());
+      break;
+    case Tank::EOrientation::Right:
+      m_pSprite_right->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_right.getCurrentFrame());
+      break;
+    }
+    if(m_hasShield) {
+      m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_shield.getCurrentFrame());
+    }
+  } else{
+    m_pSprite_respawn->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_respawn.getCurrentFrame());
   }
 }
 
@@ -38,7 +64,7 @@ void Tank::setOrientation(const EOrientation eOrientation) noexcept {
     switch(m_eOrientation) {
     case Tank::EOrientation::Top:
       m_moveOffset.x = 0.f;
-      m_moveOffset.y = 1.f;
+      m_moveOffset.y = 1.f; 
       break;
     case Tank::EOrientation::Bottom:
       m_moveOffset.x = 0.f;
@@ -64,25 +90,34 @@ bool Tank::getmove() const noexcept {
   return m_move;
 }
 
-void Tank::update(const uint64_t delta) noexcept {
-  if(m_move) {
-    m_position += delta * m_velocity * m_moveOffset;
-    switch(m_eOrientation)
-    {
-    case Tank::EOrientation::Top:
-      m_spriteAnimator_top.update(delta);
-      break;
-    case Tank::EOrientation::Bottom:
-      m_spriteAnimator_bottom.update(delta);
-      break;
-    case Tank::EOrientation::Left:
-      m_spriteAnimator_left.update(delta);
-      break;
-    case Tank::EOrientation::Right:
-      m_spriteAnimator_right.update(delta);
-      break;
-    default:
-      break;
+void Tank::update(const double delta) noexcept {
+  if(m_isRespawning) {
+    m_spriteAnimator_respawn.update(delta);
+    m_respawnTimer.update(delta);
+  } else { 
+    if(m_hasShield) {
+      m_spriteAnimator_shield.update(delta);
+      m_shieldTimer.update(delta);
+    }
+    if(m_move) {
+      m_position.x += static_cast<float>(delta * m_velocity * m_moveOffset.x);
+      m_position.y += static_cast<float>(delta * m_velocity * m_moveOffset.y);
+      switch(m_eOrientation) {
+      case Tank::EOrientation::Top:
+        m_spriteAnimator_top.update(delta);
+        break;
+      case Tank::EOrientation::Bottom:
+        m_spriteAnimator_bottom.update(delta);
+        break;
+      case Tank::EOrientation::Left:
+        m_spriteAnimator_left.update(delta);
+        break;
+      case Tank::EOrientation::Right:
+        m_spriteAnimator_right.update(delta);
+        break;
+      default:
+        break;
+      }
     }
   }
 }

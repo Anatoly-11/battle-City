@@ -79,8 +79,11 @@ int main(int argc, char *argv[]) {
   ResourceManager::setExecutablePath(argv[0]);
   
   g_game->init();
-  glfwSetWindowSize(win, static_cast<int>(g_game->getCurrentLevelWidth()),
-    static_cast<int>(g_game->getCurrentLevelHeight()));
+
+  constexpr float coef_scale = 3.5;
+
+  glfwSetWindowSize(win, static_cast<int>(coef_scale*g_game->getCurrentLevelWidth()),
+    static_cast<int>(coef_scale*g_game->getCurrentLevelHeight()));
 
   auto lastTime = chrono::high_resolution_clock::now();
 
@@ -94,7 +97,7 @@ int main(int argc, char *argv[]) {
     glfwPollEvents();
 
     auto currentTime = chrono::high_resolution_clock::now();
-    uint64_t duration = chrono::duration_cast<chrono::nanoseconds>(currentTime - lastTime).count();
+    double duration = chrono::duration<double, std::milli>(currentTime - lastTime).count();
     lastTime = currentTime;
     g_game->update(duration);
 

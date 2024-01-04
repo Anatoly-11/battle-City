@@ -100,11 +100,11 @@ namespace RendererEngine {
   }
 
   Sprite::FrameDescription::FrameDescription(const glm::vec2 _leftBottomUV, const glm::vec2 _rightTopUV,
-    const uint64_t _duration) noexcept : leftBottomUV(_leftBottomUV), rightTopUV(_rightTopUV),
+    const double _duration) noexcept : leftBottomUV(_leftBottomUV), rightTopUV(_rightTopUV),
     duration(_duration)
   {}
 
-  uint64_t Sprite::getFrameDuration(const size_t frameId) const noexcept
+  double Sprite::getFrameDuration(const size_t frameId) const noexcept
   {
     return m_framesDescriptions[frameId].duration;
   }

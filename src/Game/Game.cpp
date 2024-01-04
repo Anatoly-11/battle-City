@@ -30,7 +30,7 @@ void Game::render() noexcept {
 }
 
 
-void Game::update(const uint64_t delta) noexcept {
+void Game::update(const double delta) noexcept {
   if(m_pLevel) {
     m_pLevel->update(delta);
   }
@@ -81,7 +81,7 @@ bool Game::init() noexcept {
   pSpriteShaderProgram->setInt("tex", 0);
   pSpriteShaderProgram->setMatrix4("projectionMat", projectMatrix);
 
-  m_pTank = std::make_unique<Tank>(0.0000001f, m_pLevel->getPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+  m_pTank = std::make_unique<Tank>(0.05, m_pLevel->getPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
   return true;
 }
 

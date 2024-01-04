@@ -64,5 +64,5 @@ void BetonWall::render() const noexcept {
   renderBlock(EBlockLocation::TopLeft);
 }
 
-void BetonWall::update(const uint64_t delta) noexcept {
+void BetonWall::update(const double delta) noexcept {
 }

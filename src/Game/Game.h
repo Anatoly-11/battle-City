@@ -16,7 +16,7 @@ public:
 
   void render() noexcept;
 
-  void update(const uint64_t delta) noexcept;
+  void update(const double delta) noexcept;
 
   void setKey(const int key, const int action) noexcept;
 
