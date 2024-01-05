@@ -9,9 +9,11 @@
 #include "GameObjects/Border.h"
 
 #include <iostream>
+#include <algorithm>
+#include <cmath>
 
-std::shared_ptr<IGameObject> createGameObjectFromDescription(const char description,
-  const glm::vec2 &position, const glm::vec2 &size, const float rotation) {
+std::shared_ptr<IGameObject> createGameObjectFromDescription(const char description, const glm::vec2 &position,
+  const glm::vec2 &size, const float rotation) noexcept {
   switch(description)
   {
   case '0':
@@ -64,35 +66,42 @@ Level::Level(const std::vector<std::string> &levelDescription) noexcept {
     std::cerr << "Empty level description..." << std::endl;
     return;
   }
-  m_width = levelDescription[0].length();
-  m_height = levelDescription.size();
+  m_widthBlocks = levelDescription[0].length();
+  m_heightBlocks = levelDescription.size();
+  m_widthPixels = m_widthBlocks * BLOCK_SIZE;
+  m_heightPixels = m_heightBlocks * BLOCK_SIZE;
 
-  m_playerRespawn_1 = {BLOCK_SIZE * ((m_width >> 1) - 1), BLOCK_SIZE >> 1};
-  m_playerRespawn_2 = {BLOCK_SIZE * ((m_width >> 1) + 3), BLOCK_SIZE >> 1};
-  m_enemyRespawn_1  = {BLOCK_SIZE,                        BLOCK_SIZE * (m_height - 0.5f)};
-  m_enemyRespawn_2  = {BLOCK_SIZE * ((m_width >> 1) + 1), BLOCK_SIZE * (m_height - 0.5f)};
-  m_enemyRespawn_3  = {BLOCK_SIZE * m_width,              BLOCK_SIZE * (m_height - 0.5f)};
+  m_playerRespawn_1 = {BLOCK_SIZE * ((m_widthBlocks >> 1) - 1), BLOCK_SIZE >> 1};
+  m_playerRespawn_2 = {BLOCK_SIZE * ((m_widthBlocks >> 1) + 3), BLOCK_SIZE >> 1};
+  m_enemyRespawn_1  = {BLOCK_SIZE,                        BLOCK_SIZE * (m_heightBlocks - 0.5f)};
+  m_enemyRespawn_2  = {BLOCK_SIZE * ((m_widthBlocks >> 1) + 1), BLOCK_SIZE * (m_heightBlocks - 0.5f)};
+  m_enemyRespawn_3  = {BLOCK_SIZE * m_widthBlocks,              BLOCK_SIZE * (m_heightBlocks - 0.5f)};
   
-  m_levelObjects.reserve(m_width * m_height + 4);
-    unsigned int currentBottonOffset = BLOCK_SIZE * (m_height - 0.5f);
+  m_levelObjects.reserve(m_widthBlocks * m_heightBlocks + 4);
+    unsigned int currentBottonOffset = BLOCK_SIZE * (m_heightBlocks - 0.5f);
   for(const std::string &currentRow : levelDescription) {
     unsigned int currentLeftOffset = BLOCK_SIZE;
     for(const char currentElement : currentRow) {
       switch(currentElement) {
       case 'K':
         m_playerRespawn_1 = {currentLeftOffset, currentBottonOffset};
+        m_levelObjects.emplace_back(nullptr);
         break;
       case 'L':
         m_playerRespawn_2 = {currentLeftOffset, currentBottonOffset};
+        m_levelObjects.emplace_back(nullptr);
         break;
       case 'M':
         m_enemyRespawn_1 = {currentLeftOffset, currentBottonOffset};
+        m_levelObjects.emplace_back(nullptr);
         break;
       case 'N':
         m_enemyRespawn_2 = {currentLeftOffset, currentBottonOffset};
+        m_levelObjects.emplace_back(nullptr);
         break;
       case 'O':
         m_enemyRespawn_3 = {currentLeftOffset, currentBottonOffset};
+        m_levelObjects.emplace_back(nullptr);
         break;
       default:
         m_levelObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset,
@@ -105,24 +114,25 @@ Level::Level(const std::vector<std::string> &levelDescription) noexcept {
   }
   // bottom border
   m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((float)BLOCK_SIZE, 0.f),
-    glm::vec2(m_width * BLOCK_SIZE, BLOCK_SIZE >> 1), 0.f, 0.f));
+    glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE >> 1), 0.f, 0.f));
   // top border
-  m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((float)BLOCK_SIZE, (m_height + 0.5f) * BLOCK_SIZE),
-    glm::vec2(m_width * BLOCK_SIZE, BLOCK_SIZE >> 1), 0.f, 0.f));
+  m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((float)BLOCK_SIZE, (m_heightBlocks + 0.5f) * BLOCK_SIZE),
+    glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE >> 1), 0.f, 0.f));
   // left border
   m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(0.f),
-    glm::vec2(BLOCK_SIZE, (m_height + 1.f) * BLOCK_SIZE), 0.f, 0.f));
+    glm::vec2(BLOCK_SIZE, (m_heightBlocks + 1.f) * BLOCK_SIZE), 0.f, 0.f));
   // right border
-  m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((m_width + 1) * BLOCK_SIZE, 0.f),
-    glm::vec2(BLOCK_SIZE << 1, (m_height + 1.f) * BLOCK_SIZE), 0.f, 0.f));
+  m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((m_widthBlocks + 1) * BLOCK_SIZE, 0.f),
+    glm::vec2(BLOCK_SIZE << 1, (m_heightBlocks + 1.f) * BLOCK_SIZE), 0.f, 0.f));
 }
 
-size_t Level::getLevelWidth() const noexcept {
-  return (m_width + 3) * BLOCK_SIZE;
+
+unsigned int Level::getLevelWidth() const noexcept {
+  return (m_widthBlocks + 3) * BLOCK_SIZE;
 }
 
-size_t Level::getLevelHeight() const noexcept {
-  return (m_height + 1) * BLOCK_SIZE;
+unsigned int Level::getLevelHeight() const noexcept {
+  return (m_heightBlocks + 1) * BLOCK_SIZE;
 }
 
 void Level::render() const noexcept {
@@ -159,4 +169,31 @@ const glm::ivec2 &Level::getEnemyRespawn_2() const noexcept {
 
 const glm::ivec2 &Level::getEnemyRespawn_3() const noexcept {
   return m_enemyRespawn_3;
+}
+
+std::vector<std::shared_ptr<IGameObject>> Level::getObjectsInArea(const glm::vec2 & bottomLeft,
+  const glm::vec2 & topRight) const noexcept {
+  std::vector<std::shared_ptr<IGameObject>> output;
+  output.reserve(9);
+  
+  glm::vec2 bottomLeft_converted(std::clamp(bottomLeft.x - BLOCK_SIZE, 0.f, static_cast<float>(m_widthPixels)), 
+    std::clamp(m_heightPixels - bottomLeft.y + BLOCK_SIZE / 2, 0.f, static_cast<float>(m_heightPixels)));
+  glm::vec2 topRight_converted(std::clamp(topRight.x - BLOCK_SIZE, 0.f, static_cast<float>(m_widthPixels)), 
+    std::clamp(m_heightPixels - topRight.y + BLOCK_SIZE / 2, 0.f, static_cast<float>(m_heightPixels)));
+
+  unsigned int startX = static_cast<unsigned int>(floor(bottomLeft_converted.x / BLOCK_SIZE));
+  unsigned int endX = static_cast<unsigned int>(ceil(topRight_converted.x      / BLOCK_SIZE));
+
+  unsigned int startY = static_cast<unsigned int>(floor(topRight_converted.y  / BLOCK_SIZE));
+  unsigned int endY = static_cast<unsigned int>(ceil(bottomLeft_converted.y   / BLOCK_SIZE));
+
+  for(unsigned int currentColumn = startX; currentColumn < endX; ++currentColumn) {
+    for(unsigned int currentRow = startY; currentRow < endY; ++currentRow) {
+
+      if(auto &currentObject = m_levelObjects[currentColumn + currentRow * m_widthBlocks]; currentObject != nullptr) {
+        output.push_back(currentObject);
+      }
+    }
+  }
+  return output;
 }

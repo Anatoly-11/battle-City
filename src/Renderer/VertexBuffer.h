@@ -2,6 +2,7 @@
 #define _VERTEXBUFFER_H 1.0
 
 #include <glad/glad.h>
+#include <cstdint>
 
 namespace RendererEngine {
   class VertexBuffer {

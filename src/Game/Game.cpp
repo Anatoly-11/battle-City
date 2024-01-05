@@ -48,9 +48,12 @@ void Game::update(const double delta) noexcept {
     } else if(m_keys[GLFW_KEY_S] || m_keys[GLFW_KEY_DOWN]) {
       m_pTank->setOrientation(Tank::EOrientation::Bottom);
       m_pTank->setVelocity(m_pTank->getMaxVelocity());
-    } else if(m_keys[GLFW_KEY_SPACE]) {
+    } else /*if(m_keys[GLFW_KEY_SPACE] )*/ {
       m_pTank->setVelocity(0);
-    } 
+    } /*else {
+      m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    }*/
+
   } 
   m_pTank->update(delta);
 }
@@ -70,20 +73,20 @@ bool Game::init() noexcept {
   }
 
   m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
-
   m_windowSize.x = static_cast<int>(m_pLevel->getLevelWidth());
   m_windowSize.y = static_cast<int>(m_pLevel->getLevelHeight());
 
+  Physics::PhysicsEngine::setCurrentLevel(m_pLevel);
 
-  glm::mat4 projectMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f,
-    static_cast<float>(m_windowSize.y), -100.0f, 100.0f);
+
+  glm::mat4 projectMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f, static_cast<float>(m_windowSize.y), -100.0f, 100.0f);
 
   pSpriteShaderProgram->use();
   pSpriteShaderProgram->setInt("tex", 0);
   pSpriteShaderProgram->setMatrix4("projectionMat", projectMatrix);
   m_pTank = std::make_shared<Tank>(0.05, m_pLevel->getPlayerRespawn_1(), 
     glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
-  PhysicsEngine::addDymamycObject(m_pTank);
+  Physics::PhysicsEngine::addDymamycObject(m_pTank);
   return true;
 }
 

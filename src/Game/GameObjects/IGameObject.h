@@ -2,6 +2,7 @@
 #define _IGAMEOBJECT_H 1.0
 
 #include <glm/vec2.hpp>
+#include "../../Physics/PhysicsEngine.h"
 
 class IGameObject {
 public:
@@ -13,6 +14,8 @@ public:
   virtual glm::vec2 &getCurrentDirection() noexcept;
   virtual double getCurrentVelocity() const noexcept;
   virtual void setVelocity(const double velosity) noexcept;
+  const glm::vec2 &getSize() const noexcept;
+  const std::vector<Physics::AABB> &getCollisers() const noexcept;
 
 protected:
   glm::vec2 m_position;
@@ -22,6 +25,7 @@ protected:
 
   glm::vec2 m_direction;
   double m_velocity;
+  std::vector<Physics::AABB> m_colliders;
 };
 
 #endif // !_IGAMEOBJECT_H

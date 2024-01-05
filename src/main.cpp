@@ -80,11 +80,11 @@ int main(int argc, char *argv[]) {
 
   ResourceManager::setExecutablePath(argv[0]);
 
-  PhysicsEngine::init();
+  Physics::PhysicsEngine::init();
 
   g_game->init();
 
-  constexpr float coef_scale = 3.5;
+  constexpr float coef_scale = 2.5;
 
   glfwSetWindowSize(pWindow, static_cast<int>(coef_scale*g_game->getCurrentLevelWidth()),
     static_cast<int>(coef_scale*g_game->getCurrentLevelHeight()));
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
     double dutation = chrono::duration<double, milli>(currentTime  - prevTime).count();
     prevTime = currentTime;
     g_game->update(dutation);
-    PhysicsEngine::update(dutation);
+    Physics::PhysicsEngine::update(dutation);
 
     // Render here
     RendererEngine::Renderer::clear();
@@ -113,6 +113,7 @@ int main(int argc, char *argv[]) {
     // Swap front and back buffers
     glfwSwapBuffers(pWindow);
   }
+  Physics::PhysicsEngine::terminate();
   g_game = nullptr;
   ResourceManager::unloadAllResources();
 

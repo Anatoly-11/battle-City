@@ -1,6 +1,7 @@
 #include "Tank.h"
 #include "../../Renderer/Sprite.h"
 #include "../../Resources/ResourceManager.h"
+//include "../../Physics/PhysicsEngine.h"
 
 Tank::Tank(const double maxVelocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept
   : IGameObject(position, size, 0.f, layer), m_eOrientation(EOrientation::Top),
@@ -29,6 +30,7 @@ Tank::Tank(const double maxVelocity, const glm::vec2 &position, const glm::vec2 
   m_shieldTimer.setCallback([&]() {
     m_hasShield = false;
   });
+  m_colliders.emplace_back(glm::vec2(0), m_size);
 }
 
 void Tank::render() const noexcept {
