@@ -35,7 +35,7 @@ void Tank::render() const noexcept {
 
   if(!m_isRespawning) {
     if(m_hasShield) {
-      m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer + 0.01f, m_spriteAnimator_shield.getCurrentFrame());
+      m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer + 0.1f, m_spriteAnimator_shield.getCurrentFrame());
     }
     switch(m_eOrientation) {
     case Tank::EOrientation::Top:
@@ -112,4 +112,10 @@ void Tank::update(const double delta) noexcept {
 
 double Tank::getMaxVelocity() const noexcept {
   return m_maxVelocity;
+}
+
+void Tank::setVelocity(const double velocity) noexcept {
+  if(!m_isRespawning) {
+    m_velocity = velocity;
+  }
 }

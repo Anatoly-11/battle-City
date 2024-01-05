@@ -27,6 +27,8 @@ public:
 
   double getMaxVelocity() const noexcept;
 
+  virtual void setVelocity(const double velocity) noexcept override;
+
 private:
   EOrientation m_eOrientation;
   std::shared_ptr<RendererEngine::Sprite> m_pSprite_top;
