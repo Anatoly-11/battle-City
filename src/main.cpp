@@ -8,6 +8,8 @@
 #include <chrono>
 
 #include "Resources/ResourceManager.h"
+#include "Physics/PhysicsEngine.h"
+
 #include "Game/Game.h"
 #include "Renderer/Renderer.h"
 
@@ -18,7 +20,7 @@ glm::ivec2 g_windowSize(13 * 16, 14 * 16);
 unique_ptr<Game> g_game = make_unique<Game>(g_windowSize);
 
 
-void glfwWindowSizeCallback(GLFWwindow *win, int width, int height) {
+void glfwWindowSizeCallback(GLFWwindow *pWin, int width, int height) {
   g_windowSize.x = width;
   g_windowSize.y = height;
 
@@ -37,9 +39,9 @@ void glfwWindowSizeCallback(GLFWwindow *win, int width, int height) {
   RendererEngine::Renderer::setViewport(viewPortWidth, viewPortHeight, viewPortLeftOffset, viewPortBottomOffset);
 }
 
-void glfwKeyCallback(GLFWwindow *win, int key, int scan, int act, int mode) {
+void glfwKeyCallback(GLFWwindow *pWin, int key, int scan, int act, int mode) {
   if(key == GLFW_KEY_ESCAPE && act == GLFW_PRESS) {
-    glfwSetWindowShouldClose(win, GL_TRUE);
+    glfwSetWindowShouldClose(pWin, GL_TRUE);
   }
   g_game->setKey(key, act);
 }
@@ -56,18 +58,18 @@ int main(int argc, char *argv[]) {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // Create a windowed mode window and its OpenGL context
-  GLFWwindow *win = glfwCreateWindow(g_windowSize.x, g_windowSize.y, "Battle-Ciyt", nullptr, nullptr);
-  if(!win) {
+  GLFWwindow *pWindow = glfwCreateWindow(g_windowSize.x, g_windowSize.y, "Battle-Ciyt", nullptr, nullptr);
+  if(!pWindow) {
     cout << "glfwCreateWindow failed" << endl;
     glfwTerminate();
     return -1;
   }
 
-  glfwSetWindowSizeCallback(win, glfwWindowSizeCallback);
-  glfwSetKeyCallback(win, glfwKeyCallback);
+  glfwSetWindowSizeCallback(pWindow, glfwWindowSizeCallback);
+  glfwSetKeyCallback(pWindow, glfwKeyCallback);
 
   // Make the window's context current
-  glfwMakeContextCurrent(win);
+  glfwMakeContextCurrent(pWindow);
 
   if(!gladLoadGL()) {
     cout << "Can't load GLAD!" << endl;
@@ -77,36 +79,39 @@ int main(int argc, char *argv[]) {
   cout << RendererEngine::Renderer::getInfo() << endl;
 
   ResourceManager::setExecutablePath(argv[0]);
-  
+
+  PhysicsEngine::init();
+
   g_game->init();
 
   constexpr float coef_scale = 3.5;
 
-  glfwSetWindowSize(win, static_cast<int>(coef_scale*g_game->getCurrentLevelWidth()),
+  glfwSetWindowSize(pWindow, static_cast<int>(coef_scale*g_game->getCurrentLevelWidth()),
     static_cast<int>(coef_scale*g_game->getCurrentLevelHeight()));
 
-  auto lastTime = chrono::high_resolution_clock::now();
 
   RendererEngine::Renderer::setClearColor(0.f, 0.f, 0.f, 1.f);
 
   RendererEngine::Renderer::setDepthTest(true);
-
+  auto prevTime = chrono::high_resolution_clock::now();
   // Loop until the user closes the window
-  while(!glfwWindowShouldClose(win)) {
+  while(!glfwWindowShouldClose(pWindow)) {
+
     // Poll for and process events
     glfwPollEvents();
 
     auto currentTime = chrono::high_resolution_clock::now();
-    double duration = chrono::duration<double, std::milli>(currentTime - lastTime).count();
-    lastTime = currentTime;
-    g_game->update(duration);
+    double dutation = chrono::duration<double, milli>(currentTime  - prevTime).count();
+    prevTime = currentTime;
+    g_game->update(dutation);
+    PhysicsEngine::update(dutation);
 
     // Render here
     RendererEngine::Renderer::clear();
     g_game->render();
 
     // Swap front and back buffers
-    glfwSwapBuffers(win);
+    glfwSwapBuffers(pWindow);
   }
   g_game = nullptr;
   ResourceManager::unloadAllResources();

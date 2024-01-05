@@ -304,11 +304,11 @@
       "frames": [
         {
           "subTexture": "shield1",
-          "duration": 50
+          "duration": 100
         },
         {
           "subTexture": "shield2",
-          "duration": 50
+          "duration": 100
         }
       ]
     },

@@ -17,17 +17,16 @@ public:
     Top, Bottom,  Left, Right
   };
 
-  Tank(const double velocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept;
+  Tank(const double maxVelocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept;
 
   virtual void render() const noexcept override;
 
   void setOrientation(const EOrientation eOrientation) noexcept;
 
-  void move(const bool move) noexcept;
-
-  bool getmove() const noexcept;
-
   virtual void update(const double delta) noexcept override;
+
+  double getMaxVelocity() const noexcept;
+
 private:
   EOrientation m_eOrientation;
   std::shared_ptr<RendererEngine::Sprite> m_pSprite_top;
@@ -47,9 +46,7 @@ private:
   Timer m_respawnTimer;
   Timer m_shieldTimer;
 
-  bool m_move;
-  double m_velocity;
-  glm::vec2 m_moveOffset;
+  double m_maxVelocity;
   bool m_isRespawning;
   bool m_hasShield;
 

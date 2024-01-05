@@ -2,7 +2,7 @@
 #include "../../Renderer/Sprite.h"
 #include "../../Resources/ResourceManager.h"
 
-Tank::Tank(const double velocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept
+Tank::Tank(const double maxVelocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept
   : IGameObject(position, size, 0.f, layer), m_eOrientation(EOrientation::Top),
   m_pSprite_top(ResourceManager::getSprite("tankSprite_top")),
   m_pSprite_bottom(ResourceManager::getSprite("tankSprite_bottom")),
@@ -16,9 +16,7 @@ Tank::Tank(const double velocity, const glm::vec2 &position, const glm::vec2 &si
   m_spriteAnimator_right(m_pSprite_right),
   m_spriteAnimator_respawn(m_pSprite_respawn),
   m_spriteAnimator_shield(m_pSprite_shield),
-  m_move(false),
-  m_velocity(velocity),
-  m_moveOffset({0.f, 1.f}),
+  m_maxVelocity(maxVelocity),
   m_isRespawning(true),
   m_hasShield(false)
 {
@@ -36,6 +34,9 @@ Tank::Tank(const double velocity, const glm::vec2 &position, const glm::vec2 &si
 void Tank::render() const noexcept {
 
   if(!m_isRespawning) {
+    if(m_hasShield) {
+      m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer + 0.01f, m_spriteAnimator_shield.getCurrentFrame());
+    }
     switch(m_eOrientation) {
     case Tank::EOrientation::Top:
       m_pSprite_top->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_top.getCurrentFrame());
@@ -50,9 +51,6 @@ void Tank::render() const noexcept {
       m_pSprite_right->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_right.getCurrentFrame());
       break;
     }
-    if(m_hasShield) {
-      m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_shield.getCurrentFrame());
-    }
   } else{
     m_pSprite_respawn->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_respawn.getCurrentFrame());
   }
@@ -63,31 +61,23 @@ void Tank::setOrientation(const EOrientation eOrientation) noexcept {
     m_eOrientation = eOrientation;
     switch(m_eOrientation) {
     case Tank::EOrientation::Top:
-      m_moveOffset.x = 0.f;
-      m_moveOffset.y = 1.f; 
+      m_direction.x = 0.f;
+      m_direction.y = 1.f; 
       break;
     case Tank::EOrientation::Bottom:
-      m_moveOffset.x = 0.f;
-      m_moveOffset.y = -1.f;
+      m_direction.x = 0.f;
+      m_direction.y = -1.f;
       break;
     case Tank::EOrientation::Left:
-      m_moveOffset.x = -1.f;
-      m_moveOffset.y = 0.f;
+      m_direction.x = -1.f;
+      m_direction.y = 0.f;
       break;
     case Tank::EOrientation::Right:
-      m_moveOffset.x = 1.f;
-      m_moveOffset.y = 0.f;
+      m_direction.x = 1.f;
+      m_direction.y = 0.f;
       break;
     }
   }
-}
-
-void Tank::move(const bool move) noexcept {
-  m_move = move;
-}
-
-bool Tank::getmove() const noexcept {
-  return m_move;
 }
 
 void Tank::update(const double delta) noexcept {
@@ -99,9 +89,7 @@ void Tank::update(const double delta) noexcept {
       m_spriteAnimator_shield.update(delta);
       m_shieldTimer.update(delta);
     }
-    if(m_move) {
-      m_position.x += static_cast<float>(delta * m_velocity * m_moveOffset.x);
-      m_position.y += static_cast<float>(delta * m_velocity * m_moveOffset.y);
+    if(m_velocity > 0) {
       switch(m_eOrientation) {
       case Tank::EOrientation::Top:
         m_spriteAnimator_top.update(delta);
@@ -120,4 +108,8 @@ void Tank::update(const double delta) noexcept {
       }
     }
   }
+}
+
+double Tank::getMaxVelocity() const noexcept {
+  return m_maxVelocity;
 }

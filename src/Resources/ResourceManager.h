@@ -14,9 +14,10 @@ namespace RendererEngine {
 
 
 class ResourceManager {
-private:
   ResourceManager(const ResourceManager&) = delete;
   ResourceManager &operator=(const ResourceManager&) = delete;
+  ResourceManager(ResourceManager&&) = delete;
+  ResourceManager &operator=(ResourceManager&&) = delete;
   ~ResourceManager() = delete;
   ResourceManager() = delete;
 public:
