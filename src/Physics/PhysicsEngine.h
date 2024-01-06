@@ -6,7 +6,6 @@
 #include <unordered_set>
 #include <glm/vec2.hpp>
 
-
 class IGameObject;
 class Level;
 namespace Physics {
@@ -31,7 +30,7 @@ namespace Physics {
     static void addDymamycObject(std::shared_ptr<IGameObject> pGameObjects) noexcept;
     static void setCurrentLevel(std::shared_ptr<Level> pLevel) noexcept;
   private:
-    static std::unordered_set<std::shared_ptr<IGameObject>> m_dymamicObjects;
+    static std::unordered_set<std::shared_ptr<IGameObject>> m_dynamicObjects;
     static std::shared_ptr<Level> m_pCurrentLevel;
     static bool hasIntersection(const std::vector<AABB> &colliders1, const glm::vec2 &position1,
       const std::vector<AABB> &colliders2, const glm::vec2 &position2)  noexcept;

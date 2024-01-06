@@ -50,10 +50,10 @@ std::shared_ptr<IGameObject> createGameObjectFromDescription(const char descript
     return std::make_shared<Trees>(position, size, rotation, 1.f);
   case 'C':
     return std::make_shared<Ice>(position, size, rotation, -1.f);
-  case 'D':
-    return nullptr;
   case 'E':
     return std::make_shared<Eagle>(position, size, rotation, 0.f);
+  case 'D':
+    return nullptr;
   default:
     std::cerr << "Unknown GameObject description: '" << description << '\'' << std::endl;
     break;
@@ -112,6 +112,7 @@ Level::Level(const std::vector<std::string> &levelDescription) noexcept {
     }
     currentBottonOffset -= BLOCK_SIZE;
   }
+
   // bottom border
   m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((float)BLOCK_SIZE, 0.f),
     glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE >> 1), 0.f, 0.f));
@@ -171,21 +172,21 @@ const glm::ivec2 &Level::getEnemyRespawn_3() const noexcept {
   return m_enemyRespawn_3;
 }
 
-std::vector<std::shared_ptr<IGameObject>> Level::getObjectsInArea(const glm::vec2 & bottomLeft,
-  const glm::vec2 & topRight) const noexcept {
+std::vector<std::shared_ptr<IGameObject>> Level::getObjectsInArea(const glm::vec2 &bottomLeft,
+  const glm::vec2 &topRight) const noexcept {
   std::vector<std::shared_ptr<IGameObject>> output;
   output.reserve(9);
-  
-  glm::vec2 bottomLeft_converted(std::clamp(bottomLeft.x - BLOCK_SIZE, 0.f, static_cast<float>(m_widthPixels)), 
+
+  glm::vec2 bottomLeft_converted(std::clamp(bottomLeft.x - BLOCK_SIZE, 0.f, static_cast<float>(m_widthPixels)),
     std::clamp(m_heightPixels - bottomLeft.y + BLOCK_SIZE / 2, 0.f, static_cast<float>(m_heightPixels)));
-  glm::vec2 topRight_converted(std::clamp(topRight.x - BLOCK_SIZE, 0.f, static_cast<float>(m_widthPixels)), 
+  glm::vec2 topRight_converted(std::clamp(topRight.x - BLOCK_SIZE, 0.f, static_cast<float>(m_widthPixels)),
     std::clamp(m_heightPixels - topRight.y + BLOCK_SIZE / 2, 0.f, static_cast<float>(m_heightPixels)));
 
   unsigned int startX = static_cast<unsigned int>(floor(bottomLeft_converted.x / BLOCK_SIZE));
-  unsigned int endX = static_cast<unsigned int>(ceil(topRight_converted.x      / BLOCK_SIZE));
+  unsigned int endX = static_cast<unsigned int>(ceil(topRight_converted.x / BLOCK_SIZE));
 
-  unsigned int startY = static_cast<unsigned int>(floor(topRight_converted.y  / BLOCK_SIZE));
-  unsigned int endY = static_cast<unsigned int>(ceil(bottomLeft_converted.y   / BLOCK_SIZE));
+  unsigned int startY = static_cast<unsigned int>(floor(topRight_converted.y / BLOCK_SIZE));
+  unsigned int endY = static_cast<unsigned int>(ceil(bottomLeft_converted.y / BLOCK_SIZE));
 
   for(unsigned int currentColumn = startX; currentColumn < endX; ++currentColumn) {
     for(unsigned int currentRow = startY; currentRow < endY; ++currentRow) {
@@ -194,6 +195,19 @@ std::vector<std::shared_ptr<IGameObject>> Level::getObjectsInArea(const glm::vec
         output.push_back(currentObject);
       }
     }
+  }
+
+  if(endX >= m_widthBlocks) {
+    output.push_back(m_levelObjects[m_levelObjects.size() - 1]);
+  }
+  if(startX <= 1) {
+    output.push_back(m_levelObjects[m_levelObjects.size() - 2]);
+  }
+  if(startY <= 1) {
+    output.push_back(m_levelObjects[m_levelObjects.size() - 3]);
+  }
+  if(endY >= m_heightBlocks) {
+    output.push_back(m_levelObjects[m_levelObjects.size() - 4]);
   }
   return output;
 }

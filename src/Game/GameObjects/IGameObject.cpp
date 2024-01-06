@@ -29,7 +29,7 @@ void IGameObject::setVelocity(const double velosity) noexcept {
   m_velocity = velosity;
 }
 
-const std::vector<Physics::AABB> &IGameObject::getCollisers() const noexcept {
+const std::vector<Physics::AABB> &IGameObject::getColliders() const noexcept {
   return m_colliders;
 }
 

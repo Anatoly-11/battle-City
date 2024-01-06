@@ -12,8 +12,7 @@
 #include "Level.h"
 #include "GameObjects/Tank.h"
 
-Game::Game(const glm::ivec2 &_windowSize) noexcept : m_eCurrentGameState(EGameState::Active),
-  m_windowSize(_windowSize) {
+Game::Game(const glm::ivec2 &_windowSize) noexcept : m_windowSize(_windowSize), m_eCurrentGameState(EGameState::Active) {
   m_keys.fill(false);
 }
 

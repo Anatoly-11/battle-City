@@ -2,7 +2,6 @@
 #define _VERTEXARRAY_H 1.0
 
 #include <glad/glad.h>
-//#include "VertexBuffer.h"
 
 namespace RendererEngine {
 

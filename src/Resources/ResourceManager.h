@@ -12,7 +12,6 @@ namespace RendererEngine {
   class Sprite;
 }
 
-
 class ResourceManager {
   ResourceManager(const ResourceManager&) = delete;
   ResourceManager &operator=(const ResourceManager&) = delete;

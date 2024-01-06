@@ -15,7 +15,7 @@ public:
   virtual double getCurrentVelocity() const noexcept;
   virtual void setVelocity(const double velosity) noexcept;
   const glm::vec2 &getSize() const noexcept;
-  const std::vector<Physics::AABB> &getCollisers() const noexcept;
+  const std::vector<Physics::AABB> &getColliders() const noexcept;
 
 protected:
   glm::vec2 m_position;

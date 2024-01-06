@@ -34,9 +34,9 @@ private:
     Paused
   };
 
-  EGameState m_eCurrentGameState;
-
   glm::ivec2 m_windowSize;
+
+  EGameState m_eCurrentGameState;
 
   std::shared_ptr<Tank> m_pTank;
 
