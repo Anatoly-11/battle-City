@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
 
   g_game->init();
 
-  constexpr float coef_scale = 2.5;
+  constexpr float coef_scale = 3.f;
 
   glfwSetWindowSize(pWindow, static_cast<int>(coef_scale*g_game->getCurrentLevelWidth()),
     static_cast<int>(coef_scale*g_game->getCurrentLevelHeight()));

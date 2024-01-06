@@ -3,7 +3,8 @@
 #include "../../Resources/ResourceManager.h"
 
 Ice::Ice(const glm::vec2 &position,
-  const glm::vec2 &size, const float rotation, const float layer) noexcept : IGameObject(position, size, rotation, layer),
+  const glm::vec2 &size, const float rotation, const float layer) noexcept :
+  IGameObject(IGameObject::EObjectType::Ice, position, size, rotation, layer),
   m_sprite(ResourceManager::getSprite("ice")),
   m_blockOffsets{glm::vec2(0, size.y / 2),
                  glm::vec2(size.x / 2, size.y / 2),

@@ -3,7 +3,8 @@
 #include "../../Resources/ResourceManager.h"
 
 Water::Water(const glm::vec2 &position,
-  const glm::vec2 &size, const float rotation, const float layer) noexcept : IGameObject(position, size, rotation, layer),
+  const glm::vec2 &size, const float rotation, const float layer) noexcept :
+  IGameObject(IGameObject::EObjectType::Water, position, size, rotation, layer),
   m_sprite(ResourceManager::getSprite("water")), m_spriteAnimator(m_sprite),
   m_blockOffsets{glm::vec2(0, size.y / 2),
                  glm::vec2(size.x / 2, size.y / 2),
@@ -26,4 +27,8 @@ void Water::render() const noexcept {
 
 void Water::update(const double delta) noexcept {
   m_spriteAnimator.update(delta);
+}
+
+bool Water::collides(const IGameObject::EObjectType objectType) const noexcept {
+  return objectType != IGameObject::EObjectType::Bullet;
 }

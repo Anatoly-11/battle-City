@@ -37,9 +37,10 @@ namespace Physics {
         bool hasCollision = false;
         for(const auto &currentObjectToCheck : objectsToCheck) {
           const auto &collidersToCheck = currentObjectToCheck->getColliders();
-          if(!collidersToCheck.empty()) {
+          if(currentObjectToCheck->collides(currentObject->getObjectType()) && !collidersToCheck.empty()) {
             if(hasIntersection(colliders, newPosition, collidersToCheck, currentObjectToCheck->getCurrentPosition())) {
               hasCollision = true;
+              currentObjectToCheck->onCollision();
               break;
             }
           }
@@ -56,6 +57,7 @@ namespace Physics {
           {
             currentObject->getCurrentPosition() = glm::vec2(currentObject->getCurrentPosition().x, static_cast<unsigned int>(currentObject->getCurrentPosition().y / 8.f + 0.5f) * 8.f);
           }
+          currentObject->onCollision();
         }
       }
     }

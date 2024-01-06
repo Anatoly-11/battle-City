@@ -6,7 +6,7 @@
 #include "../../Physics/PhysicsEngine.h"
 
 Tank::Tank(const double maxVelocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept
-  : IGameObject(position, size, 0.f, layer), m_eOrientation(EOrientation::Top),
+  : IGameObject(IGameObject::EObjectType::Tank, position, size, 0.f, layer), m_eOrientation(EOrientation::Top),
   m_pCurrentBullet(std::make_shared<Bullet>(0.1, m_position + m_size / 4.f, m_size / 2.f, layer)),
   m_pSprite_top(ResourceManager::getSprite("tankSprite_top")),
   m_pSprite_bottom(ResourceManager::getSprite("tankSprite_bottom")),
@@ -21,11 +21,11 @@ Tank::Tank(const double maxVelocity, const glm::vec2 &position, const glm::vec2 
   m_spriteAnimator_respawn(m_pSprite_respawn),
   m_spriteAnimator_shield(m_pSprite_shield),
   m_maxVelocity(maxVelocity),
-  m_isRespawning(true),
+  m_isSpawning(true),
   m_hasShield(false)
 {
   m_respawnTimer.setCallback([&]() {
-    m_isRespawning = false;
+    m_isSpawning = false;
     m_hasShield = true;
     m_shieldTimer.start(2000);
   });
@@ -34,11 +34,12 @@ Tank::Tank(const double maxVelocity, const glm::vec2 &position, const glm::vec2 
     m_hasShield = false;
   });
   m_colliders.emplace_back(glm::vec2(0), m_size);
+  Physics::PhysicsEngine::addDynamicGameObject(m_pCurrentBullet);
 }
 
 void Tank::render() const noexcept {
 
-  if(!m_isRespawning) {
+  if(!m_isSpawning) {
     if(m_hasShield) {
       m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer + 0.1f, m_spriteAnimator_shield.getCurrentFrame());
     }
@@ -90,7 +91,7 @@ void Tank::setOrientation(const EOrientation eOrientation) noexcept {
 }
 
 void Tank::update(const double delta) noexcept {
-  if(m_isRespawning) {
+  if(m_isSpawning) {
     m_spriteAnimator_respawn.update(delta);
     m_respawnTimer.update(delta);
   } else { 
@@ -122,15 +123,14 @@ double Tank::getMaxVelocity() const noexcept {
 }
 
 void Tank::setVelocity(const double velocity) noexcept {
-  if(!m_isRespawning) {
+  if(!m_isSpawning) {
     m_velocity = velocity;
   }
 }
 
+
 void Tank::fire() const noexcept {
-    //if (!m_pCurrentBullet->isActive())
-    {
-        m_pCurrentBullet->fire(m_position + m_size / 4.f, m_direction);
-        Physics::PhysicsEngine::addDynamicGameObject(m_pCurrentBullet);
-    }
+  if(!m_pCurrentBullet->isActive()) {
+    m_pCurrentBullet->fire(m_position + m_size / 4.f + m_size * m_direction / 2.2f, m_direction);
+  }
 }

@@ -54,7 +54,7 @@ private:
   Timer m_shieldTimer;
 
   double m_maxVelocity;
-  bool m_isRespawning;
+  bool m_isSpawning;
   bool m_hasShield;
 
 };

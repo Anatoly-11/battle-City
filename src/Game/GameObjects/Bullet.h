@@ -23,6 +23,7 @@ public:
   virtual void render() const noexcept override;
   bool isActive() const noexcept;
   void fire(const glm::vec2 &position, const glm::vec2 &direction) noexcept;
+  virtual void onCollision() noexcept override;
 
 private:
   std::shared_ptr<RendererEngine::Sprite> m_pSprite_top;
@@ -31,6 +32,7 @@ private:
   std::shared_ptr<RendererEngine::Sprite> m_pSprite_right;
 
   EOrientation m_eOrientation;
+  double m_maxVelocity;
   bool m_isActive;
 };
 #endif // !_BULLET_H

@@ -27,6 +27,7 @@ public:
   Water(const glm::vec2 &position, const glm::vec2 &size, const float rotation, const float layer) noexcept;
   void render() const noexcept override;
   void update(const double delta) noexcept override;
+  virtual bool collides(const IGameObject::EObjectType objectType) const noexcept override;
 
 private:
   void renderBlock(const EBlockLocation eBlockLocation) const noexcept;

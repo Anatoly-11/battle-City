@@ -3,7 +3,8 @@
 #include "../../Resources/ResourceManager.h"
 
 BrickWall::BrickWall(const EBrickWallType eBrickWallType, const glm::vec2 &position,
-  const glm::vec2 &size, const float rotation, const float layer) noexcept : IGameObject(position, size, rotation, layer),
+  const glm::vec2 &size, const float rotation, const float layer) noexcept :
+  IGameObject(IGameObject::EObjectType::BrickWall, position, size, rotation, layer),
   m_eCurrentBrickState{ EBrickState::Destroyed,
                         EBrickState::Destroyed,
                         EBrickState::Destroyed,
