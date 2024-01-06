@@ -62,7 +62,7 @@ namespace Physics {
   }
 
 
-  void PhysicsEngine::addDymamycObject(std::shared_ptr<IGameObject> pGameObjects) noexcept {
+  void PhysicsEngine::addDynamicGameObject(std::shared_ptr<IGameObject> pGameObjects) noexcept {
     m_dynamicObjects.insert(std::move(pGameObjects));
   }
 
@@ -79,19 +79,20 @@ namespace Physics {
         const glm::vec2 currentCollider2_bottomLeft_world = currentCollider2.bottomLeft + position2;
         const glm::vec2 currentCollider2_topRight_world = currentCollider2.topRight + position2;
         if(currentCollider1_bottomLeft_world.x >= currentCollider2_topRight_world.x) { // первый объект целиком справа по x
-          return false;
+          continue;
         }
         if(currentCollider1_topRight_world.x <= currentCollider2_bottomLeft_world.x) { // первый объект целиком справа по x
-          return false;
+          continue;
         }
         if(currentCollider1_bottomLeft_world.y >= currentCollider2_topRight_world.y) { // первый объект целиком сверху по y
-          return false;
+          continue;
         }
         if(currentCollider1_topRight_world.y <= currentCollider2_bottomLeft_world.y) { // первый объект целиком снизу по y
-          return false;
+          continue;
         }
+        return true;
       }
     }
-    return true;
+    return false;
   }
 }

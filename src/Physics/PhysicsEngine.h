@@ -27,7 +27,7 @@ namespace Physics {
     static void init() noexcept;
     static void terminate() noexcept;
     static void update(const double delta) noexcept;
-    static void addDymamycObject(std::shared_ptr<IGameObject> pGameObjects) noexcept;
+    static void addDynamicGameObject(std::shared_ptr<IGameObject> pGameObjects) noexcept;
     static void setCurrentLevel(std::shared_ptr<Level> pLevel) noexcept;
   private:
     static std::unordered_set<std::shared_ptr<IGameObject>> m_dynamicObjects;

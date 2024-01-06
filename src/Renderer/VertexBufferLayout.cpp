@@ -17,7 +17,7 @@ namespace RendererEngine {
 
   void VertexBufferLayout::adLayoutEletmtntsFloat(const unsigned int count, const bool normalized) noexcept {
     unsigned int size = count * sizeof(GLfloat);
-    m_latotuElements.emplace_back(static_cast<int>(count), GL_FLOAT, normalized, size);
+    m_latotuElements.emplace_back(static_cast<GLint>(count), GL_FLOAT, normalized, size);
     m_stride += size;
   }
 }
