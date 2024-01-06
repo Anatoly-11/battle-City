@@ -5,7 +5,7 @@
 #include "ShaderProgram.h"
 #include <format>
 
-namespace RendererEngine {
+namespace RenderEngine {
   void Renderer::draw(const VertexArray &vertexArray, const IndexBuffer &indexBuffer,
     const ShaderProgram &shader) noexcept {
     shader.use();

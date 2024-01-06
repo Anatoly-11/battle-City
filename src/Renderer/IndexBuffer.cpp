@@ -1,6 +1,6 @@
 #include "IndexBuffer.h"
 
-namespace RendererEngine {
+namespace RenderEngine {
   IndexBuffer::IndexBuffer() noexcept : m_id(0), m_count(0) {
   }
 

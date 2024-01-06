@@ -6,7 +6,7 @@
 #include "IGameObject.h"
 #include <glm/vec2.hpp>
 
-namespace RendererEngine
+namespace RenderEngine
 {
   class Sprite;
 }
@@ -24,7 +24,7 @@ public:
   virtual void render() const noexcept override;
 private:
   void renderBlock(const EBlockLocation eBlockLocation) const noexcept;
-  std::shared_ptr<RendererEngine::Sprite> m_sprite;
+  std::shared_ptr<RenderEngine::Sprite> m_sprite;
   std::array<glm::vec2, 4> m_blockOffsets;
 };
 #endif // !_ICE_H

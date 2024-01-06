@@ -36,7 +36,7 @@ void glfwWindowSizeCallback(GLFWwindow *pWin, int width, int height) {
     viewPortHeight = static_cast<unsigned int>(((float)g_windowSize.x / map_aspect_ratio));
     viewPortBottomOffset = static_cast<unsigned int>(((float)g_windowSize.y - viewPortHeight) / 2.f);
   }
-  RendererEngine::Renderer::setViewport(viewPortWidth, viewPortHeight, viewPortLeftOffset, viewPortBottomOffset);
+  RenderEngine::Renderer::setViewport(viewPortWidth, viewPortHeight, viewPortLeftOffset, viewPortBottomOffset);
 }
 
 void glfwKeyCallback(GLFWwindow *pWin, int key, int scan, int act, int mode) {
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  cout << RendererEngine::Renderer::getInfo() << endl;
+  cout << RenderEngine::Renderer::getInfo() << endl;
 
   ResourceManager::setExecutablePath(argv[0]);
 
@@ -90,9 +90,9 @@ int main(int argc, char *argv[]) {
     static_cast<int>(coef_scale*g_game->getCurrentLevelHeight()));
 
 
-  RendererEngine::Renderer::setClearColor(0.f, 0.f, 0.f, 1.f);
+  RenderEngine::Renderer::setClearColor(0.f, 0.f, 0.f, 1.f);
 
-  RendererEngine::Renderer::setDepthTest(true);
+  RenderEngine::Renderer::setDepthTest(true);
   auto prevTime = chrono::high_resolution_clock::now();
   // Loop until the user closes the window
   while(!glfwWindowShouldClose(pWindow)) {
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
     Physics::PhysicsEngine::update(dutation);
 
     // Render here
-    RendererEngine::Renderer::clear();
+    RenderEngine::Renderer::clear();
     g_game->render();
 
     // Swap front and back buffers

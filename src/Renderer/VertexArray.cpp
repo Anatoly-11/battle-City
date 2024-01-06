@@ -2,7 +2,7 @@
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 
-namespace RendererEngine {
+namespace RenderEngine {
   VertexArray::VertexArray() noexcept : m_id(0), m_elementsCount(0) {
     glGenVertexArrays(1, &m_id);
   }

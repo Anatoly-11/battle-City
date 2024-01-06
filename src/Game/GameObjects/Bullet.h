@@ -2,11 +2,13 @@
 #define _BULLET_H 1.0
 
 #include "IGameObject.h"
+#include "../../Renderer/SpriteAnimator.h"
+#include "../../System/Timer.h"
 
 #include <array>
 #include <memory>
 
-namespace RendererEngine {
+namespace RenderEngine {
   class Sprite;
 }
 
@@ -19,20 +21,28 @@ public:
     Right
   };
 
-  Bullet(const double velocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept;
+  Bullet(const double velocity, const glm::vec2& position, const glm::vec2& size, const glm::vec2& explosionSize,
+    const float layer) noexcept;
   virtual void render() const noexcept override;
+  void update(const double delta) noexcept override;
   bool isActive() const noexcept;
   void fire(const glm::vec2 &position, const glm::vec2 &direction) noexcept;
   virtual void onCollision() noexcept override;
 
 private:
-  std::shared_ptr<RendererEngine::Sprite> m_pSprite_top;
-  std::shared_ptr<RendererEngine::Sprite> m_pSprite_bottom;
-  std::shared_ptr<RendererEngine::Sprite> m_pSprite_left;
-  std::shared_ptr<RendererEngine::Sprite> m_pSprite_right;
+  glm::vec2 m_explosionSize;
+  glm::vec2 m_explosionOffset;
+  std::shared_ptr<RenderEngine::Sprite> m_pSprite_top;
+  std::shared_ptr<RenderEngine::Sprite> m_pSprite_bottom;
+  std::shared_ptr<RenderEngine::Sprite> m_pSprite_left;
+  std::shared_ptr<RenderEngine::Sprite> m_pSprite_right;
+  std::shared_ptr<RenderEngine::Sprite> m_pSprite_explosion;
+  RenderEngine::SpriteAnimator m_spriteAnimator_explosion;
+  Timer m_explosionTimer;
 
   EOrientation m_eOrientation;
   double m_maxVelocity;
   bool m_isActive;
+  bool m_isExplosion;
 };
 #endif // !_BULLET_H

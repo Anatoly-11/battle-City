@@ -6,7 +6,7 @@
 #include "IGameObject.h"
 #include <glm/vec2.hpp>
 
-namespace RendererEngine
+namespace RenderEngine
 {
   class Sprite;
 }
@@ -44,7 +44,7 @@ public:
 private:
   void renderBlock(const EBlockLocation eBlockLocation) const noexcept;
   std::array<EBlockState, 4> m_eCurrentBlockState;
-  std::shared_ptr<RendererEngine::Sprite> m_sprite;
+  std::shared_ptr<RenderEngine::Sprite> m_sprite;
   std::array<glm::vec2, 4> m_blockOffsets;
 };
 #endif // !_BETONWALL_H

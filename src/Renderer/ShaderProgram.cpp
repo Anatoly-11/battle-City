@@ -2,7 +2,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
-namespace RendererEngine {
+namespace RenderEngine {
   ShaderProgram::ShaderProgram(const std::string &vertexShader, const std::string &fragmentShader) noexcept
     : m_isCompiled(false), m_ID(0) {
     GLuint vertexShaderID, fragmentShaderID;

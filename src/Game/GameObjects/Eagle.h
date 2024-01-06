@@ -6,7 +6,7 @@
 #include "IGameObject.h"
 #include <glm/vec2.hpp>
 
-namespace RendererEngine
+namespace RenderEngine
 {
   class Sprite;
 }
@@ -21,7 +21,7 @@ public:
   virtual void render() const noexcept override;
   virtual void update(const double delta) noexcept override;
 private:
-  std::array<std::shared_ptr<RendererEngine::Sprite>, 2> m_sprites;
+  std::array<std::shared_ptr<RenderEngine::Sprite>, 2> m_sprites;
   EEagleState m_eCurrentEagleState;
 };
 #endif // !_EAGLE_H

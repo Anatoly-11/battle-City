@@ -12,7 +12,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 
-namespace RendererEngine
+namespace RenderEngine
 {
   class Texture2D;
   class ShaderProgram;

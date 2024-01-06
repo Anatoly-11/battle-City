@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <cstdint>
 
-namespace RendererEngine {
+namespace RenderEngine {
   class VertexBuffer {
     VertexBuffer(const VertexBuffer&) = delete;
     VertexBuffer &operator=(const VertexBuffer&) = delete;

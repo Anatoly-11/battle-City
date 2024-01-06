@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 
-namespace RendererEngine {
+namespace RenderEngine {
   class ShaderProgram;
   class Texture2D;
   class Sprite;
@@ -24,22 +24,22 @@ public:
 
   static void unloadAllResources() noexcept;
 
-  static std::shared_ptr<RendererEngine::ShaderProgram> getShaderProgram(const std::string &shaderName) noexcept;
+  static std::shared_ptr<RenderEngine::ShaderProgram> getShaderProgram(const std::string &shaderName) noexcept;
  
-  static std::shared_ptr<RendererEngine::ShaderProgram> loadShader(const std::string &shaderName,
+  static std::shared_ptr<RenderEngine::ShaderProgram> loadShader(const std::string &shaderName,
     const std::string &vertexPath,const std::string &fragmentPath) noexcept;
 
-  static std::shared_ptr<RendererEngine::Texture2D> loadTexture(const std::string &textureName,
+  static std::shared_ptr<RenderEngine::Texture2D> loadTexture(const std::string &textureName,
     const std::string &texturePath) noexcept;
 
-  static std::shared_ptr<RendererEngine::Texture2D> getTexture(const std::string &textureName) noexcept;
+  static std::shared_ptr<RenderEngine::Texture2D> getTexture(const std::string &textureName) noexcept;
 
-  static std::shared_ptr<RendererEngine::Sprite> loadSprite(const std::string &spriteName, const std::string &textureName,
+  static std::shared_ptr<RenderEngine::Sprite> loadSprite(const std::string &spriteName, const std::string &textureName,
     const std::string &shaderName, const std::string &subTextureName = "default") noexcept;
 
-  static std::shared_ptr<RendererEngine::Sprite> getSprite(const std::string &spriteName) noexcept;
+  static std::shared_ptr<RenderEngine::Sprite> getSprite(const std::string &spriteName) noexcept;
 
-  static std::shared_ptr<RendererEngine::Texture2D> loadTextureAtlas(const std::string &textureName,
+  static std::shared_ptr<RenderEngine::Texture2D> loadTextureAtlas(const std::string &textureName,
     const std::string texturePath, std::vector<std::string> &subTextures, const unsigned int subTextureWidth,
     const unsigned int subTextureHeight) noexcept;
 
@@ -51,13 +51,13 @@ private:
 
   static std::string getFileString(const std::string &relativeFilePath) noexcept;
 
-  using ShaderProgramsMap = std::map<std::string, std::shared_ptr<RendererEngine::ShaderProgram>>;
+  using ShaderProgramsMap = std::map<std::string, std::shared_ptr<RenderEngine::ShaderProgram>>;
   static ShaderProgramsMap m_shaderPrograms;
 
-  using TextureMap = std::map<std::string, std::shared_ptr<RendererEngine::Texture2D>>;
+  using TextureMap = std::map<std::string, std::shared_ptr<RenderEngine::Texture2D>>;
   static TextureMap m_textures;
 
-  using SpritesMap = std::map<std::string, std::shared_ptr<RendererEngine::Sprite>>;
+  using SpritesMap = std::map<std::string, std::shared_ptr<RenderEngine::Sprite>>;
   static SpritesMap m_sprites;
 
   static std::vector <std::vector<std::string>> m_levels;

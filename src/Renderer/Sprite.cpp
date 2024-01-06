@@ -7,7 +7,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace RendererEngine {
+namespace RenderEngine {
 
   Sprite::Sprite(const std::shared_ptr<Texture2D> &pTexture,
     const std::string &initialSubTexture,

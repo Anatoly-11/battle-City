@@ -6,7 +6,7 @@
 #include "IGameObject.h"
 #include <glm/vec2.hpp>
 
-namespace RendererEngine
+namespace RenderEngine
 {
   class Sprite;
 }
@@ -58,7 +58,7 @@ public:
 private:
   void renderBrick(const EBrickLocation eBrickLocation) const noexcept;
   std::array<EBrickState, 4> m_eCurrentBrickState;
-  std::array<std::shared_ptr<RendererEngine::Sprite>, 15> m_sprites;
+  std::array<std::shared_ptr<RenderEngine::Sprite>, 15> m_sprites;
   std::array<glm::vec2, 4> m_blockOffsets;
 };
 #endif // !_BRICKWALL_H

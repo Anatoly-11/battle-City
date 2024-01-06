@@ -5,7 +5,7 @@
 #include <glm/mat4x4.hpp>
 #include <string>
 
-namespace RendererEngine {
+namespace RenderEngine {
 	class ShaderProgram {
 	private:
 		bool m_isCompiled;

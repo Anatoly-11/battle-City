@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <cstdint>
 
-namespace RendererEngine {
+namespace RenderEngine {
   class IndexBuffer {
     IndexBuffer(const IndexBuffer&) = delete;
     IndexBuffer &operator=(const IndexBuffer&) = delete;

@@ -9,7 +9,7 @@
 
 #include <glm/vec2.hpp>
 
-namespace RendererEngine
+namespace RenderEngine
 {
   class Sprite;
   class Sprite;
@@ -31,8 +31,8 @@ public:
 
 private:
   void renderBlock(const EBlockLocation eBlockLocation) const noexcept;
-  std::shared_ptr<RendererEngine::Sprite> m_sprite;
-  RendererEngine::SpriteAnimator m_spriteAnimator;
+  std::shared_ptr<RenderEngine::Sprite> m_sprite;
+  RenderEngine::SpriteAnimator m_spriteAnimator;
   std::array<glm::vec2, 4> m_blockOffsets;
 };
 #endif // !_WATER_H

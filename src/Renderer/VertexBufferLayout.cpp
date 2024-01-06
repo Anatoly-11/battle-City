@@ -1,5 +1,5 @@
 #include "VertexBufferLayout.h"
-namespace RendererEngine {
+namespace RenderEngine {
   VertexBufferLayout::VertexBufferLayout() noexcept : m_stride(0) {
   }
 
