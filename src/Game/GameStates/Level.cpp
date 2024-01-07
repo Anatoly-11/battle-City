@@ -1,12 +1,12 @@
 #include "Level.h"
 
-#include "GameObjects/BrickWall.h"
-#include "GameObjects/BetonWall.h"
-#include "GameObjects/Trees.h"
-#include "GameObjects/Ice.h"
-#include "GameObjects/Water.h"
-#include "GameObjects/Eagle.h"
-#include "GameObjects/Border.h"
+#include "../GameObjects/BrickWall.h"
+#include "../GameObjects/BetonWall.h"
+#include "../GameObjects/Trees.h"
+#include "../GameObjects/Ice.h"
+#include "../GameObjects/Water.h"
+#include "../GameObjects/Eagle.h"
+#include "../GameObjects/Border.h"
 
 #include <iostream>
 #include <algorithm>
@@ -128,11 +128,11 @@ Level::Level(const std::vector<std::string> &levelDescription) noexcept {
 }
 
 
-unsigned int Level::getLevelWidth() const noexcept {
+unsigned int Level::getStateWidth() const noexcept {
   return (m_widthBlocks + 3) * BLOCK_SIZE;
 }
 
-unsigned int Level::getLevelHeight() const noexcept {
+unsigned int Level::getStateHeight() const noexcept {
   return (m_heightBlocks + 1) * BLOCK_SIZE;
 }
 

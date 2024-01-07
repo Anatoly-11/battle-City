@@ -23,6 +23,8 @@ ResourceManager::SpritesMap ResourceManager::m_sprites;
 
 vector <vector<string>> ResourceManager::m_levels;
 
+std::vector<std::string> ResourceManager::m_startScreen;
+
 std::string ResourceManager::m_path;
 
 void ResourceManager::setExecutablePath(const std::string &executablePath) noexcept {
@@ -232,6 +234,24 @@ bool ResourceManager::loadJSONResources(const string &JSONPath) noexcept {
     }
   }
 
+  if(auto startScreenIt = document.FindMember("start_screen"); startScreenIt != document.MemberEnd()) {
+    const auto descriptionArray = startScreenIt->value.GetArray();
+    m_startScreen.reserve(descriptionArray.Size());
+    size_t maxLength = 0;
+    for(const auto &currentRow : descriptionArray) {
+      m_startScreen.emplace_back(currentRow.GetString());
+      if(maxLength < m_startScreen.back().length()) {
+        maxLength = m_startScreen.back().length();
+      }
+    }
+
+    for(auto &currentRow : m_startScreen) {
+      while(currentRow.length() < maxLength) {
+        currentRow.append("F");
+      }
+    }
+  }
+
   if(auto levelsIt = document.FindMember("levels"); levelsIt != document.MemberEnd()) {
     for(const auto& currentLevel : levelsIt->value.GetArray()) {
       const auto description = currentLevel["description"].GetArray();
@@ -258,3 +278,8 @@ bool ResourceManager::loadJSONResources(const string &JSONPath) noexcept {
 const vector<vector<string>> &ResourceManager::getLevels() noexcept {
   return m_levels;
 }
+
+const std::vector<std::string> &ResourceManager::getStartScreen() noexcept {
+  return m_startScreen;
+}
+

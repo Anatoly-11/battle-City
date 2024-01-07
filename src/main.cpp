@@ -23,17 +23,16 @@ unique_ptr<Game> g_game = make_unique<Game>(g_windowSize);
 void glfwWindowSizeCallback(GLFWwindow *pWin, int width, int height) {
   g_windowSize.x = width;
   g_windowSize.y = height;
-
-  const float map_aspect_ratio = static_cast<float>(g_game->getCurrentLevelWidth()) / g_game->getCurrentLevelHeight();
+  const float level_aspect_ratio = static_cast<float>(g_game->getCurrentWidth()) / g_game->getCurrentHeight();
   unsigned int viewPortWidth = g_windowSize.x;
   unsigned int viewPortHeight = g_windowSize.y;
   unsigned int viewPortLeftOffset = 0;
   unsigned int viewPortBottomOffset = 0;
-  if((float)g_windowSize.x / g_windowSize.y > map_aspect_ratio) {
-    viewPortWidth = static_cast<unsigned int>((float)g_windowSize.y * map_aspect_ratio);
+  if((float)g_windowSize.x / g_windowSize.y > level_aspect_ratio) {
+    viewPortWidth = static_cast<unsigned int>((float)g_windowSize.y * level_aspect_ratio);
     viewPortLeftOffset = static_cast<unsigned int>(((float)g_windowSize.x - viewPortWidth) / 2.f);
-  } else if((float)g_windowSize.x / g_windowSize.y < map_aspect_ratio) {
-    viewPortHeight = static_cast<unsigned int>(((float)g_windowSize.x / map_aspect_ratio));
+  } else if((float)g_windowSize.x / g_windowSize.y < level_aspect_ratio) {
+    viewPortHeight = static_cast<unsigned int>(((float)g_windowSize.x / level_aspect_ratio));
     viewPortBottomOffset = static_cast<unsigned int>(((float)g_windowSize.y - viewPortHeight) / 2.f);
   }
   RenderEngine::Renderer::setViewport(viewPortWidth, viewPortHeight, viewPortLeftOffset, viewPortBottomOffset);
@@ -86,8 +85,8 @@ int main(int argc, char *argv[]) {
 
   constexpr float coef_scale = 3.f;
 
-  glfwSetWindowSize(pWindow, static_cast<int>(coef_scale*g_game->getCurrentLevelWidth()),
-    static_cast<int>(coef_scale*g_game->getCurrentLevelHeight()));
+  glfwSetWindowSize(pWindow, static_cast<int>(coef_scale*g_game->getCurrentWidth()),
+    static_cast<int>(coef_scale*g_game->getCurrentHeight()));
 
 
   RenderEngine::Renderer::setClearColor(0.f, 0.f, 0.f, 1.f);

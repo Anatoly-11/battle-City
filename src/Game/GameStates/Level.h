@@ -3,21 +3,25 @@
 
 #include <string>
 #include <vector>
+
+#include "IGameState.h"
+
 #include <memory>
 
 #include <glm/vec2.hpp>
 
 class IGameObject;
 
-class Level {
+class Level : public IGameState {
 public:
 	static constexpr unsigned int BLOCK_SIZE = 16;
 
 	Level(const std::vector<std::string> &levelDescription) noexcept;
 	void render() const noexcept;
 	void update(const double delta) noexcept;
-	unsigned int getLevelWidth() const noexcept;
-	unsigned int getLevelHeight() const noexcept;
+
+	virtual unsigned int getStateWidth() const noexcept override;
+  virtual unsigned int getStateHeight() const noexcept override;
 
 	const glm::ivec2 &getPlayerRespawn_1() const noexcept;
 	const glm::ivec2 &getPlayerRespawn_2() const noexcept;

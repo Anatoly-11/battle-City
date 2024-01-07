@@ -47,6 +47,8 @@ public:
 
   static const std::vector <std::vector<std::string>> &getLevels() noexcept;
 
+  static const std::vector<std::string> &getStartScreen() noexcept;
+
 private:
 
   static std::string getFileString(const std::string &relativeFilePath) noexcept;
@@ -61,7 +63,9 @@ private:
   static SpritesMap m_sprites;
 
   static std::vector <std::vector<std::string>> m_levels;
-  
+
+  static std::vector<std::string> m_startScreen;
+
   static std::string m_path;
 };
 #endif // !_RESOURCEMANAGER_H

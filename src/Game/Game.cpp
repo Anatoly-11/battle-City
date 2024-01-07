@@ -9,11 +9,13 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Level.h"
+#include "GameStates/Level.h"
+#include "GameStates/StartScreen.h"
 #include "GameObjects/Tank.h"
 #include "GameObjects/Bullet.h"
 
-Game::Game(const glm::ivec2 &_windowSize) noexcept : m_windowSize(_windowSize), m_eCurrentGameState(EGameState::Active) {
+Game::Game(const glm::ivec2 &_windowSize) noexcept : m_windowSize(_windowSize),
+  m_eCurrentGameState(EGameState::StartScreen) {
   m_keys.fill(false);
 }
 
@@ -21,41 +23,61 @@ Game::~Game() noexcept {
 }
 
 void Game::render() noexcept {
-  if(m_pTank != nullptr) {
-    m_pTank->render();
-  }
+  switch(m_eCurrentGameState) {
+  case EGameState::StartScreen:
+    m_pStartScreen->render();
+    break;
+  case EGameState::Level:
+    if(m_pTank) {
+      m_pTank->render();
+    }
 
-  if(m_pLevel) {
-    m_pLevel->render();
+    if(m_pLevel) {
+      m_pLevel->render();
+    }
+    break;
   }
 }
 
 
 void Game::update(const double delta) noexcept {
-  if(m_pLevel) {
-    m_pLevel->update(delta);
+  switch(m_eCurrentGameState) {
+  case EGameState::StartScreen:
+    if(m_keys[GLFW_KEY_ENTER]) {
+      m_eCurrentGameState = EGameState::Level;
+    }
+    break;
+
+  case EGameState::Level:
+    if(m_pLevel) {
+      m_pLevel->update(delta);
+    }
+
+    if(m_pTank) {
+      if(m_keys[GLFW_KEY_W] || m_keys[GLFW_KEY_UP]) {
+        m_pTank->setOrientation(Tank::EOrientation::Top);
+        m_pTank->setVelocity(m_pTank->getMaxVelocity());
+      } else if(m_keys[GLFW_KEY_A] || m_keys[GLFW_KEY_LEFT]) {
+        m_pTank->setOrientation(Tank::EOrientation::Left);
+        m_pTank->setVelocity(m_pTank->getMaxVelocity());
+      } else if(m_keys[GLFW_KEY_D] || m_keys[GLFW_KEY_RIGHT]) {
+        m_pTank->setOrientation(Tank::EOrientation::Right);
+        m_pTank->setVelocity(m_pTank->getMaxVelocity());
+      } else if(m_keys[GLFW_KEY_S] || m_keys[GLFW_KEY_DOWN]) {
+        m_pTank->setOrientation(Tank::EOrientation::Bottom);
+        m_pTank->setVelocity(m_pTank->getMaxVelocity());
+      } else {
+        m_pTank->setVelocity(0);
+      }
+
+      if(m_pTank && m_keys[GLFW_KEY_SPACE]) {
+        m_pTank->fire();
+      }
+
+      m_pTank->update(delta);
+    }
+    break;
   }
-  if(m_pTank != nullptr) {
-    if(m_keys[GLFW_KEY_W] || m_keys[GLFW_KEY_UP]) {
-      m_pTank->setOrientation(Tank::EOrientation::Top);
-      m_pTank->setVelocity(m_pTank->getMaxVelocity());
-    } else if(m_keys[GLFW_KEY_A] || m_keys[GLFW_KEY_LEFT]) {
-      m_pTank->setOrientation(Tank::EOrientation::Left);
-      m_pTank->setVelocity(m_pTank->getMaxVelocity());
-    } else if(m_keys[GLFW_KEY_D] || m_keys[GLFW_KEY_RIGHT]) {
-      m_pTank->setOrientation(Tank::EOrientation::Right);
-      m_pTank->setVelocity(m_pTank->getMaxVelocity());
-    } else if(m_keys[GLFW_KEY_S] || m_keys[GLFW_KEY_DOWN]) {
-      m_pTank->setOrientation(Tank::EOrientation::Bottom);
-      m_pTank->setVelocity(m_pTank->getMaxVelocity());
-    } else {
-      m_pTank->setVelocity(0);
-    }
-    if(m_keys[GLFW_KEY_SPACE]) {
-      m_pTank->fire();
-    }
-  } 
-  m_pTank->update(delta);
 }
 
 void Game::setKey(const int key, const int action) noexcept {
@@ -72,9 +94,11 @@ bool Game::init() noexcept {
     return false;
   }
 
+  m_pStartScreen = std::make_shared<StartScreen>(ResourceManager::getStartScreen());
+
   m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
-  m_windowSize.x = static_cast<int>(m_pLevel->getLevelWidth());
-  m_windowSize.y = static_cast<int>(m_pLevel->getLevelHeight());
+  m_windowSize.x = static_cast<int>(m_pLevel->getStateWidth());
+  m_windowSize.y = static_cast<int>(m_pLevel->getStateHeight());
 
   Physics::PhysicsEngine::setCurrentLevel(m_pLevel);
 
@@ -90,10 +114,22 @@ bool Game::init() noexcept {
   return true;
 }
 
-size_t Game::getCurrentLevelWidth() const noexcept {
-  return m_pLevel->getLevelWidth();
+unsigned int Game::getCurrentWidth() const noexcept {
+  switch(m_eCurrentGameState) {
+  case EGameState::StartScreen:
+    return m_pStartScreen->getStateWidth();
+
+  case EGameState::Level:
+    return m_pLevel->getStateWidth();
+  }
 }
 
-size_t Game::getCurrentLevelHeight() const noexcept {
-  return m_pLevel->getLevelHeight();
+unsigned int Game::getCurrentHeight() const noexcept {
+  switch(m_eCurrentGameState) {
+  case EGameState::StartScreen:
+    return m_pStartScreen->getStateHeight();
+
+  case EGameState::Level:
+    return m_pLevel->getStateHeight();
+  }
 }

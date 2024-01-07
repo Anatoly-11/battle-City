@@ -8,10 +8,12 @@
 
 class Tank;
 class Level;
+class StartScreen;
 
 class Game {
 public:
   Game(const glm::ivec2 &_windowSize) noexcept;
+
   ~Game() noexcept;
 
   void render() noexcept;
@@ -22,17 +24,21 @@ public:
 
   bool init() noexcept;
 
-  size_t getCurrentLevelWidth() const noexcept;
+  unsigned int getCurrentWidth() const noexcept;
 
-  size_t getCurrentLevelHeight() const noexcept;
+  unsigned int  getCurrentHeight() const noexcept;
 
 private:
-  std::array<bool, 349> m_keys;
-
-  enum class EGameState {
-    Active,
-    Paused
+  enum class EGameState : uint8_t {
+    StartScreen,
+    LevelStart,
+    Level,
+    Pause,
+    Scores,
+    GameOver
   };
+
+  std::array<bool, 349> m_keys;
 
   glm::ivec2 m_windowSize;
 
@@ -41,5 +47,7 @@ private:
   std::shared_ptr<Tank> m_pTank;
 
   std::shared_ptr<Level> m_pLevel;
+
+  std::shared_ptr<StartScreen> m_pStartScreen;
 };
 #endif // !_GAME_H
