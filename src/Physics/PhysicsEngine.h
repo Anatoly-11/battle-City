@@ -3,18 +3,38 @@
 
 #include <memory>
 #include <vector>
+#include <functional>
 #include <unordered_set>
 #include <glm/vec2.hpp>
 
 class IGameObject;
 class Level;
 namespace Physics {
+  enum class ECollisionDirection : uint8_t {
+    Top,
+    Bottom,
+    Left,
+    Right
+  };
 
   struct AABB {
     glm::vec2 bottomLeft;
     glm::vec2 topRight;
     AABB(const glm::vec2 &v1, const glm::vec2 &v2) noexcept;
   };
+
+  struct Collider {
+    Collider(const glm::vec2 &_bottomLeft, const glm::vec2 _topRight,
+      std::function<void(const IGameObject &, const ECollisionDirection)> _onCollisionCallback = {}) noexcept;
+
+    Collider(const AABB &_boundingBox, std::function<void(const IGameObject &, const ECollisionDirection)>
+      _onCollisionCallback = {}) noexcept;
+
+    AABB boundingBox;
+    bool isActive;
+    std::function<void(const IGameObject &, const ECollisionDirection)> onCollisionCallback;
+  };
+
 
   class PhysicsEngine {
     PhysicsEngine(const PhysicsEngine &) = delete;
@@ -32,8 +52,8 @@ namespace Physics {
   private:
     static std::unordered_set<std::shared_ptr<IGameObject>> m_dynamicObjects;
     static std::shared_ptr<Level> m_pCurrentLevel;
-    static bool hasIntersection(const std::vector<AABB> &colliders1, const glm::vec2 &position1,
-      const std::vector<AABB> &colliders2, const glm::vec2 &position2)  noexcept;
+    static bool hasIntersection(const Collider& collider1, const glm::vec2& position1, const Collider& collider2,
+      const glm::vec2& position2) noexcept;
   };
 }
 #endif // _PHYSICSENGINE_H

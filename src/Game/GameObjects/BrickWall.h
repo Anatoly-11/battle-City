@@ -54,9 +54,16 @@ public:
   BrickWall(const EBrickWallType eBrickWallType, const glm::vec2 &position, const glm::vec2 &size, const float rotation,
     const float layer) noexcept;
   virtual void render() const noexcept override;
-  virtual void update(const double delta) noexcept override;
 private:
   void renderBrick(const EBrickLocation eBrickLocation) const noexcept;
+  static EBrickState getBrickStateAfterCollision(const EBrickState currentState,
+    const Physics::ECollisionDirection direction) noexcept;
+  static Physics::AABB getAABBForBrickState(const EBrickLocation location, const EBrickState eBrickState,
+    const glm::vec2 &size) noexcept;
+  void onCollisionCallback(const EBrickLocation location, const IGameObject &object,
+    const Physics::ECollisionDirection direction) noexcept;
+
+  std::array<Physics::Collider *, 4> m_brickLocationToColliderMap;
   std::array<EBrickState, 4> m_eCurrentBrickState;
   std::array<std::shared_ptr<RenderEngine::Sprite>, 15> m_sprites;
   std::array<glm::vec2, 4> m_blockOffsets;

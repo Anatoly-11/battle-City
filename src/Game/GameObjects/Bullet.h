@@ -27,7 +27,6 @@ public:
   void update(const double delta) noexcept override;
   bool isActive() const noexcept;
   void fire(const glm::vec2 &position, const glm::vec2 &direction) noexcept;
-  virtual void onCollision() noexcept override;
 
 private:
   glm::vec2 m_explosionSize;

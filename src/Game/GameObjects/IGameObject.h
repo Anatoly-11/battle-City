@@ -19,7 +19,8 @@ public:
     Unknown
   };
 
-  IGameObject(const EObjectType objectType, const glm::vec2 &position, const glm::vec2 &size, const float rotation, const float layer) noexcept;
+  IGameObject(const EObjectType objectType, const glm::vec2 &position, const glm::vec2 &size, const float rotation,
+    const float layer) noexcept;
   virtual void render() const noexcept = 0;
   virtual void update(const double delta) noexcept;
   virtual ~IGameObject() noexcept;
@@ -28,7 +29,7 @@ public:
   virtual double getCurrentVelocity() const noexcept;
   virtual void setVelocity(const double velosity) noexcept;
   const glm::vec2 &getSize() const noexcept;
-  const std::vector<Physics::AABB> &getColliders() const noexcept;
+  const std::vector<Physics::Collider> &getColliders() const noexcept;
   EObjectType getObjectType() const noexcept;
   virtual bool collides(const EObjectType objectType) const noexcept;
   virtual void onCollision()  noexcept;
@@ -41,7 +42,7 @@ protected:
 
   glm::vec2 m_direction;
   double m_velocity;
-  std::vector<Physics::AABB> m_colliders;
+  std::vector<Physics::Collider> m_colliders;
 };
 
 #endif // !_IGAMEOBJECT_H
