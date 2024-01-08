@@ -166,7 +166,7 @@ void Level::processInput(const std::array<bool, 349> &aKeys) noexcept {
 }
 
 void Level::initPhysics() noexcept {
-  m_pTank = std::make_shared<Tank>(0.05, getPlayerRespawn_1(), 
+  m_pTank = std::make_shared<Tank>(Tank::ETankType::Player1Yellow_type1, 0.05, getPlayerRespawn_1(),
    glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
   Physics::PhysicsEngine::addDynamicGameObject(m_pTank);
 }
