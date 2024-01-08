@@ -370,6 +370,16 @@
 				"redType8_right1",
 				"redType8_right2"
 			]
+		},
+
+		{
+			"name": "menu_128x64",
+			"filePath": "res/textures/menu_128x64.png",
+			"subTextureWidth": 128,
+			"subTextureHeight": 64,
+			"subTextures": [
+				"menu"
+			]
 		}
 	],
 
@@ -589,11 +599,11 @@
 			"frames": [
 				{
 					"subTexture": "shield1",
-					"duration": 50
+					"duration": 100
 				},
 				{
 					"subTexture": "shield2",
-					"duration": 50
+					"duration": 100
 				}
 			]
 		},
@@ -605,15 +615,15 @@
 			"frames": [
 				{
 					"subTexture": "explosion1",
-					"duration": 100
+					"duration": 80
 				},
 				{
 					"subTexture": "explosion2",
-					"duration": 100
+					"duration": 80
 				},
 				{
 					"subTexture": "explosion3",
-					"duration": 100
+					"duration": 80
 				}
 			]
 		},
@@ -725,7 +735,12 @@
 			"initialSubTexture": "bonus_gun"
 		},
 
-
+		{
+			"name": "menu",
+			"textureAtlas": "menu_128x64",
+			"shader": "spriteShader",
+			"initialSubTexture": "menu"
+		},
 
 		{
 			"name": "tankSprite_top",
