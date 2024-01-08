@@ -6,6 +6,7 @@
 #include "IGameObject.h"
 #include "../../Renderer/SpriteAnimator.h"
 #include "../../System/Timer.h"
+#include "../AIComponent.h"
 
 namespace RenderEngine{
   class Sprite;
@@ -73,8 +74,8 @@ public:
     Top, Bottom,  Left, Right
   };
 
-  Tank(const Tank::ETankType eType, const double maxVelocity, const glm::vec2 &position, const glm::vec2 &size,
-    const float layer) noexcept;
+  Tank(const Tank::ETankType eType, const bool bHasAI,const bool bShieldOnSpawn, const EOrientation eOrientation,
+    const double maxVelocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept;
 
   virtual void render() const noexcept override;
 
@@ -112,6 +113,9 @@ private:
   double m_maxVelocity;
   bool m_isSpawning;
   bool m_hasShield;
+  bool m_bShieldOnSpawn;
+
+  std::unique_ptr<AIComponent> m_pAIComponent;
 
   static const std::string &getTankSpriteFromType(const Tank::ETankType eType) noexcept;
  };

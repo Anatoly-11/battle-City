@@ -9,6 +9,12 @@ endif()
 SET(PROJECT_NAME BattleCity)
 
 project(${PROJECT_NAME} VERSION 1.0.0)
+#if(NOT EXISTS "src/Game/AIComponent.cpp")
+#	file(WRITE "src/Game/AIComponent.cpp" "#include \"AIComponent.h\"\n\nAIComponent::AIComponent() noexcept {\n\n}")
+#endif()
+#if(NOT EXISTS "src/Game/AIComponent.h")
+#	file(WRITE "src/Game/AIComponent.h" "#pragma once\n\nclass AIComponent {\npublic:\n  AIComponent() noexcept;\n\n};")
+#endif()
 
 add_executable(${PROJECT_NAME}
 	src/main.cpp
@@ -38,6 +44,8 @@ add_executable(${PROJECT_NAME}
 
 	src/Game/Game.cpp
 	src/Game/Game.h
+	src/Game/AIComponent.cpp
+	src/Game/AIComponent.h
 
 	src/Game/GameStates/IGameState.h
 	src/Game/GameStates/StartScreen.cpp

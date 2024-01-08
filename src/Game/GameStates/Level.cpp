@@ -166,9 +166,19 @@ void Level::processInput(const std::array<bool, 349> &aKeys) noexcept {
 }
 
 void Level::initPhysics() noexcept {
-  m_pTank = std::make_shared<Tank>(Tank::ETankType::Player1Yellow_type1, 0.05, getPlayerRespawn_1(),
+  m_pTank = std::make_shared<Tank>(Tank::ETankType::Player1Yellow_type1, false, true, Tank::EOrientation::Top, 0.05,
+    getPlayerRespawn_1(),
    glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
   Physics::PhysicsEngine::addDynamicGameObject(m_pTank);
+  m_enemyTanks.emplace(std::make_shared<Tank>(Tank::ETankType::EnemyWhite_type1, true, false, Tank::EOrientation::Bottom, 0.05,
+    getEnemyRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f));
+  m_enemyTanks.emplace(std::make_shared<Tank>(Tank::ETankType::EnemyWhite_type4, true, false, Tank::EOrientation::Bottom, 0.05,
+    getEnemyRespawn_2(),  glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f));
+  m_enemyTanks.emplace(std::make_shared<Tank>(Tank::ETankType::EnemyWhite_type2, true, false, Tank::EOrientation::Bottom, 0.05,
+    getEnemyRespawn_3(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f));
+  for(const auto &enemyTank : m_enemyTanks) {
+    Physics::PhysicsEngine::addDynamicGameObject(enemyTank);
+  }
 }
 
 void Level::render() const noexcept {
@@ -178,6 +188,9 @@ void Level::render() const noexcept {
     }
   }
   m_pTank->render();
+  for(const auto &enemyTank : m_enemyTanks) {
+    enemyTank->render();
+  }
 }
 
 void Level::update(const double delta) noexcept {
@@ -187,6 +200,9 @@ void Level::update(const double delta) noexcept {
     }
   }
   m_pTank->update(delta);
+  for(const auto &enemyTank : m_enemyTanks) {
+    enemyTank->update(delta);
+  }
 }
 
 const glm::ivec2 &Level::getPlayerRespawn_1() const noexcept {
