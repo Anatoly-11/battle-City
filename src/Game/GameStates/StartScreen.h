@@ -1,5 +1,4 @@
-#ifndef _STARTRSCREEN_H
-#define _STARTRSCREEN_H 1.0
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -30,6 +29,3 @@ public:
 private:
     std::vector<std::pair<std::shared_ptr<RenderEngine::Sprite>, glm::vec2>> m_sprites;
 };
-
-
-#endif // !_STARTRSCREEN_H

@@ -1,5 +1,4 @@
-#ifndef _IGAMEOBJECT_H
-#define _IGAMEOBJECT_H 1.0
+#pragma once
 
 #include <glm/vec2.hpp>
 #include "../../Physics/PhysicsEngine.h"
@@ -44,5 +43,3 @@ protected:
   double m_velocity;
   std::vector<Physics::Collider> m_colliders;
 };
-
-#endif // !_IGAMEOBJECT_H

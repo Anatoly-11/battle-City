@@ -1,5 +1,4 @@
-#ifndef _VERTEXBUFFERLAYOUT_H
-#define _VERTEXBUFFERLAYOUT_H 1.0
+#pragma once
 
 #include <vector>
 #include <glad/glad.h>
@@ -31,5 +30,3 @@ namespace RenderEngine {
     unsigned int m_stride;
   };
 }
-
-#endif // !_VERTEXBUFFERLAYOUT_H

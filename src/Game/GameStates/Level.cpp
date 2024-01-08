@@ -7,10 +7,14 @@
 #include "../GameObjects/Water.h"
 #include "../GameObjects/Eagle.h"
 #include "../GameObjects/Border.h"
+#include "../GameObjects/Tank.h"
+
+#include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+
 
 std::shared_ptr<IGameObject> createGameObjectFromDescription(const char description, const glm::vec2 &position,
   const glm::vec2 &size, const float rotation) noexcept {
@@ -125,6 +129,7 @@ Level::Level(const std::vector<std::string> &levelDescription) noexcept {
   // right border
   m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((m_widthBlocks + 1) * BLOCK_SIZE, 0.f),
     glm::vec2(BLOCK_SIZE << 1, (m_heightBlocks + 1.f) * BLOCK_SIZE), 0.f, 0.f));
+ 
 }
 
 
@@ -136,12 +141,43 @@ unsigned int Level::getStateHeight() const noexcept {
   return (m_heightBlocks + 1) * BLOCK_SIZE;
 }
 
+void Level::processInput(const std::array<bool, 349> &aKeys) noexcept {
+  if(m_pTank) {
+    if(aKeys[GLFW_KEY_W] || aKeys[GLFW_KEY_UP]) {
+      m_pTank->setOrientation(Tank::EOrientation::Top);
+      m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    } else if(aKeys[GLFW_KEY_A] || aKeys[GLFW_KEY_LEFT]) {
+      m_pTank->setOrientation(Tank::EOrientation::Left);
+      m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    } else if(aKeys[GLFW_KEY_D] || aKeys[GLFW_KEY_RIGHT]) {
+      m_pTank->setOrientation(Tank::EOrientation::Right);
+      m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    } else if(aKeys[GLFW_KEY_S] || aKeys[GLFW_KEY_DOWN]) {
+      m_pTank->setOrientation(Tank::EOrientation::Bottom);
+      m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    } else {
+      m_pTank->setVelocity(0);
+    }
+
+    if(m_pTank && aKeys[GLFW_KEY_SPACE]) {
+      m_pTank->fire();
+    }
+  }
+}
+
+void Level::initPhysics() noexcept {
+  m_pTank = std::make_shared<Tank>(0.05, getPlayerRespawn_1(), 
+   glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+  Physics::PhysicsEngine::addDynamicGameObject(m_pTank);
+}
+
 void Level::render() const noexcept {
   for(const auto &currentMapObject : m_levelObjects) {
     if(currentMapObject) {
       currentMapObject->render();
     }
   }
+  m_pTank->render();
 }
 
 void Level::update(const double delta) noexcept {
@@ -150,6 +186,7 @@ void Level::update(const double delta) noexcept {
       currentMapObject->update(delta);
     }
   }
+  m_pTank->update(delta);
 }
 
 const glm::ivec2 &Level::getPlayerRespawn_1() const noexcept {

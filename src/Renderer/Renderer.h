@@ -1,5 +1,4 @@
-#ifndef _RENDERER_H
-#define _RENDERER_H 1.0
+#pragma once
 
 #include <string>
 
@@ -22,4 +21,3 @@ namespace RenderEngine {
     static const std::string getInfo() noexcept;
   };
 }
-#endif // !_RENDERER_H

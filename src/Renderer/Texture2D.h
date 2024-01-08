@@ -1,5 +1,4 @@
-#ifndef _TEXTURE2D_H
-#define _TEXTURE2D_H 1.0
+#pragma once
 
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
@@ -40,4 +39,3 @@ namespace RenderEngine {
     std::map<std::string, SubTexture2D> m_subTextures;
   };
 }
-#endif // !_TEXTURE2D_H

@@ -1,5 +1,4 @@
-#ifndef _BETONWALL_H
-#define _BETONWALL_H 1.0
+#pragma once
 
 #include <memory>
 #include <array>
@@ -47,4 +46,3 @@ private:
   std::shared_ptr<RenderEngine::Sprite> m_sprite;
   std::array<glm::vec2, 4> m_blockOffsets;
 };
-#endif // !_BETONWALL_H

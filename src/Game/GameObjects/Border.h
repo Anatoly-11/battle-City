@@ -1,5 +1,4 @@
-#ifndef _BORDER_H
-#define _BORDER_H 1.0
+#pragma once
 
 #include <memory>
 #include <array>
@@ -19,4 +18,3 @@ public:
 private:
   std::shared_ptr<RenderEngine::Sprite> m_sprite;
 };
-#endif // !_BORDER_H

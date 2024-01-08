@@ -1,5 +1,4 @@
-#ifndef _WATER_H
-#define _WATER_H 1.0
+#pragma once
 
 #include <memory>
 #include <array>
@@ -35,4 +34,3 @@ private:
   RenderEngine::SpriteAnimator m_spriteAnimator;
   std::array<glm::vec2, 4> m_blockOffsets;
 };
-#endif // !_WATER_H

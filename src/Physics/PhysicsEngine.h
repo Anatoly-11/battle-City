@@ -1,5 +1,4 @@
-#ifndef _PHYSICSENGINE_H
-#define _PHYSICSENGINE_H 1.0
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -56,4 +55,3 @@ namespace Physics {
       const glm::vec2& position2) noexcept;
   };
 }
-#endif // _PHYSICSENGINE_H

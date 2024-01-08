@@ -1,5 +1,4 @@
-#ifndef _BULLET_H
-#define _BULLET_H 1.0
+#pragma once
 
 #include "IGameObject.h"
 #include "../../Renderer/SpriteAnimator.h"
@@ -44,4 +43,3 @@ private:
   bool m_isActive;
   bool m_isExplosion;
 };
-#endif // !_BULLET_H

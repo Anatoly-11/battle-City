@@ -1,5 +1,4 @@
-#ifndef _VERTEXARRAY_H
-#define _VERTEXARRAY_H 1.0
+#pragma once
 
 #include <glad/glad.h>
 
@@ -31,4 +30,3 @@ namespace RenderEngine {
     unsigned int m_elementsCount;
   };
 }
-#endif // !_VERTEXARRAY_H

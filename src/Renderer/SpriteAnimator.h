@@ -1,5 +1,4 @@
-#ifndef _SPRITEANIMATOR_H
-#define _SPRITEANIMATOR_H 1.0
+#pragma once
 
 #include <memory>
 
@@ -20,4 +19,3 @@ namespace RenderEngine {
     double m_totalDuration;
   };
 }
-#endif // !_SPRITEANIMATOR_H

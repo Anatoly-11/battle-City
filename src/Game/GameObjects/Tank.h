@@ -1,5 +1,4 @@
-#ifndef _TANK_H
-#define _TANK_H 1.0
+#pragma once
 
 #include <memory>
 #include <glm/vec2.hpp>
@@ -58,5 +57,3 @@ private:
   bool m_hasShield;
 
 };
-
-#endif //  _TANK_H

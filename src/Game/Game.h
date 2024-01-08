@@ -1,17 +1,18 @@
-#ifndef _GAME_H
-#define _GAME_H 1.0
+#pragma once
 
 #include <array>
 #include <vector>
 #include <glm/vec2.hpp>
 #include <memory>
+namespace RenderEngine {
+  class ShaderProgram;
+}
 
-class Tank;
-class Level;
-class StartScreen;
+class IGameState;
 
 class Game {
 public:
+
   Game(const glm::ivec2 &_windowSize) noexcept;
 
   ~Game() noexcept;
@@ -24,10 +25,15 @@ public:
 
   bool init() noexcept;
 
+  void startNewLevel(const unsigned int level) noexcept;
+
   unsigned int getCurrentWidth() const noexcept;
 
   unsigned int  getCurrentHeight() const noexcept;
-
+  
+  void updateViewport() noexcept;
+  
+  void setWindowSize(const glm::uvec2& windowSize) noexcept;
 private:
   enum class EGameState : uint8_t {
     StartScreen,
@@ -41,13 +47,8 @@ private:
   std::array<bool, 349> m_keys;
 
   glm::ivec2 m_windowSize;
-
   EGameState m_eCurrentGameState;
 
-  std::shared_ptr<Tank> m_pTank;
-
-  std::shared_ptr<Level> m_pLevel;
-
-  std::shared_ptr<StartScreen> m_pStartScreen;
+  std::shared_ptr<IGameState> m_pCurrentGameState;
+  std::shared_ptr<RenderEngine::ShaderProgram> m_pSpriteShaderProgram;
 };
-#endif // !_GAME_H

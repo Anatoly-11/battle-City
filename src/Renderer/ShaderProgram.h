@@ -1,5 +1,4 @@
-#ifndef _SHADERPROGRAM_H_
-#define _SHADERPROGRAM_H_ 1.0
+#pragma once
 
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
@@ -27,4 +26,3 @@ namespace RenderEngine {
 		void setMatrix4(const std::string &name, const glm::mat4 &matr) noexcept;
 	};
 }
-#endif // !_SHADERPROGRAM_H_

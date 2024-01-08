@@ -1,5 +1,4 @@
-#ifndef _TREES_H
-#define _TREES_H 1.0
+#pragma once
 
 #include <memory>
 #include <array>
@@ -27,4 +26,3 @@ private:
   std::shared_ptr<RenderEngine::Sprite> m_sprite;
   std::array<glm::vec2, 4> m_blockOffsets;
 };
-#endif // !_TREES_H

@@ -1,5 +1,4 @@
-#ifndef _VERTEXBUFFER_H
-#define _VERTEXBUFFER_H 1.0
+#pragma once
 
 #include <glad/glad.h>
 #include <cstdint>
@@ -29,4 +28,3 @@ namespace RenderEngine {
     GLuint m_id;
   };
 }
-#endif // !_VERTEXBUFFER_H

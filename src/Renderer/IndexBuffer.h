@@ -1,5 +1,4 @@
-#ifndef _INDEXBUFFER_H
-#define _INDEXBUFFER_H 1.0
+#pragma once
 
 #include <glad/glad.h>
 #include <cstdint>
@@ -30,4 +29,3 @@ namespace RenderEngine {
     unsigned int m_count;
   };
 }
-#endif // !_INDEXBUFFER_H

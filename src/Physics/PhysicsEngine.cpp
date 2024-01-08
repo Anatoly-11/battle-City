@@ -18,6 +18,12 @@ namespace Physics {
     m_pCurrentLevel.reset();
   }
 
+  void PhysicsEngine::setCurrentLevel(std::shared_ptr<Level> pLevel) noexcept {
+    m_pCurrentLevel.swap(pLevel);
+    m_dynamicObjects.clear();
+    m_pCurrentLevel->initPhysics();
+  }
+
   void PhysicsEngine::update(const double delta) noexcept {
     for(auto &currentDynamicObject : m_dynamicObjects) {
       if(currentDynamicObject->getCurrentVelocity() > 0) {
@@ -66,7 +72,6 @@ namespace Physics {
           }
         }
 
-
         if(!hasCollision) {
           currentDynamicObject->getCurrentPosition() = newPosition;
         } else {
@@ -86,10 +91,6 @@ namespace Physics {
 
   void PhysicsEngine::addDynamicGameObject(std::shared_ptr<IGameObject> pGameObjects) noexcept {
     m_dynamicObjects.insert(std::move(pGameObjects));
-  }
-
-  void PhysicsEngine::setCurrentLevel(std::shared_ptr<Level> pLevel) noexcept {
-    m_pCurrentLevel.swap(pLevel);
   }
 
   bool PhysicsEngine::hasIntersection(const Collider &collider1, const glm::vec2 &position1,

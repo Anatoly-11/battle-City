@@ -1,5 +1,4 @@
-#ifndef _RESOURCEMANAGER_H
-#define _RESOURCEMANAGER_H 1.0
+#pragma once
 
 #include <string>
 #include <memory>
@@ -68,4 +67,3 @@ private:
 
   static std::string m_path;
 };
-#endif // !_RESOURCEMANAGER_H

@@ -1,5 +1,4 @@
-#ifndef _BRICKWALL_H
-#define _BRICKWALL_H 1.0
+#pragma once
 
 #include <memory>
 #include <array>
@@ -68,4 +67,3 @@ private:
   std::array<std::shared_ptr<RenderEngine::Sprite>, 15> m_sprites;
   std::array<glm::vec2, 4> m_blockOffsets;
 };
-#endif // !_BRICKWALL_H

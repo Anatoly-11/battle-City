@@ -1,5 +1,4 @@
-#ifndef _SPRITE_H
-#define _SPRITE_H 1.0
+#pragma once
 
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
@@ -56,4 +55,3 @@ namespace RenderEngine
     mutable size_t lastFrameId;
   };
 }
-#endif // !_SPRITE_H

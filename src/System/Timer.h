@@ -1,5 +1,4 @@
-#ifndef _TIMER_H
-#define _TIMER_H 1.0
+#pragma once
 
 #include <functional>
 class Timer {
@@ -13,4 +12,3 @@ private:
 	double m_timeLeft;
 	bool m_isRunning;
 };
-#endif // !_TIMER_H

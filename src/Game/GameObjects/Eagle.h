@@ -1,5 +1,4 @@
-#ifndef _EAGLE_H
-#define _EAGLE_H 1.0
+#pragma once
 
 #include <memory>
 #include <array>
@@ -24,4 +23,3 @@ private:
   std::array<std::shared_ptr<RenderEngine::Sprite>, 2> m_sprites;
   EEagleState m_eCurrentEagleState;
 };
-#endif // !_EAGLE_H
