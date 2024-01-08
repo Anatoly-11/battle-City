@@ -4,6 +4,8 @@
 
 #include "Bullet.h"
 #include "../../Physics/PhysicsEngine.h"
+#include "../AIComponent.h"
+
 
 const std::string &Tank::getTankSpriteFromType(const Tank::ETankType eType) noexcept {
   return TankTypeToSpriteString[static_cast<size_t>(eType)];
@@ -50,6 +52,11 @@ Tank::Tank(const Tank::ETankType eType, const bool bHasAI, const bool bShieldOnS
   if(bHasAI) {
     m_pAIComponent = std::make_unique<AIComponent>(this);
   }
+}
+
+Tank::~Tank() noexcept {
+  if(m_pAIComponent)
+    m_pAIComponent.release();
 }
 
 void Tank::render() const noexcept {

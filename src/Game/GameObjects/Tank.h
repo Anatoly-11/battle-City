@@ -6,13 +6,13 @@
 #include "IGameObject.h"
 #include "../../Renderer/SpriteAnimator.h"
 #include "../../System/Timer.h"
-#include "../AIComponent.h"
 
 namespace RenderEngine{
   class Sprite;
 }
 
 class Bullet;
+class AIComponent;
 
 class Tank : public IGameObject {
 public:
@@ -76,7 +76,7 @@ public:
 
   Tank(const Tank::ETankType eType, const bool bHasAI,const bool bShieldOnSpawn, const EOrientation eOrientation,
     const double maxVelocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept;
-
+  ~Tank() noexcept;
   virtual void render() const noexcept override;
 
   void setOrientation(const EOrientation eOrientation) noexcept;
