@@ -2,7 +2,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 
-
 #include <iostream>
 #include <chrono>
 
@@ -21,89 +20,87 @@ std::unique_ptr<Game> g_game = std::make_unique<Game>(g_windowSize);
 
 
 void glfwWindowSizeCallback(GLFWwindow *pWin, int width, int height) {
-  g_windowSize.x = width;
-  g_windowSize.y = height;
-  g_game->setWindowSize(g_windowSize);
+	g_windowSize.x = width;
+	g_windowSize.y = height;
+	g_game->setWindowSize(g_windowSize);
 }
 
 void glfwKeyCallback(GLFWwindow *pWin, int key, int scan, int act, int mode) {
-  if((key == GLFW_KEY_ESCAPE || (key == GLFW_KEY_F4 && mode == GLFW_MOD_ALT)) && act == GLFW_PRESS) {
-    glfwSetWindowShouldClose(pWin, GL_TRUE);
-  }
-  g_game->setKey(key, act);
+	if((key == GLFW_KEY_ESCAPE || (key == GLFW_KEY_F4 && mode == GLFW_MOD_ALT)) && act == GLFW_PRESS) {
+		glfwSetWindowShouldClose(pWin, GL_TRUE);
+	}
+	g_game->setKey(key, act, mode);
 }
 
 int main(int argc, char *argv[]) {
-  // Initialize the library
-  if(!glfwInit()) {
-    std::cout << "glfwInit failed" << std::endl;
-    return -1;
-  }
+	// Initialize the library
+	if(!glfwInit()) {
+		std::cout << "glfwInit failed" << std::endl;
+		return -1;
+	}
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  // Create a windowed mode window and its OpenGL context
-  GLFWwindow *pWindow = glfwCreateWindow(g_windowSize.x, g_windowSize.y, "Battle-Ciyt", nullptr, nullptr);
-  if(!pWindow) {
-    std::cout << "glfwCreateWindow failed" << std::endl;
-    glfwTerminate();
-    return -1;
-  }
+	// Create a windowed mode window and its OpenGL context
+	GLFWwindow *pWindow = glfwCreateWindow(g_windowSize.x, g_windowSize.y, "Battle-Ciyt", nullptr, nullptr);
+	if(!pWindow) {
+		std::cout << "glfwCreateWindow failed" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
 
-  glfwSetWindowSizeCallback(pWindow, glfwWindowSizeCallback);
-  glfwSetKeyCallback(pWindow, glfwKeyCallback);
+	glfwSetWindowSizeCallback(pWindow, glfwWindowSizeCallback);
+	glfwSetKeyCallback(pWindow, glfwKeyCallback);
 
-  // Make the window's context current
-  glfwMakeContextCurrent(pWindow);
+	// Make the window's context current
+	glfwMakeContextCurrent(pWindow);
 
-  if(!gladLoadGL()) {
-    std::cout << "Can't load GLAD!" << std::endl;
-    return -1;
-  }
+	if(!gladLoadGL()) {
+		std::cout << "Can't load GLAD!" << std::endl;
+		return -1;
+	}
 
-  std::cout << RenderEngine::Renderer::getInfo() << std::endl;
+	std::cout << RenderEngine::Renderer::getInfo() << std::endl;
 
-  ResourceManager::setExecutablePath(argv[0]);
+	ResourceManager::setExecutablePath(argv[0]);
 
-  Physics::PhysicsEngine::init();
+	Physics::PhysicsEngine::init();
 
-  g_game->init();
+	g_game->init();
 
-  //constexpr float coef_scale = 3.f;
-  //glfwSetWindowSize(pWindow, static_cast<int>(coef_scale*g_game->getCurrentWidth()),
-  //  static_cast<int>(coef_scale*g_game->getCurrentHeight()));
+	//constexpr float coef_scale = 3.f;
+	//glfwSetWindowSize(pWindow, static_cast<int>(coef_scale*g_game->getCurrentWidth()),
+	//  static_cast<int>(coef_scale*g_game->getCurrentHeight()));
 
 
-  RenderEngine::Renderer::setClearColor(0.f, 0.f, 0.f, 1.f);
+	RenderEngine::Renderer::setClearColor(0.f, 0.f, 0.f, 1.f);
 
-  RenderEngine::Renderer::setDepthTest(true);
-  auto prevTime = std::chrono::high_resolution_clock::now();
-  // Loop until the user closes the window
-  while(!glfwWindowShouldClose(pWindow)) {
+	RenderEngine::Renderer::setDepthTest(true);
+	auto prevTime = std::chrono::high_resolution_clock::now();
+	// Loop until the user closes the window
+	while(!glfwWindowShouldClose(pWindow)) {
 
-    // Poll for and process events
-    glfwPollEvents();
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		double dutation = std::chrono::duration<double, std::milli>(currentTime  - prevTime).count();
+		prevTime = currentTime;
 
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    double dutation = std::chrono::duration<double, std::milli>(currentTime  - prevTime).count();
-    prevTime = currentTime;
-    g_game->update(dutation);
-    Physics::PhysicsEngine::update(dutation);
+		glfwPollEvents();
 
-    // Render here
-    RenderEngine::Renderer::clear();
-    g_game->render();
+		g_game->update(dutation);
+		Physics::PhysicsEngine::update(dutation);
+		
+		RenderEngine::Renderer::clear();
+		g_game->render();
 
-    // Swap front and back buffers
-    glfwSwapBuffers(pWindow);
-  }
-  Physics::PhysicsEngine::terminate();
-  g_game = nullptr;
-  ResourceManager::unloadAllResources();
+		glfwSwapBuffers(pWindow);
+	}
+	Physics::PhysicsEngine::terminate();
+	g_game = nullptr;
+	ResourceManager::unloadAllResources();
 
-  glfwTerminate();
+	glfwTerminate();
 
-  return 0;
+	return 0;
 }

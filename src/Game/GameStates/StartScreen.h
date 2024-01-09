@@ -28,7 +28,7 @@ public:
 
   virtual void render() const noexcept override;
   virtual void update(const double delta) noexcept override;
-  virtual void processInput(const std::array<bool, 349> &aKeys) noexcept override;
+  virtual void processInput(const int key, const int act, const int mode) noexcept override;
 
   virtual unsigned int getStateWidth() const  noexcept override;
   virtual unsigned int getStateHeight() const  noexcept override;

@@ -142,45 +142,57 @@ unsigned int Level::getStateHeight() const noexcept {
   return (m_heightBlocks + 1) * BLOCK_SIZE;
 }
 
-void Level::processInput(const std::array<bool, 349> &aKeys) noexcept {
+void Level::processInput(const int key, const int act, const int mode) noexcept {
   switch(m_eGameMode) {
   case Game::EGameMode::TwoPlayers:
-    if(aKeys[GLFW_KEY_UP]) {
+    switch(key) {
+    case GLFW_KEY_UP:
       m_pTank2->setOrientation(Tank::EOrientation::Top);
       m_pTank2->setVelocity(m_pTank2->getMaxVelocity());
-    } else if(aKeys[GLFW_KEY_LEFT]) {
+      break;
+    case GLFW_KEY_LEFT:
       m_pTank2->setOrientation(Tank::EOrientation::Left);
       m_pTank2->setVelocity(m_pTank2->getMaxVelocity());
-    } else if(aKeys[GLFW_KEY_RIGHT]) {
+      break;
+    case GLFW_KEY_RIGHT:
       m_pTank2->setOrientation(Tank::EOrientation::Right);
       m_pTank2->setVelocity(m_pTank2->getMaxVelocity());
-    } else if(aKeys[GLFW_KEY_DOWN]) {
+      break;
+    case GLFW_KEY_DOWN:
       m_pTank2->setOrientation(Tank::EOrientation::Bottom);
       m_pTank2->setVelocity(m_pTank2->getMaxVelocity());
-    } else {
+      break;
+    default:
       m_pTank2->setVelocity(0);
+      break;
     }
-    if(m_pTank2 && aKeys[GLFW_KEY_RIGHT_SHIFT]) {
+    if(m_pTank2 && key == GLFW_KEY_KP_0) {
       m_pTank2->fire();
     }
   [[fallthrough]];
   case Game::EGameMode::OnePlayer:
-    if(aKeys[GLFW_KEY_W]) {
+    switch(key) {
+    case GLFW_KEY_W:
       m_pTank1->setOrientation(Tank::EOrientation::Top);
       m_pTank1->setVelocity(m_pTank1->getMaxVelocity());
-    } else if(aKeys[GLFW_KEY_A]) {
+      break;
+    case GLFW_KEY_A:
       m_pTank1->setOrientation(Tank::EOrientation::Left);
       m_pTank1->setVelocity(m_pTank1->getMaxVelocity());
-    } else if(aKeys[GLFW_KEY_D]) {
+      break;
+    case GLFW_KEY_D:
       m_pTank1->setOrientation(Tank::EOrientation::Right);
       m_pTank1->setVelocity(m_pTank1->getMaxVelocity());
-    } else if(aKeys[GLFW_KEY_S]) {
+      break;
+    case GLFW_KEY_S:
       m_pTank1->setOrientation(Tank::EOrientation::Bottom);
       m_pTank1->setVelocity(m_pTank1->getMaxVelocity());
-    } else {
+      break;
+    default:
       m_pTank1->setVelocity(0);
+      break;
     }
-    if(m_pTank1 && aKeys[GLFW_KEY_SPACE]) {
+    if(m_pTank1 && key == GLFW_KEY_SPACE) {
       m_pTank1->fire();
     }
   }

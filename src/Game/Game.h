@@ -25,7 +25,7 @@ public:
 
   void update(const double delta) noexcept;
 
-  void setKey(const int key, const int action) noexcept;
+  void setKey(const int key, const int act, const int mode) noexcept;
 
   bool init() noexcept;
 
@@ -50,7 +50,9 @@ private:
     GameOver
   };
 
-  std::array<bool, 349> m_keys;
+  int m_key;
+  int m_mode;
+  int m_act;
 
   glm::ivec2 m_windowSize;
   EGameState m_eCurrentGameState;

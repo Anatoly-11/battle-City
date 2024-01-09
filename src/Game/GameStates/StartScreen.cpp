@@ -98,19 +98,19 @@ void StartScreen::update(const double delta) noexcept {
   m_tankSpriteAnimator.update(delta);
 }
 
-void StartScreen::processInput(const std::array<bool, 349> &aKeys) noexcept {
-  if(!aKeys[GLFW_KEY_UP] && !aKeys[GLFW_KEY_W] && !aKeys[GLFW_KEY_DOWN] && !aKeys[GLFW_KEY_S]){
+void StartScreen::processInput(const int key, const int act, const int mode) noexcept {
+  if(key != GLFW_KEY_UP && key != GLFW_KEY_W && key != GLFW_KEY_DOWN && key != GLFW_KEY_S){
     m_keyReleased = true;
   }
   if(m_keyReleased) {
-    if(aKeys[GLFW_KEY_UP] || aKeys[GLFW_KEY_W]) {
+    if(key == GLFW_KEY_UP || key == GLFW_KEY_W) {
       --m_currentMenuSelection;
       if(m_currentMenuSelection < 0) {
         m_currentMenuSelection = 2;
       }
       m_keyReleased = false;
 
-    } else if(aKeys[GLFW_KEY_DOWN] || aKeys[GLFW_KEY_S]) {
+    } else if(key == GLFW_KEY_DOWN || key ==  GLFW_KEY_S) {
       ++m_currentMenuSelection;
       if(m_currentMenuSelection > 2) {
         m_currentMenuSelection = 0;
@@ -118,7 +118,7 @@ void StartScreen::processInput(const std::array<bool, 349> &aKeys) noexcept {
       m_keyReleased = false;
     }
   }
-  if(aKeys[GLFW_KEY_ENTER]) {
+  if(key == GLFW_KEY_ENTER) {
     switch(m_currentMenuSelection) {
     case 0:
       m_pGame->startNewLevel(0, Game::EGameMode::OnePlayer);

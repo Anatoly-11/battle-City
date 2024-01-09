@@ -2,7 +2,6 @@
 #include "GameObjects/Tank.h"
 
 AIComponent::AIComponent(Tank *pParentTank) noexcept : m_pParentTank(pParentTank) {
-
 }
 
 AIComponent::~AIComponent() noexcept {

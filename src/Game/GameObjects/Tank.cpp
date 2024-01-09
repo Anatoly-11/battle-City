@@ -11,8 +11,8 @@ const std::string &Tank::getTankSpriteFromType(const Tank::ETankType eType) noex
   return TankTypeToSpriteString[static_cast<size_t>(eType)];
 }
 
-Tank::Tank(const Tank::ETankType eType, const bool bHasAI, const bool bShieldOnSpawn, const EOrientation eOrientation, const double maxVelocity,
-  const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept
+Tank::Tank(const Tank::ETankType eType, const bool bHasAI, const bool bShieldOnSpawn, const EOrientation eOrientation,
+  const double maxVelocity, const glm::vec2 &position, const glm::vec2 &size, const float layer) noexcept
   : IGameObject(IGameObject::EObjectType::Tank, position, size, 0.f, layer),
   m_eOrientation(eOrientation),
   m_pCurrentBullet(std::make_shared<Bullet>(0.1, m_position + m_size / 4.f, m_size / 2.f, m_size, layer)),
