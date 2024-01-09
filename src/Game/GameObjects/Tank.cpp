@@ -35,7 +35,7 @@ Tank::Tank(const Tank::ETankType eType, const bool bHasAI, const bool bShieldOnS
   setOrientation(eOrientation);
   m_respawnTimer.setCallback([&]() {
     m_isSpawning = false;
-    if(bHasAI) {
+    if(m_pAIComponent) {
       m_velocity = m_maxVelocity;
     }
     if(m_bShieldOnSpawn) {
