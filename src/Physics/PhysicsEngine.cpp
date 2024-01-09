@@ -21,7 +21,7 @@ namespace Physics {
   void PhysicsEngine::setCurrentLevel(std::shared_ptr<Level> pLevel) noexcept {
     m_pCurrentLevel.swap(pLevel);
     m_dynamicObjects.clear();
-    m_pCurrentLevel->initPhysics();
+    m_pCurrentLevel->initLevel();
   }
 
   void PhysicsEngine::update(const double delta) noexcept {

@@ -2,23 +2,22 @@
 
 #include <string>
 #include <vector>
-
-#include "IGameState.h"
 #include <memory>
 #include <set>
-
 #include <glm/vec2.hpp>
+
+#include "IGameState.h"
+#include "../Game.h"
 
 class IGameObject;
 
 class Tank;
 
-
 class Level : public IGameState {
 public:
 	static constexpr unsigned int BLOCK_SIZE = 16;
 
-	Level(const std::vector<std::string> &levelDescription) noexcept;
+	Level(const std::vector<std::string> &levelDescription, const Game::EGameMode eGameMode) noexcept;
 	virtual void render() const noexcept override;
 	virtual void update(const double delta) noexcept override;
 
@@ -34,7 +33,7 @@ public:
 
 	std::vector<std::shared_ptr<IGameObject>> getObjectsInArea(const glm::vec2 &bottomLeft,
 		const glm::vec2 &topRight) const noexcept;
-	void initPhysics() noexcept;
+	void initLevel() noexcept;
 private:
 	unsigned int m_widthBlocks;
 	unsigned int m_heightBlocks;
@@ -48,6 +47,9 @@ private:
 	glm::ivec2 m_enemyRespawn_3;
 
 	std::vector<std::shared_ptr<IGameObject>> m_levelObjects;
-	std::shared_ptr<Tank> m_pTank;
+	std::shared_ptr<Tank> m_pTank1;
+	std::shared_ptr<Tank> m_pTank2;
 	std::set<std::shared_ptr<Tank>> m_enemyTanks;
+
+	Game::EGameMode m_eGameMode;
 };

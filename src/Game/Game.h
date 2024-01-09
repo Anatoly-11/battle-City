@@ -12,6 +12,10 @@ class IGameState;
 
 class Game {
 public:
+  enum class EGameMode : uint8_t {
+    OnePlayer,
+    TwoPlayers
+  };
 
   Game(const glm::ivec2 &_windowSize) noexcept;
 
@@ -25,7 +29,9 @@ public:
 
   bool init() noexcept;
 
-  void startNewLevel(const unsigned int level) noexcept;
+  void startNewLevel(const unsigned int level, const EGameMode eGameMode) noexcept;
+
+  void nextLevel(const EGameMode eGameMode) noexcept;
 
   unsigned int getCurrentWidth() const noexcept;
 
@@ -48,7 +54,8 @@ private:
 
   glm::ivec2 m_windowSize;
   EGameState m_eCurrentGameState;
-
+  
   std::shared_ptr<IGameState> m_pCurrentGameState;
   std::shared_ptr<RenderEngine::ShaderProgram> m_pSpriteShaderProgram;
+  unsigned int m_currentLevelIndex;
 };

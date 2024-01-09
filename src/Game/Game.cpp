@@ -20,7 +20,7 @@
 
 
 Game::Game(const glm::ivec2 &_windowSize) noexcept :
-  m_windowSize(_windowSize),
+  m_windowSize(_windowSize), 
   m_eCurrentGameState(EGameState::StartScreen) {
   m_keys.fill(false);
 }
@@ -98,11 +98,23 @@ void Game::updateViewport() noexcept {
   m_pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 }
 
-void Game::startNewLevel(const unsigned int level) noexcept {
-  auto pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
+void Game::startNewLevel(const unsigned int level, const EGameMode eGameMode) noexcept {
+  m_currentLevelIndex = level;
+  auto pLevel = std::make_shared<Level>(ResourceManager::getLevels()[m_currentLevelIndex], eGameMode);
+  m_pCurrentGameState = pLevel;
+  Physics::PhysicsEngine::setCurrentLevel(pLevel);
+  updateViewport();
+  /*if(m_pCurrentGameState != pLevel) {
+    if(m_pCurrentGameState)
+      m_pCurrentGameState.reset();
     m_pCurrentGameState = pLevel;
     Physics::PhysicsEngine::setCurrentLevel(pLevel);
     updateViewport();
+  }*/
+}
+
+void Game::nextLevel(const EGameMode eGameMode) noexcept {
+  startNewLevel(++m_currentLevelIndex, eGameMode);
 }
 
 unsigned int Game::getCurrentWidth() const noexcept {
