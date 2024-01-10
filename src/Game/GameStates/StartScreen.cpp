@@ -50,13 +50,14 @@ std::shared_ptr<RenderEngine::Sprite> getSpriteForDescription(const char descrip
   return nullptr;
 }
 
-StartScreen::StartScreen(const std::vector<std::string> &startScreenDescription, Game *pGame) noexcept : m_pGame(pGame), 
-  //m_keyReleased(true),
-  m_currentMenuIndex(0),
+StartScreen::StartScreen(const std::vector<std::string> &startScreenDescription, Game *pGame) noexcept :
+  m_pGame(pGame), 
+  m_keyReleased(true),
+  m_currentMenuSelection(0),
   m_menuSprite(std::make_pair(ResourceManager::getSprite("menu"), glm::vec2(11 * BLOCK_SIZE, STARTSCREEN_HEIGHT -
     startScreenDescription.size() * BLOCK_SIZE - MENU_HEIGHT - 5 * BLOCK_SIZE))),
   m_tankSprite(std::make_pair(ResourceManager::getSprite("player1_yellow_tank_type1_sprite_right"), glm::vec2(8 * BLOCK_SIZE, m_menuSprite.second.y +
-    6 * BLOCK_SIZE - m_currentMenuIndex * BLOCK_SIZE))), m_tankSpriteAnimator(m_tankSprite.first) {
+    6 * BLOCK_SIZE - m_currentMenuSelection * BLOCK_SIZE))), m_tankSpriteAnimator(m_tankSprite.first) {
   if(startScreenDescription.empty()) {
     std::cerr << "Empty start screen description!" << std::endl;
   }
@@ -90,7 +91,7 @@ void StartScreen::render() const noexcept {
     }
   }
   m_menuSprite.first->render(m_menuSprite.second, glm::vec2(MENU_WIDTH, MENU_HEIGHT), 0.f);
-  m_tankSprite.first->render(glm::vec2(m_tankSprite.second.x, m_tankSprite.second.y - m_currentMenuIndex * 2 * BLOCK_SIZE),
+  m_tankSprite.first->render(glm::vec2(m_tankSprite.second.x, m_tankSprite.second.y - m_currentMenuSelection * 2 * BLOCK_SIZE),
     glm::vec2(TANK_SIZE), 0.f, 0.f, m_tankSpriteAnimator.getCurrentFrame());
 }
 
@@ -98,30 +99,37 @@ void StartScreen::update(const double delta) noexcept {
   m_tankSpriteAnimator.update(delta);
 }
 
-void StartScreen::processInput(int &key, int &mode) noexcept {
-  switch(key){
-  case GLFW_KEY_UP: case GLFW_KEY_W:
-    if(m_currentMenuIndex > 0) {
-      --m_currentMenuIndex;
+void StartScreen::processInput(const std::array<bool, 349> &keys) noexcept {
+  if(!keys[GLFW_KEY_W] && !keys[GLFW_KEY_S] && !keys[GLFW_KEY_DOWN] && !keys[GLFW_KEY_UP]) {
+    m_keyReleased = true;
+  }
+
+  if(m_keyReleased) {
+    if(keys[GLFW_KEY_W] || keys[GLFW_KEY_UP]) {
+      m_keyReleased = false;
+      --m_currentMenuSelection;
+      if(m_currentMenuSelection < 0) {
+        m_currentMenuSelection = 2;
+      }
+    } else if(keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN]) {
+      m_keyReleased = false;
+      ++m_currentMenuSelection;
+      if(m_currentMenuSelection > 2) {
+        m_currentMenuSelection = 0;
+      }
     }
-    break;
-  case GLFW_KEY_DOWN: case GLFW_KEY_S:
-    if(m_currentMenuIndex < MAX_MENU_INDEX) {
-      ++m_currentMenuIndex;
-    }
-    break;
-  case GLFW_KEY_ENTER:
-    switch(m_currentMenuIndex) {
+  }
+
+  if(keys[GLFW_KEY_ENTER] || keys[GLFW_KEY_KP_ENTER]) {
+    switch(m_currentMenuSelection) {
     case 0:
       m_pGame->startNewLevel(0, Game::EGameMode::OnePlayer);
       break;
     case 1:
       m_pGame->startNewLevel(0, Game::EGameMode::TwoPlayers);
       break;
-    case 2:
+    default:
       break;
     }
-    break;
   }
-  mode = key = GLFW_KEY_UNKNOWN;
 }

@@ -19,9 +19,10 @@
 #include <iostream>
 
 
-Game::Game(const glm::ivec2 &_windowSize) noexcept : m_key(-1), m_mode(-1),
+Game::Game(const glm::ivec2 &_windowSize) noexcept :
   m_windowSize(_windowSize), 
   m_eCurrentGameState(EGameState::StartScreen) {
+  m_keys.fill(false);
 }
 
 Game::~Game() noexcept {
@@ -33,13 +34,12 @@ void Game::render() noexcept {
 }
 
 void Game::update(const double delta) noexcept {
-  m_pCurrentGameState->processInput(m_key, m_mode);
+  m_pCurrentGameState->processInput(m_keys);
   m_pCurrentGameState->update(delta);
 }
 
-void Game::setKey(const int key, const int mode) noexcept {
-  m_key = key;
-  m_mode = mode;
+void Game::setKey(const int key, const int action) noexcept {
+  m_keys[key] = action;
 }
 
 bool Game::init() noexcept {

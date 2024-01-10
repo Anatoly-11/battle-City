@@ -20,10 +20,13 @@ public:
 
   IGameObject(const EObjectType objectType, const glm::vec2 &position, const glm::vec2 &size, const float rotation,
     const float layer) noexcept;
+  void setOwner(IGameObject *pOwner) noexcept;
+  IGameObject *getOwner() const  noexcept;
   virtual void render() const noexcept = 0;
   virtual void update(const double delta) noexcept;
   virtual ~IGameObject() noexcept;
   virtual glm::vec2 &getCurrentPosition() noexcept;
+  virtual glm::vec2 &getTargetPosition() noexcept;
   virtual glm::vec2 &getCurrentDirection() noexcept;
   virtual double getCurrentVelocity() const noexcept;
   virtual void setVelocity(const double velosity) noexcept;
@@ -33,7 +36,9 @@ public:
   virtual bool collides(const EObjectType objectType) const noexcept;
   virtual void onCollision()  noexcept;
 protected:
+  IGameObject *m_pOwner;
   glm::vec2 m_position;
+  glm::vec2 m_targetPosition;
   glm::vec2 m_size;
   float m_rotation;
   float m_layer;

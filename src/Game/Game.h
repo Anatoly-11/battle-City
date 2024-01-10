@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <vector>
 #include <glm/vec2.hpp>
 #include <memory>
 namespace RenderEngine {
@@ -25,7 +24,7 @@ public:
 
   void update(const double delta) noexcept;
 
-  void setKey(const int key, const int mode) noexcept;
+  void setKey(const int key, const int action) noexcept;
 
   bool init() noexcept;
 
@@ -49,9 +48,7 @@ private:
     Scores,
     GameOver
   };
-
-  int m_key;
-  int m_mode;
+  std::array<bool, 349> m_keys;
 
   glm::ivec2 m_windowSize;
   EGameState m_eCurrentGameState;

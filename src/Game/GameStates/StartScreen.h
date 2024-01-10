@@ -28,16 +28,15 @@ public:
 
   virtual void render() const noexcept override;
   virtual void update(const double delta) noexcept override;
-  virtual void processInput(int &key, int &mode) noexcept override;
+  virtual void processInput(const std::array<bool, 349> &keys) noexcept override;
 
   virtual unsigned int getStateWidth() const  noexcept override;
   virtual unsigned int getStateHeight() const  noexcept override;
 
 private:
-  static constexpr int MAX_MENU_INDEX = 2;
   Game *m_pGame;
-  //bool m_keyReleased;
-  int m_currentMenuIndex;
+  bool m_keyReleased;
+  int m_currentMenuSelection;
   std::vector<std::pair<std::shared_ptr<RenderEngine::Sprite>, glm::vec2>> m_sprites;
   std::pair<std::shared_ptr<RenderEngine::Sprite>, glm::vec2> m_menuSprite;
   std::pair<std::shared_ptr<RenderEngine::Sprite>, glm::vec2> m_tankSprite;

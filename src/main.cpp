@@ -26,13 +26,10 @@ void glfwWindowSizeCallback(GLFWwindow *pWin, int width, int height) {
 }
 
 void glfwKeyCallback(GLFWwindow *pWin, int key, int scan, int act, int mode) {
-	if(act == GLFW_PRESS) {
-		if(key != GLFW_KEY_ESCAPE) {
-			g_game->setKey(key, mode);
-		} else {
-			glfwSetWindowShouldClose(pWin, GL_TRUE);
-		}
+	if(key == GLFW_KEY_ESCAPE && act == GLFW_PRESS) {
+		glfwSetWindowShouldClose(pWin, GL_TRUE);
 	}
+	g_game->setKey(key, act);
 }
 
 int main(int argc, char *argv[]) {
@@ -56,7 +53,6 @@ int main(int argc, char *argv[]) {
 
 	glfwSetWindowSizeCallback(pWindow, glfwWindowSizeCallback);
 	glfwSetKeyCallback(pWindow, glfwKeyCallback);
-	//glfwSetInputMode(pWindow, GLFW_STICKY_KEYS, GLFW_TRUE);
 
 	// Make the window's context current
 	glfwMakeContextCurrent(pWindow);
@@ -86,11 +82,11 @@ int main(int argc, char *argv[]) {
 	// Loop until the user closes the window
 	while(!glfwWindowShouldClose(pWindow)) {
 
+		glfwPollEvents();
+
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		double dutation = std::chrono::duration<double, std::milli>(currentTime  - prevTime).count();
 		prevTime = currentTime;
-
-		glfwPollEvents();
 
 		g_game->update(dutation);
 		Physics::PhysicsEngine::update(dutation);

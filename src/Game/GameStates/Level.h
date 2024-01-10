@@ -23,7 +23,7 @@ public:
 
 	virtual unsigned int getStateWidth() const noexcept override;
   virtual unsigned int getStateHeight() const noexcept override;
-	virtual void processInput(int &key, int &mode) noexcept override;
+	virtual void processInput(const std::array<bool, 349> &keys) noexcept override;
 
 	const glm::ivec2 &getPlayerRespawn_1() const noexcept;
 	const glm::ivec2 &getPlayerRespawn_2() const noexcept;

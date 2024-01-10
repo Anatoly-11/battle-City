@@ -1,16 +1,35 @@
 #include "IGameObject.h"
 
 IGameObject::IGameObject(const IGameObject::EObjectType objectType, const glm::vec2 &position, const glm::vec2 &size,
-  const float rotation, const float layer) noexcept : m_position(position), m_size(size), m_rotation(rotation),
-  m_layer(layer), m_eObjectType(objectType), m_direction(0.f, 1.f),  m_velocity(0.f) {
+  const float rotation, const float layer) noexcept :
+  m_pOwner(nullptr),
+  m_position(position),
+  m_targetPosition(position),
+  m_size(size),
+  m_rotation(rotation),
+  m_layer(layer),
+  m_eObjectType(objectType),
+  m_direction(0.f, 1.f),
+  m_velocity(0.f) {
 }
 
 void IGameObject::update(const double delta) noexcept {
 }
 
+void IGameObject::setOwner(IGameObject *pOwner) noexcept {
+  m_pOwner = pOwner;
+}
+
+IGameObject *IGameObject::getOwner() const  noexcept {
+  return m_pOwner;
+}
 
 glm::vec2 &IGameObject::getCurrentPosition() noexcept{
   return m_position;
+}
+
+glm::vec2 &IGameObject::getTargetPosition() noexcept {
+  return m_targetPosition;
 }
 
 glm::vec2 &IGameObject::getCurrentDirection() noexcept {
@@ -44,4 +63,5 @@ bool IGameObject::collides(const IGameObject::EObjectType objectType) const noex
   return true;
 }
 
-void IGameObject::onCollision()  noexcept {}
+void IGameObject::onCollision()  noexcept {
+}

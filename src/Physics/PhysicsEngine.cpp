@@ -25,18 +25,48 @@ namespace Physics {
   }
 
   void PhysicsEngine::update(const double delta) noexcept {
-    for(auto &currentDynamicObject : m_dynamicObjects) {
+    calculateTargetPositions(m_dynamicObjects, delta);
+
+    for(auto it1 = m_dynamicObjects.begin(); it1 != m_dynamicObjects.end(); ) {
+      auto &pObject1 = *it1;
+      for(auto it2 = ++it1; it2 != m_dynamicObjects.end(); ++it2) {
+        auto &pObject2 = *it2;
+        if(pObject1->getOwner() == pObject2.get() || pObject2->getOwner() == pObject1.get()) {
+          continue;
+        }
+        if(!hasPositionIntersection(pObject1, pObject1->getTargetPosition(),
+          pObject2, pObject2->getTargetPosition())) {
+          continue;
+        }
+
+        if(hasPositionIntersection(pObject1, pObject1->getTargetPosition(),
+          pObject2, pObject2->getCurrentPosition())) {
+          pObject1->getTargetPosition() = pObject1->getCurrentPosition();
+        }
+
+        if(hasPositionIntersection(pObject2, pObject2->getTargetPosition(),
+          pObject1, pObject1->getCurrentPosition())) {
+          pObject2->getTargetPosition() = pObject2->getCurrentPosition();
+        }
+      }
+    }
+    updatePositions(m_dynamicObjects);
+  }
+
+  void PhysicsEngine::calculateTargetPositions(std::unordered_set<std::shared_ptr<IGameObject>> &dynamicObjects,
+    const double delta) noexcept {
+    for(auto &currentDynamicObject : dynamicObjects) {
       if(currentDynamicObject->getCurrentVelocity() > 0) {
         // align position to multiple of 4 pixels
         if(currentDynamicObject->getCurrentDirection().x != 0.f) // right and left
         {
-          currentDynamicObject->getCurrentPosition() = glm::vec2(currentDynamicObject->getCurrentPosition().x, static_cast<unsigned int>(currentDynamicObject->getCurrentPosition().y / 4.f + 0.5f) * 4.f);
+          currentDynamicObject->getTargetPosition() = glm::vec2(currentDynamicObject->getCurrentPosition().x, static_cast<unsigned int>(currentDynamicObject->getCurrentPosition().y / 4.f + 0.5f) * 4.f);
         } else if(currentDynamicObject->getCurrentDirection().y != 0.f) // top and bottom
         {
-          currentDynamicObject->getCurrentPosition() = glm::vec2(static_cast<unsigned int>(currentDynamicObject->getCurrentPosition().x / 4.f + 0.5f) * 4.f, currentDynamicObject->getCurrentPosition().y);
+          currentDynamicObject->getTargetPosition() = glm::vec2(static_cast<unsigned int>(currentDynamicObject->getCurrentPosition().x / 4.f + 0.5f) * 4.f, currentDynamicObject->getCurrentPosition().y);
         }
 
-        const auto newPosition = currentDynamicObject->getCurrentPosition() + currentDynamicObject->getCurrentDirection() * static_cast<float>(currentDynamicObject->getCurrentVelocity() * delta);
+        const auto newPosition = currentDynamicObject->getTargetPosition() + currentDynamicObject->getCurrentDirection() * static_cast<float>(currentDynamicObject->getCurrentVelocity() * delta);
         std::vector<std::shared_ptr<IGameObject>> objectsToCheck = m_pCurrentLevel->getObjectsInArea(newPosition, newPosition + currentDynamicObject->getSize());
 
 
@@ -58,7 +88,7 @@ namespace Physics {
             const auto &collidersToCheck = currentObjectToCheck->getColliders();
             if(currentObjectToCheck->collides(currentDynamicObject->getObjectType()) && !collidersToCheck.empty()) {
               for(const auto &currentObjectCollider : currentObjectToCheck->getColliders()) {
-                if(currentObjectCollider.isActive && hasIntersection(currentDynamicObjectCollider, newPosition, currentObjectCollider, currentObjectToCheck->getCurrentPosition())) {
+                if(currentObjectCollider.isActive && hasCollidersIntersection(currentDynamicObjectCollider, newPosition, currentObjectCollider, currentObjectToCheck->getCurrentPosition())) {
                   hasCollision = true;
                   if(currentObjectCollider.onCollisionCallback) {
                     currentObjectCollider.onCollisionCallback(*currentDynamicObject, objectCollisionDirection);
@@ -73,27 +103,32 @@ namespace Physics {
         }
 
         if(!hasCollision) {
-          currentDynamicObject->getCurrentPosition() = newPosition;
+          currentDynamicObject->getTargetPosition() = newPosition;
         } else {
           // align position to multiple of 8 pixels
           if(currentDynamicObject->getCurrentDirection().x != 0.f) // right and left
           {
-            currentDynamicObject->getCurrentPosition() = glm::vec2(static_cast<unsigned int>(currentDynamicObject->getCurrentPosition().x / 4.f + 0.5f) * 4.f, currentDynamicObject->getCurrentPosition().y);
+            currentDynamicObject->getTargetPosition() = glm::vec2(static_cast<unsigned int>(currentDynamicObject->getTargetPosition().x / 4.f + 0.5f) * 4.f, currentDynamicObject->getTargetPosition().y);
           } else if(currentDynamicObject->getCurrentDirection().y != 0.f) // top and bottom
           {
-            currentDynamicObject->getCurrentPosition() = glm::vec2(currentDynamicObject->getCurrentPosition().x, static_cast<unsigned int>(currentDynamicObject->getCurrentPosition().y / 4.f + 0.5f) * 4.f);
+            currentDynamicObject->getTargetPosition() = glm::vec2(currentDynamicObject->getTargetPosition().x, static_cast<unsigned int>(currentDynamicObject->getTargetPosition().y / 4.f + 0.5f) * 4.f);
           }
         }
       }
     }
   }
 
-
-  void PhysicsEngine::addDynamicGameObject(std::shared_ptr<IGameObject> pGameObjects) noexcept {
-    m_dynamicObjects.insert(std::move(pGameObjects));
+  void PhysicsEngine::updatePositions(std::unordered_set<std::shared_ptr<IGameObject>> &dynamicObjects) noexcept {
+    for(auto &currentDynamicObject : dynamicObjects) {
+      currentDynamicObject->getCurrentPosition() = currentDynamicObject->getTargetPosition();
+    }
   }
 
-  bool PhysicsEngine::hasIntersection(const Collider &collider1, const glm::vec2 &position1,
+  void PhysicsEngine::addDynamicGameObject(std::shared_ptr<IGameObject> pGameObject) noexcept {
+    m_dynamicObjects.insert(std::move(pGameObject));
+  }
+
+  bool PhysicsEngine::hasCollidersIntersection(const Collider &collider1, const glm::vec2 &position1,
     const Collider &collider2, const glm::vec2 &position2) noexcept {
     const glm::vec2 collider1_bottomLeft_world = collider1.boundingBox.bottomLeft + position1;
     const glm::vec2 collider1_topRight_world = collider1.boundingBox.topRight + position1;
@@ -114,9 +149,23 @@ namespace Physics {
     if(collider1_topRight_world.y <= collider2_bottomLeft_world.y) {
       return false;
     }
-
     return true;
   }
+
+  bool PhysicsEngine::hasPositionIntersection(const std::shared_ptr<IGameObject> &pObject1, const glm::vec2 &position1,
+      const std::shared_ptr<IGameObject> &pObject2, const glm::vec2 &position2) noexcept {
+    const auto &currentObjectColliders = pObject1->getColliders();
+    const auto &otherObjectColliders = pObject2->getColliders();
+    for(const auto &currentObjectCollider : currentObjectColliders) {
+      for(const auto &otherObjectCollider : otherObjectColliders) {
+        if(hasCollidersIntersection(currentObjectCollider, position1, otherObjectCollider, position2)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
 
   Collider::Collider(const glm::vec2 &_bottomLeft, const glm::vec2 _topRight,
   std::function<void(const IGameObject &, const ECollisionDirection)> _onCollisionCallback) noexcept
