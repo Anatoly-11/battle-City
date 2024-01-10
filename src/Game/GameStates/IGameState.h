@@ -4,7 +4,7 @@ class IGameState {
 public:
   virtual void render() const noexcept = 0;
   virtual void update(const double delta) noexcept = 0;
-  virtual void processInput(const int key, const int act, const int mode) noexcept {};
+  virtual void processInput(int &key, int &mode) noexcept {};
   virtual ~IGameState() = default;
   virtual unsigned int getStateWidth() const noexcept = 0;
   virtual unsigned int getStateHeight() const noexcept = 0;

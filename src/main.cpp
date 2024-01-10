@@ -26,10 +26,13 @@ void glfwWindowSizeCallback(GLFWwindow *pWin, int width, int height) {
 }
 
 void glfwKeyCallback(GLFWwindow *pWin, int key, int scan, int act, int mode) {
-	if((key == GLFW_KEY_ESCAPE || (key == GLFW_KEY_F4 && mode == GLFW_MOD_ALT)) && act == GLFW_PRESS) {
-		glfwSetWindowShouldClose(pWin, GL_TRUE);
+	if(act == GLFW_PRESS) {
+		if(key != GLFW_KEY_ESCAPE) {
+			g_game->setKey(key, mode);
+		} else {
+			glfwSetWindowShouldClose(pWin, GL_TRUE);
+		}
 	}
-	g_game->setKey(key, act, mode);
 }
 
 int main(int argc, char *argv[]) {
@@ -53,6 +56,7 @@ int main(int argc, char *argv[]) {
 
 	glfwSetWindowSizeCallback(pWindow, glfwWindowSizeCallback);
 	glfwSetKeyCallback(pWindow, glfwKeyCallback);
+	//glfwSetInputMode(pWindow, GLFW_STICKY_KEYS, GLFW_TRUE);
 
 	// Make the window's context current
 	glfwMakeContextCurrent(pWindow);
